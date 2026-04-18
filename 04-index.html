@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>frenchbutnice — the index</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bone:#F8F6F0;
+    --ink:#0F0F0F;
+    --ink-60:rgba(15,15,15,.6);
+    --ink-30:rgba(15,15,15,.3);
+    --ink-12:rgba(15,15,15,.12);
+    --red:#D0352C;
+    --rule:rgba(15,15,15,.9);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bone);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{font-family:"Newsreader",Georgia,serif;font-weight:400;font-size:16px;line-height:1.5}
+
+  .wrap{max-width:1440px;margin:0 auto;padding:28px 48px 56px}
+
+  /* Header strip */
+  header.top{display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .wordmark{font-family:"Anton",Impact,sans-serif;font-weight:400;letter-spacing:.06em;font-size:18px;text-transform:uppercase}
+  .wordmark .dot{color:var(--red)}
+  nav.primary{display:flex;gap:28px}
+  nav.primary a{
+    font-family:"JetBrains Mono",monospace;
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--ink);text-decoration:none;
+  }
+  nav.primary a:hover{color:var(--red)}
+
+  .rule{height:1px;background:var(--rule);margin:18px 0}
+  .rule.thin{background:var(--ink-12)}
+
+  .standfirst-line{
+    font-family:"Newsreader",serif;font-style:italic;font-weight:400;
+    font-size:15px;color:var(--ink);letter-spacing:.002em;
+    padding:2px 0 0;
+  }
+  .standfirst-line::before{content:"— ";color:var(--ink-60)}
+
+  /* Index */
+  .meta-row{
+    display:flex;justify-content:space-between;align-items:baseline;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-60);
+    padding:10px 0 14px;
+  }
+  .meta-row span b{font-weight:500;color:var(--ink)}
+
+  ol.index{list-style:none;margin:0;padding:0;border-top:1px solid var(--rule)}
+  ol.index li{
+    border-bottom:1px solid var(--ink-12);
+    transition:background .25s ease;
+    position:relative;
+  }
+  ol.index li:hover{background:var(--ink);color:var(--bone)}
+  ol.index li:hover .num,
+  ol.index li:hover .title,
+  ol.index li:hover .cat,
+  ol.index li:hover .when{color:var(--bone)}
+  ol.index li:hover .num{color:var(--red)}
+  ol.index li:hover .standfirst{
+    max-height:80px;opacity:1;padding:0 0 22px 136px;
+  }
+
+  .row{
+    display:grid;
+    grid-template-columns: 96px 110px 1fr auto;
+    align-items:center;
+    gap:24px;
+    padding:14px 0 14px;
+    min-height:92px;
+  }
+  .num{
+    font-family:"Anton",Impact,sans-serif;font-size:64px;line-height:.9;
+    letter-spacing:.01em;color:var(--ink);
+    transition:color .25s ease;
+  }
+  .cat{
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ink-60);
+    border-left:1px solid var(--ink-12);padding-left:14px;
+  }
+  .title{
+    font-family:"Anton",Impact,sans-serif;font-size:38px;line-height:1;
+    letter-spacing:.005em;text-transform:none;color:var(--ink);
+    transition:color .25s ease;
+  }
+  .when{
+    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-60);text-align:right;white-space:nowrap;
+  }
+  .when .dot{color:var(--ink-30);padding:0 6px}
+
+  .standfirst{
+    font-family:"Newsreader",serif;font-style:italic;font-size:17px;line-height:1.45;
+    color:var(--bone);max-width:70ch;
+    max-height:0;opacity:0;overflow:hidden;
+    transition:max-height .3s ease, opacity .25s ease, padding .3s ease;
+    padding:0 0 0 136px;
+  }
+
+  ol.index a{display:block;color:inherit;text-decoration:none}
+
+  /* Lower blocks */
+  .block{padding:28px 0 10px}
+  .block h2{
+    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ink-60);margin:0 0 14px;font-weight:500;
+  }
+  .topics{
+    display:grid;grid-template-columns:1fr 1fr;gap:28px;
+  }
+  .topic .name{
+    font-family:"Anton",Impact,sans-serif;font-size:28px;line-height:1;
+    text-transform:uppercase;letter-spacing:.01em;color:var(--ink);
+  }
+  .topic p{
+    font-family:"Newsreader",serif;font-style:italic;font-size:16px;line-height:1.5;
+    margin:8px 0 0;color:var(--ink);max-width:48ch;
+  }
+  .book{
+    margin-top:18px;font-family:"JetBrains Mono",monospace;font-size:11px;
+    letter-spacing:.14em;text-transform:uppercase;
+  }
+  .book a{color:var(--red);text-decoration:none;border-bottom:1px solid var(--red);padding-bottom:2px}
+  .book a:hover{color:var(--ink);border-color:var(--ink)}
+
+  .about p{
+    font-family:"Newsreader",serif;font-size:17px;line-height:1.55;margin:0;max-width:70ch;
+  }
+  .about .cred{
+    font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-60);margin-bottom:10px;
+  }
+  .about .email{
+    margin-top:10px;font-family:"JetBrains Mono",monospace;font-size:11px;
+    letter-spacing:.14em;text-transform:uppercase;
+  }
+  .about .email a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink-30)}
+  .about .email a:hover{color:var(--red);border-color:var(--red)}
+
+  footer{
+    display:flex;justify-content:space-between;align-items:center;gap:24px;
+    font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--ink-60);padding:18px 0 4px;
+  }
+  footer a{color:var(--ink-60);text-decoration:none;margin-right:18px}
+  footer a:hover{color:var(--red)}
+
+  /* Focus */
+  a:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+
+  /* Responsive */
+  @media (max-width: 820px){
+    .wrap{padding:20px 22px 40px}
+    nav.primary{gap:16px}
+    nav.primary a{font-size:10px}
+    .row{
+      grid-template-columns: 72px 1fr;
+      grid-template-areas:
+        "num    title"
+        "num    cat"
+        "meta   meta";
+      gap:4px 18px;
+      min-height:auto;
+      padding:18px 0 18px;
+    }
+    .num{grid-area:num;font-size:44px}
+    .title{grid-area:title;font-size:24px;align-self:end}
+    .cat{grid-area:cat;border-left:0;padding-left:0}
+    .when{grid-area:meta;text-align:left;padding-top:8px}
+    .standfirst{padding:0 0 0 0 !important}
+    ol.index li:hover .standfirst{padding:0 0 18px 0 !important}
+    .topics{grid-template-columns:1fr;gap:22px}
+    .standfirst-line{font-size:14px}
+    footer{flex-direction:column;align-items:flex-start;gap:10px}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="top">
+      <div class="wordmark">FRENCH<span class="dot">.</span>BUT<span class="dot">.</span>NICE</div>
+      <nav class="primary" aria-label="Primary">
+        <a href="#index">Essays</a>
+        <a href="#speaking">Speaking</a>
+        <a href="#about">About</a>
+        <a href="#rss">RSS</a>
+      </nav>
+    </header>
+
+    <div class="rule"></div>
+
+    <p class="standfirst-line">Essays on design systems and the models that are eating them.</p>
+
+    <div class="rule thin"></div>
+
+    <div class="meta-row" id="index">
+      <span><b>The Index</b> &nbsp;·&nbsp; Vol. I</span>
+      <span>Updated APR 2026 &nbsp;·&nbsp; 06 of 24 shown</span>
+    </div>
+
+    <ol class="index" role="list">
+
+      <li>
+        <a href="#e1">
+          <div class="row">
+            <div class="num">001</div>
+            <div class="cat">Systems</div>
+            <div class="title">Build for Adoption, Not Perfection</div>
+            <div class="when">Apr 2026 <span class="dot">·</span> 9 min</div>
+          </div>
+          <div class="standfirst">Your design system is not a mandate. It is a service. Act accordingly — and the adoption problem mostly solves itself.</div>
+        </a>
+      </li>
+
+      <li>
+        <a href="#e2">
+          <div class="row">
+            <div class="num">002</div>
+            <div class="cat">Systems</div>
+            <div class="title">Coherence Over Uniformity</div>
+            <div class="when">Mar 2026 <span class="dot">·</span> 7 min</div>
+          </div>
+          <div class="standfirst">Uniformity is cheap and brittle. Coherence is expensive and it ages well. Fifteen years in, I know which one I am paid for.</div>
+        </a>
+      </li>
+
+      <li>
+        <a href="#e3">
+          <div class="row">
+            <div class="num">003</div>
+            <div class="cat">AI</div>
+            <div class="title">GenUI Before It Had a Name</div>
+            <div class="when">Mar 2026 <span class="dot">·</span> 12 min</div>
+          </div>
+          <div class="standfirst">Most teams still think AI means chat interfaces. I saw it generating custom UIs for every query, and moved my team to be ready before the demand hit.</div>
+        </a>
+      </li>
+
+      <li>
+        <a href="#e4">
+          <div class="row">
+            <div class="num">004</div>
+            <div class="cat">Systems</div>
+            <div class="title">Systems Are Services, Not Mandates</div>
+            <div class="when">Feb 2026 <span class="dot">·</span> 8 min</div>
+          </div>
+          <div class="standfirst">The problem isn't that design systems are hard to build. It's that most of them were never meant to be lived in.</div>
+        </a>
+      </li>
+
+      <li>
+        <a href="#e5">
+          <div class="row">
+            <div class="num">005</div>
+            <div class="cat">AI</div>
+            <div class="title">Models Don't Read Your Figma</div>
+            <div class="when">Feb 2026 <span class="dot">·</span> 10 min</div>
+          </div>
+          <div class="standfirst">Components were written for humans. Tokens were written for machines. Guess which one the model actually understands — and what to do about it.</div>
+        </a>
+      </li>
+
+      <li>
+        <a href="#e6">
+          <div class="row">
+            <div class="num">006</div>
+            <div class="cat">Systems</div>
+            <div class="title">Lessons from 607 Teams</div>
+            <div class="when">Jan 2026 <span class="dot">·</span> 15 min</div>
+          </div>
+          <div class="standfirst">Systems are organisms, not formulas. I've spent fifteen years learning the difference — mostly the hard way, and mostly in public.</div>
+        </a>
+      </li>
+
+    </ol>
+
+    <section class="block" id="speaking" aria-labelledby="sp-h">
+      <h2 id="sp-h">Speaking &nbsp;/&nbsp; 2026</h2>
+      <div class="topics">
+        <div class="topic">
+          <div class="name">Design Systems at Scale</div>
+          <p>What breaks at 600+ teams, and how to build for adoption instead of enforcement.</p>
+        </div>
+        <div class="topic">
+          <div class="name">Designing with Generative AI</div>
+          <p>From Gemini's Canvases to the generative UI frameworks that change what a design system is for.</p>
+        </div>
+      </div>
+      <div class="book">Book a talk → <a href="mailto:og@frenchbutnice.design?subject=Speaking">og@frenchbutnice.design</a></div>
+    </section>
+
+    <div class="rule thin"></div>
+
+    <section class="block about" id="about" aria-labelledby="ab-h">
+      <h2 id="ab-h">About</h2>
+      <div class="cred">Previously Gemini · Frame.io · Airbnb</div>
+      <p>Olivier Gillaizeau leads design systems at Google Gemini. Previously at Frame.io (acquired by Adobe) and Airbnb. Fifteen years shipping the infrastructure that makes creative teams faster without making them smaller. Designer. Systems lead. French, but nice.</p>
+      <div class="email"><a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></div>
+    </section>
+
+    <div class="rule thin"></div>
+
+    <footer>
+      <div>
+        <a href="https://twitter.com/">Twitter / X</a>
+        <a href="https://www.linkedin.com/">LinkedIn</a>
+        <a href="#rss">RSS</a>
+      </div>
+      <div>© 2026 Olivier Gillaizeau · Set in Anton &amp; Newsreader</div>
+    </footer>
+
+  </div>
+</body>
+</html>

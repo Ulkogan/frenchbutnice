@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>session.log — frenchbutnice / 2026-04-11</title>
+<meta name="description" content="Olivier Gillaizeau — creative working at the edge of technology. A session log." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #FBFBF8;
+    --ink: #1A1814;
+    --warm-grey: #7A766C;
+    --warm-grey-soft: #D9D5C8;
+    --blue: #3D5A80;
+    --blue-soft: #C4D0DF;
+    --rule: #E8E4D6;
+    --mono-user: "Space Mono", ui-monospace, Menlo, monospace;
+    --mono-model: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: var(--mono-model);
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  ::selection { background: var(--blue-soft); color: var(--ink); }
+
+  a {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 150ms ease;
+  }
+  a:hover, a:focus-visible { border-bottom-color: var(--blue); }
+  a:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; border-radius: 1px; }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 56px 32px 120px;
+    min-height: 100vh;
+  }
+
+  /* ---------- Header ---------- */
+  .session-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 20px;
+    margin-bottom: 48px;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono-model);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  .session-head .title { color: var(--ink); }
+  .session-head .title span { color: var(--warm-grey); font-weight: 400; }
+  .session-head .meta { display: flex; gap: 18px; }
+  .session-head .dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: #7FA97C;
+    margin-right: 6px;
+    vertical-align: middle;
+    box-shadow: 0 0 0 2px rgba(127,169,124,0.18);
+  }
+
+  /* ---------- Messages ---------- */
+  .msg {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 18px;
+    margin-bottom: 36px;
+  }
+
+  .msg .ts {
+    font-family: var(--mono-model);
+    font-size: 11px;
+    color: var(--warm-grey);
+    padding-top: 2px;
+    letter-spacing: 0.02em;
+  }
+
+  .msg .body {
+    padding-left: 18px;
+    border-left: 1px solid var(--warm-grey-soft);
+  }
+
+  .msg .label {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  /* ---------- User ---------- */
+  .msg.user .body { border-left-color: var(--warm-grey-soft); }
+  .msg.user .label {
+    font-family: var(--mono-user);
+    font-weight: 700;
+    color: var(--warm-grey);
+  }
+  .msg.user .content {
+    font-family: var(--mono-user);
+    font-weight: 400;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.55;
+  }
+
+  /* ---------- Model ---------- */
+  .msg.model .body {
+    border-left-color: var(--blue-soft);
+  }
+  .msg.model .label {
+    font-family: var(--mono-model);
+    font-weight: 500;
+    color: var(--blue);
+  }
+  .msg.model .content {
+    font-family: var(--mono-model);
+    font-weight: 400;
+    font-size: 16px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+
+  .msg .content p { margin: 0 0 14px; }
+  .msg .content p:last-child { margin-bottom: 0; }
+
+  /* Essay / topic lists inside model messages */
+  .list-essays, .list-topics {
+    list-style: none;
+    margin: 4px 0 14px;
+    padding: 0;
+  }
+  .list-essays li {
+    padding: 3px 0;
+    color: var(--ink);
+  }
+  .list-essays li::before {
+    content: "→";
+    display: inline-block;
+    width: 22px;
+    color: var(--blue);
+  }
+  .list-essays em {
+    font-style: normal;
+    border-bottom: 1px dotted var(--warm-grey);
+    padding-bottom: 1px;
+  }
+
+  .list-topics {
+    counter-reset: topic;
+  }
+  .list-topics li {
+    counter-increment: topic;
+    padding: 10px 0 10px 28px;
+    position: relative;
+  }
+  .list-topics li::before {
+    content: counter(topic) ".";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    color: var(--blue);
+    font-weight: 500;
+  }
+  .list-topics .topic-title {
+    display: block;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .list-topics .topic-desc {
+    display: block;
+    color: var(--warm-grey);
+    margin-top: 2px;
+  }
+
+  .aside {
+    color: var(--warm-grey);
+  }
+
+  /* ---------- Cursor ---------- */
+  .cursor {
+    display: inline-block;
+    width: 0.58em;
+    height: 1.05em;
+    background: var(--ink);
+    vertical-align: -0.17em;
+    margin-left: 1px;
+    animation: blink 1.05s steps(1) infinite;
+  }
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+
+  /* ---------- Input bar (fake) ---------- */
+  .input-bar {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid var(--rule);
+  }
+  .input-shell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    border: 1px solid var(--warm-grey-soft);
+    background: #F5F2E8;
+    font-family: var(--mono-user);
+    font-size: 14px;
+    color: var(--warm-grey);
+  }
+  .input-shell .prompt {
+    color: var(--blue);
+    font-weight: 700;
+  }
+  .input-shell .placeholder { flex: 1; }
+  .input-shell .kbd {
+    font-family: var(--mono-model);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    padding: 3px 7px;
+    border: 1px solid var(--warm-grey-soft);
+    border-radius: 3px;
+    background: var(--paper);
+  }
+
+  /* ---------- Footer meta ---------- */
+  .session-foot {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    font-family: var(--mono-model);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+  }
+  .session-foot .links { display: flex; gap: 18px; }
+  .session-foot a { color: var(--warm-grey); }
+  .session-foot a:hover { color: var(--blue); border-bottom-color: var(--blue); }
+
+  /* ---------- Mobile ---------- */
+  @media (max-width: 640px) {
+    .page { padding: 36px 20px 80px; }
+    .session-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .msg {
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .msg .ts {
+      padding-top: 0;
+    }
+    .msg .body {
+      padding-left: 14px;
+    }
+    .msg.user .content { font-size: 14px; }
+    .msg.model .content { font-size: 15px; }
+    .session-foot {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .input-shell { padding: 12px 14px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+  <main class="page" role="main">
+
+    <header class="session-head">
+      <div class="title"># session.log <span>— frenchbutnice / 2026-04-11</span></div>
+      <div class="meta">
+        <span><span class="dot" aria-hidden="true"></span>model: olivier-v15</span>
+        <span>tokens: 1,412</span>
+      </div>
+    </header>
+
+    <!-- 1 -->
+    <article class="msg user" aria-label="User message">
+      <div class="ts">[14:32]</div>
+      <div class="body">
+        <span class="label">Olivier</span>
+        <div class="content">
+          <p>tell me about olivier gillaizeau in two sentences.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2 -->
+    <article class="msg model" aria-label="Model response">
+      <div class="ts">[14:32]</div>
+      <div class="body">
+        <span class="label">Model</span>
+        <div class="content">
+          <p>Olivier is a creative working at the edge of technology. He leads AI design at Google Gemini, where he has spent the past four years building generative UI frameworks.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3 -->
+    <article class="msg user" aria-label="User message">
+      <div class="ts">[14:33]</div>
+      <div class="body">
+        <span class="label">Olivier</span>
+        <div class="content">
+          <p>what does he write about?</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4 -->
+    <article class="msg model" aria-label="Model response">
+      <div class="ts">[14:33]</div>
+      <div class="body">
+        <span class="label">Model</span>
+        <div class="content">
+          <p>A few things, mostly:</p>
+          <ul class="list-essays">
+            <li><a href="#"><em>Working With Models, Not Against Them</em></a></li>
+            <li><a href="#"><em>Notes from a Creative at the Edge of the Model</em></a></li>
+            <li><a href="#"><em>From Flash to Generative UI</em></a></li>
+            <li><a href="#"><em>Why I Stopped Calling Myself a Design Systems Person</em></a></li>
+            <li><a href="#"><em>I Have Spent 15 Years Building Tools That Are About to Disappear</em></a></li>
+          </ul>
+          <p class="aside">The throughline is practitioner work — what it actually feels like to build with models, not what it's like to have opinions about them.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5 -->
+    <article class="msg user" aria-label="User message">
+      <div class="ts">[14:34]</div>
+      <div class="body">
+        <span class="label">Olivier</span>
+        <div class="content">
+          <p>can he speak at our event?</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 6 -->
+    <article class="msg model" aria-label="Model response">
+      <div class="ts">[14:34]</div>
+      <div class="body">
+        <span class="label">Model</span>
+        <div class="content">
+          <p>Yes. Two topics:</p>
+          <ol class="list-topics">
+            <li>
+              <span class="topic-title">Designing with Generative AI</span>
+              <span class="topic-desc">From Gemini's Canvases to the gen-UI frameworks that are reshaping what design tools are for.</span>
+            </li>
+            <li>
+              <span class="topic-title">Leading Creative at the Edge of Technology</span>
+              <span class="topic-desc">What 15 years of building with evolving tools teaches you about leading teams that ship the future.</span>
+            </li>
+          </ol>
+          <p>Reach him at <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a>.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 7 -->
+    <article class="msg user" aria-label="User message">
+      <div class="ts">[14:35]</div>
+      <div class="body">
+        <span class="label">Olivier</span>
+        <div class="content">
+          <p>what's his deal?</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 8 -->
+    <article class="msg model" aria-label="Model response">
+      <div class="ts">[14:35]</div>
+      <div class="body">
+        <span class="label">Model</span>
+        <div class="content">
+          <p>French by birth, San Franciscan by choice. Started in Flash. Scaled creative orgs across continents. Currently teaches AI models how to design — and designs the systems that hold them.</p>
+          <p class="aside">Previously Gemini · Frame.io · Airbnb. Fifteen years at the edge of where creative work meets the tools that make it possible.</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- 9 — cursor -->
+    <article class="msg user" aria-label="User message in progress">
+      <div class="ts">[14:36]</div>
+      <div class="body">
+        <span class="label">Olivier</span>
+        <div class="content">
+          <p><span class="cursor" aria-hidden="true"></span><span class="visually-hidden" style="position:absolute;left:-9999px;">typing</span></p>
+        </div>
+      </div>
+    </article>
+
+    <!-- Input bar -->
+    <div class="input-bar" aria-hidden="true">
+      <div class="input-shell">
+        <span class="prompt">&gt;</span>
+        <span class="placeholder">ask the model about olivier...</span>
+        <span class="kbd">enter</span>
+      </div>
+    </div>
+
+    <footer class="session-foot">
+      <div>© 2026 olivier gillaizeau · french, but nice</div>
+      <div class="links">
+        <a href="mailto:og@frenchbutnice.design">email</a>
+        <a href="#">twitter</a>
+        <a href="#">linkedin</a>
+        <a href="#">rss</a>
+      </div>
+    </footer>
+
+  </main>
+</body>
+</html>

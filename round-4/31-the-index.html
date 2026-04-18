@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olivier Gillaizeau — The Index</title>
+<meta name="description" content="Creative working at the edge of technology. AI Design Lead at Google Gemini.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Astro Mono';
+  src: url('../references/fonts/AstroMono-Family-axezye/AstroMono-Regular.otf') format('opentype');
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Astro Mono';
+  src: url('../references/fonts/AstroMono-Family-axezye/AstroMono-Bold.otf') format('opentype');
+  font-weight: 700;
+}
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #1A1D24;
+  --bg-card: #1E2129;
+  --text: #C8CCD4;
+  --text-dim: #6B7280;
+  --text-bright: #E8ECF4;
+  --accent: #4A9EFF;
+  --accent-glow: rgba(74, 158, 255, 0.15);
+  --amber: #E8A849;
+  --rule: rgba(200, 204, 212, 0.12);
+  --rule-strong: rgba(200, 204, 212, 0.25);
+  --font-primary: 'Astro Mono', 'Share Tech Mono', monospace;
+  --font-secondary: 'Share Tech Mono', monospace;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-primary);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* ── ARRIVAL CARD ─────────────────────────── */
+#arrival-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.3s ease-out;
+}
+
+#arrival-overlay.dissolving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#arrival-card {
+  border: 1px solid var(--rule-strong);
+  padding: 2.5rem 3rem;
+  text-align: center;
+  opacity: 0;
+  transform: scale(0.95);
+  animation: cardPop 0.2s ease-out 0.15s forwards;
+  position: relative;
+}
+
+#arrival-card::before,
+#arrival-card::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: var(--rule-strong);
+}
+
+#arrival-card::before { top: 0.8rem; }
+#arrival-card::after { bottom: 0.8rem; }
+
+.card-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.5rem;
+}
+
+.card-tagline {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+
+.card-rule {
+  width: 100%;
+  height: 1px;
+  background: var(--rule-strong);
+  margin: 1rem 0;
+}
+
+.card-domain {
+  font-size: 0.7rem;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+
+.card-year {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  margin-top: 0.25rem;
+  letter-spacing: 0.2em;
+}
+
+.card-skip {
+  position: absolute;
+  bottom: -2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  opacity: 0;
+  animation: fadeIn 0.3s ease-out 0.8s forwards;
+}
+
+@keyframes cardPop {
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+/* ── MAIN WORKSPACE ───────────────────────── */
+#workspace {
+  opacity: 0;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+  transition: opacity 0.3s ease-out;
+}
+
+#workspace.visible {
+  opacity: 1;
+}
+
+/* ── SECTION LABELS ───────────────────────── */
+.section-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.2em;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ── SECTIONS ─────────────────────────────── */
+section {
+  margin-bottom: 4rem;
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(4px) scale(0.97);
+  will-change: transform, opacity;
+  transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* ── IDENTITY BLOCK ───────────────────────── */
+.identity {
+  margin-bottom: 4rem;
+}
+
+.identity-number {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.25rem;
+}
+
+.identity-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-bright);
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+}
+
+.identity-sub {
+  font-size: 0.8rem;
+  color: var(--text);
+  margin-top: 0.75rem;
+  line-height: 1.8;
+}
+
+.identity-sub .dim {
+  color: var(--text-dim);
+}
+
+.identity-sub .link {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.identity-sub .link:hover {
+  color: var(--text-bright);
+}
+
+.identity-sub .link:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── INDEX ROWS (ESSAYS) ──────────────────── */
+.index-list {
+  list-style: none;
+}
+
+.index-row {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
+  align-items: baseline;
+  padding: 0.6rem 0.5rem;
+  border-bottom: 1px solid var(--rule);
+  cursor: default;
+  transition: background 0.15s ease-out, color 0.15s ease-out;
+  gap: 0.75rem;
+}
+
+.index-row:first-child {
+  border-top: 1px solid var(--rule);
+}
+
+.index-row:hover {
+  background: var(--accent-glow);
+}
+
+.index-row:hover .index-title {
+  color: var(--accent);
+}
+
+.index-num {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.index-title {
+  font-size: 0.8rem;
+  color: var(--text);
+  transition: color 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.index-status {
+  font-size: 0.7rem;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-dot.published {
+  background: var(--accent);
+}
+
+.status-dot.draft {
+  background: transparent;
+  border: 1px solid var(--text-dim);
+}
+
+.status-label {
+  color: var(--text-dim);
+}
+
+.blink-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 0.8em;
+  background: var(--amber);
+  margin-left: 0.25rem;
+  animation: blink 1s step-end infinite;
+  vertical-align: middle;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── TOPICS (SPEAKING) ────────────────────── */
+.topic-item {
+  padding: 1.25rem 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.topic-item:first-child {
+  border-top: 1px solid var(--rule);
+}
+
+.topic-header {
+  display: grid;
+  grid-template-columns: 2.5rem 1fr;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.topic-num {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.topic-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-bright);
+}
+
+.topic-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-left: 3.25rem;
+}
+
+.topic-cta {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  margin-left: 3.25rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--rule);
+}
+
+.topic-cta a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.topic-cta a:hover {
+  color: var(--text-bright);
+}
+
+.topic-cta a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── BIO ──────────────────────────────────── */
+.bio-text {
+  font-size: 0.8rem;
+  color: var(--text);
+  line-height: 1.9;
+  max-width: 560px;
+}
+
+/* ── MODULES ──────────────────────────────── */
+.modules-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.module-block {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--text-dim);
+  border: 1px solid var(--rule-strong);
+  padding: 0.6rem 1rem;
+  cursor: default;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  white-space: nowrap;
+}
+
+.module-block:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.module-block:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ── GRAPH ────────────────────────────────── */
+.graph-container {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.graph-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.graph-node {
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.graph-node circle,
+.graph-node rect {
+  transition: fill 0.2s, stroke 0.2s;
+}
+
+.graph-node text {
+  font-family: var(--font-primary);
+  font-size: 9px;
+  fill: var(--text-dim);
+  transition: fill 0.2s;
+}
+
+.graph-line {
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+  fill: none;
+  transition: stroke 0.2s, opacity 0.2s;
+}
+
+.graph-container.has-hover .graph-node.dimmed {
+  opacity: 0.15;
+}
+
+.graph-container.has-hover .graph-line.dimmed {
+  opacity: 0.08;
+}
+
+.graph-container.has-hover .graph-node.highlighted text {
+  fill: var(--accent);
+}
+
+.graph-container.has-hover .graph-node.highlighted circle {
+  fill: var(--accent);
+}
+
+.graph-container.has-hover .graph-line.highlighted {
+  stroke: var(--accent);
+  opacity: 1;
+}
+
+/* ── FOOTER ───────────────────────────────── */
+footer {
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule-strong);
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  line-height: 2;
+}
+
+footer a {
+  color: var(--text-dim);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+footer a:hover {
+  color: var(--accent);
+}
+
+footer a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.footer-sep {
+  color: var(--rule-strong);
+}
+
+.footer-machine {
+  color: var(--text-dim);
+  opacity: 0.5;
+  margin-top: 0.5rem;
+}
+
+/* ── RESPONSIVE ───────────────────────────── */
+@media (max-width: 600px) {
+  #workspace {
+    padding: 2rem 1.25rem 3rem;
+  }
+
+  .identity-name {
+    font-size: 1.25rem;
+  }
+
+  .index-row {
+    grid-template-columns: 2rem 1fr auto;
+    padding: 0.5rem 0.25rem;
+    gap: 0.5rem;
+  }
+
+  .index-title {
+    font-size: 0.72rem;
+  }
+
+  .topic-desc {
+    margin-left: 2.75rem;
+  }
+
+  .topic-cta {
+    margin-left: 2.75rem;
+  }
+
+  .module-block {
+    font-size: 0.6rem;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .graph-svg {
+    height: auto;
+    min-height: 300px;
+  }
+
+  #arrival-card {
+    padding: 2rem 2rem;
+  }
+
+  .card-name {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .index-row {
+    grid-template-columns: 2rem 1fr;
+  }
+
+  .index-status {
+    display: none;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     PHASE 1: ARRIVAL
+     ════════════════════════════════════════════ -->
+<div id="arrival-overlay" role="button" tabindex="0" aria-label="Click or press any key to skip intro">
+  <div id="arrival-card">
+    <div class="card-name">OLIVIER GILLAIZEAU</div>
+    <div class="card-tagline">Creative &times; Technology &times; AI</div>
+    <div class="card-rule"></div>
+    <div class="card-domain">frenchbutnice.design</div>
+    <div class="card-year">2026</div>
+  </div>
+  <div class="card-skip">CLICK TO ENTER</div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PHASE 2: WORKSPACE
+     ════════════════════════════════════════════ -->
+<main id="workspace">
+
+  <!-- IDENTITY -->
+  <section class="identity reveal">
+    <div class="identity-number">001</div>
+    <h1 class="identity-name">OLIVIER GILLAIZEAU</h1>
+    <div class="identity-sub">
+      Creative working at the edge of technology<br>
+      AI Design Lead — Google Gemini<br>
+      <span class="dim">Previously:</span> Frame.io &middot; Airbnb<br>
+      <span class="dim">Contact:</span> <a href="mailto:og@frenchbutnice.design" class="link">og@frenchbutnice.design</a>
+    </div>
+  </section>
+
+  <!-- ESSAYS -->
+  <section class="reveal">
+    <div class="section-label">ESSAYS_</div>
+    <ol class="index-list">
+      <li class="index-row reveal" style="transition-delay: 0ms">
+        <span class="index-num">01</span>
+        <span class="index-title">Working With Models, Not Against Them</span>
+        <span class="index-status"><span class="status-dot published"></span><span class="status-label">published</span></span>
+      </li>
+      <li class="index-row reveal" style="transition-delay: 60ms">
+        <span class="index-num">02</span>
+        <span class="index-title">From Flash to Generative UI</span>
+        <span class="index-status"><span class="status-dot published"></span><span class="status-label">published</span></span>
+      </li>
+      <li class="index-row reveal" style="transition-delay: 120ms">
+        <span class="index-num">03</span>
+        <span class="index-title">The Last System You'll Ever Build</span>
+        <span class="index-status"><span class="status-dot draft"></span><span class="status-label">draft</span><span class="blink-cursor"></span></span>
+      </li>
+      <li class="index-row reveal" style="transition-delay: 180ms">
+        <span class="index-num">04</span>
+        <span class="index-title">Why I Stopped Calling Myself a DSP</span>
+        <span class="index-status"><span class="status-dot published"></span><span class="status-label">published</span></span>
+      </li>
+      <li class="index-row reveal" style="transition-delay: 240ms">
+        <span class="index-num">05</span>
+        <span class="index-title">Coherence Over Uniformity</span>
+        <span class="index-status"><span class="status-dot published"></span><span class="status-label">published</span></span>
+      </li>
+      <li class="index-row reveal" style="transition-delay: 300ms">
+        <span class="index-num">06</span>
+        <span class="index-title">Notes from a Creative at the Edge</span>
+        <span class="index-status"><span class="status-dot draft"></span><span class="status-label">draft</span><span class="blink-cursor"></span></span>
+      </li>
+    </ol>
+  </section>
+
+  <!-- TOPICS -->
+  <section class="reveal">
+    <div class="section-label">TOPICS_</div>
+    <div class="topic-item reveal">
+      <div class="topic-header">
+        <span class="topic-num">01</span>
+        <span class="topic-title">Designing with Generative AI</span>
+      </div>
+      <div class="topic-desc">
+        From Gemini's Canvases to the generative UI frameworks<br>
+        reshaping what design tools are for.
+      </div>
+    </div>
+    <div class="topic-item reveal">
+      <div class="topic-header">
+        <span class="topic-num">02</span>
+        <span class="topic-title">Leading Creative at the Edge of Technology</span>
+      </div>
+      <div class="topic-desc">
+        What 15 years of building with evolving tools teaches<br>
+        you about leading teams that ship the future.
+      </div>
+    </div>
+    <div class="topic-cta reveal">
+      &crarr; Available for speaking — book via <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a>
+    </div>
+  </section>
+
+  <!-- BIO -->
+  <section class="reveal">
+    <div class="section-label">BIO_</div>
+    <p class="bio-text">
+      Olivier Gillaizeau is a creative working at the edge
+      of technology. He leads AI design at Google Gemini,
+      where he has spent the past four years building
+      generative UI frameworks. Previously at Frame.io and
+      Airbnb. Fifteen years of shipping the infrastructure
+      that makes creative teams faster — and is now reshaping
+      what creative even means.
+    </p>
+  </section>
+
+  <!-- MODULES -->
+  <section class="reveal">
+    <div class="section-label">MODULES_</div>
+    <div class="modules-grid">
+      <div class="module-block reveal" tabindex="0" data-module="brand">BRAND</div>
+      <div class="module-block reveal" tabindex="0" data-module="motion">MOTION</div>
+      <div class="module-block reveal" tabindex="0" data-module="systems">SYSTEMS</div>
+      <div class="module-block reveal" tabindex="0" data-module="ai">AI</div>
+      <div class="module-block reveal" tabindex="0" data-module="leadership">LEADERSHIP</div>
+      <div class="module-block reveal" tabindex="0" data-module="product">PRODUCT</div>
+      <div class="module-block reveal" tabindex="0" data-module="creative-direction">CREATIVE DIRECTION</div>
+    </div>
+  </section>
+
+  <!-- GRAPH -->
+  <section class="reveal">
+    <div class="section-label">CONNECTIONS_</div>
+    <div class="graph-container" id="graph-container">
+      <svg class="graph-svg" id="graph-svg" viewBox="0 0 860 420" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="reveal">
+    <div class="footer-links">
+      <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a>
+      <span class="footer-sep">&middot;</span>
+      <a href="https://x.com/oliviergl" target="_blank" rel="noopener">X</a>
+      <span class="footer-sep">&middot;</span>
+      <a href="https://linkedin.com/in/oliviergillaizeau" target="_blank" rel="noopener">LinkedIn</a>
+      <span class="footer-sep">&middot;</span>
+      <a href="#">RSS</a>
+    </div>
+    <div>&copy; 2026 Olivier Gillaizeau</div>
+    <div class="footer-machine">This site is machine-readable.</div>
+  </footer>
+
+</main>
+
+<script>
+(function() {
+  'use strict';
+
+  // ── ARRIVAL ──────────────────────────────
+  const overlay = document.getElementById('arrival-overlay');
+  const workspace = document.getElementById('workspace');
+  let arrived = false;
+  let autoTimer;
+
+  function enter() {
+    if (arrived) return;
+    arrived = true;
+    clearTimeout(autoTimer);
+    overlay.classList.add('dissolving');
+    setTimeout(() => {
+      overlay.style.display = 'none';
+      workspace.classList.add('visible');
+      initObservers();
+    }, 300);
+  }
+
+  overlay.addEventListener('click', enter);
+  overlay.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') enter();
+  });
+  document.addEventListener('keydown', function handler() {
+    enter();
+    document.removeEventListener('keydown', handler);
+  });
+
+  autoTimer = setTimeout(enter, 2500);
+
+  // ── INTERSECTION OBSERVER ────────────────
+  function initObservers() {
+    const reveals = document.querySelectorAll('.reveal');
+    const obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(function(el) { obs.observe(el); });
+
+    // trigger graph build when graph section enters
+    const graphSection = document.getElementById('graph-container');
+    const graphObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          buildGraph();
+          graphObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    graphObs.observe(graphSection);
+  }
+
+  // ── CONNECTION GRAPH ─────────────────────
+  function buildGraph() {
+    const svg = document.getElementById('graph-svg');
+    const container = document.getElementById('graph-container');
+    const ns = 'http://www.w3.org/2000/svg';
+
+    // Three columns: Career (left), Modules (center), Essays (right)
+    const career = [
+      { id: 'airbnb', label: 'Airbnb', y: 80 },
+      { id: 'frameio', label: 'Frame.io', y: 160 },
+      { id: 'gemini', label: 'Google Gemini', y: 240 },
+    ];
+
+    const modules = [
+      { id: 'brand', label: 'Brand', y: 50 },
+      { id: 'motion', label: 'Motion', y: 110 },
+      { id: 'systems', label: 'Systems', y: 170 },
+      { id: 'ai', label: 'AI', y: 230 },
+      { id: 'leadership', label: 'Leadership', y: 290 },
+      { id: 'product', label: 'Product', y: 350 },
+    ];
+
+    const essays = [
+      { id: 'e1', label: 'Working With Models', y: 60 },
+      { id: 'e2', label: 'Flash to Gen UI', y: 130 },
+      { id: 'e3', label: 'Last System', y: 200 },
+      { id: 'e4', label: 'Not a DSP', y: 270 },
+      { id: 'e5', label: 'Coherence', y: 340 },
+    ];
+
+    const colX = { career: 120, modules: 430, essays: 740 };
+
+    const connections = [
+      ['airbnb', 'brand'], ['airbnb', 'systems'], ['airbnb', 'product'],
+      ['frameio', 'motion'], ['frameio', 'product'], ['frameio', 'systems'],
+      ['gemini', 'ai'], ['gemini', 'leadership'], ['gemini', 'systems'],
+      ['brand', 'e2'], ['brand', 'e4'],
+      ['motion', 'e2'],
+      ['systems', 'e3'], ['systems', 'e5'],
+      ['ai', 'e1'], ['ai', 'e3'],
+      ['leadership', 'e1'], ['leadership', 'e4'],
+      ['product', 'e5'],
+    ];
+
+    const allNodes = {};
+
+    function placeNodes(list, cx) {
+      list.forEach(function(n) {
+        n.cx = cx;
+        n.cy = n.y;
+        allNodes[n.id] = n;
+      });
+    }
+
+    placeNodes(career, colX.career);
+    placeNodes(modules, colX.modules);
+    placeNodes(essays, colX.essays);
+
+    // Connection map for hover
+    const connMap = {};
+    connections.forEach(function(c) {
+      if (!connMap[c[0]]) connMap[c[0]] = [];
+      if (!connMap[c[1]]) connMap[c[1]] = [];
+      connMap[c[0]].push(c[1]);
+      connMap[c[1]].push(c[0]);
+    });
+
+    // Draw lines
+    const lineEls = [];
+    connections.forEach(function(c, i) {
+      var a = allNodes[c[0]], b = allNodes[c[1]];
+      var line = document.createElementNS(ns, 'line');
+      line.setAttribute('x1', a.cx);
+      line.setAttribute('y1', a.cy);
+      line.setAttribute('x2', b.cx);
+      line.setAttribute('y2', b.cy);
+      line.classList.add('graph-line');
+      line.dataset.from = c[0];
+      line.dataset.to = c[1];
+      line.style.opacity = '0';
+      svg.appendChild(line);
+      lineEls.push(line);
+
+      // Animate in with stagger
+      setTimeout(function() {
+        line.style.transition = 'opacity 0.2s ease-out';
+        line.style.opacity = '1';
+      }, 300 + i * 30);
+    });
+
+    // Draw nodes
+    var allNodeEls = [];
+    var totalIdx = 0;
+
+    function drawGroup(list, shape) {
+      list.forEach(function(n) {
+        var g = document.createElementNS(ns, 'g');
+        g.classList.add('graph-node');
+        g.dataset.id = n.id;
+        g.style.opacity = '0';
+
+        if (shape === 'circle') {
+          var circ = document.createElementNS(ns, 'circle');
+          circ.setAttribute('cx', n.cx);
+          circ.setAttribute('cy', n.cy);
+          circ.setAttribute('r', 5);
+          circ.setAttribute('fill', '#4A9EFF');
+          circ.setAttribute('stroke', 'none');
+          g.appendChild(circ);
+        } else {
+          var rect = document.createElementNS(ns, 'rect');
+          rect.setAttribute('x', n.cx - 5);
+          rect.setAttribute('y', n.cy - 5);
+          rect.setAttribute('width', 10);
+          rect.setAttribute('height', 10);
+          rect.setAttribute('fill', shape === 'square-amber' ? '#E8A849' : '#4A9EFF');
+          rect.setAttribute('stroke', 'none');
+          g.appendChild(rect);
+        }
+
+        var text = document.createElementNS(ns, 'text');
+        var isLeft = n.cx < 300;
+        var isRight = n.cx > 600;
+        text.setAttribute('x', isLeft ? n.cx - 14 : isRight ? n.cx + 14 : n.cx);
+        text.setAttribute('y', n.cy + 3);
+        text.setAttribute('text-anchor', isLeft ? 'end' : isRight ? 'start' : 'middle');
+        text.setAttribute('dy', isLeft || isRight ? '0' : '-12');
+        text.textContent = n.label;
+        g.appendChild(text);
+
+        svg.appendChild(g);
+        allNodeEls.push(g);
+        n.el = g;
+
+        var delay = totalIdx * 50;
+        totalIdx++;
+        setTimeout(function() {
+          g.style.transition = 'opacity 0.2s ease-out';
+          g.style.opacity = '1';
+        }, delay);
+      });
+    }
+
+    drawGroup(career, 'square-amber');
+    drawGroup(modules, 'circle');
+    drawGroup(essays, 'circle');
+
+    // Hover interaction
+    allNodeEls.forEach(function(g) {
+      g.addEventListener('mouseenter', function() {
+        var id = g.dataset.id;
+        var connected = connMap[id] || [];
+        var connectedSet = new Set(connected);
+        connectedSet.add(id);
+
+        container.classList.add('has-hover');
+
+        allNodeEls.forEach(function(n) {
+          if (connectedSet.has(n.dataset.id)) {
+            n.classList.add('highlighted');
+            n.classList.remove('dimmed');
+          } else {
+            n.classList.add('dimmed');
+            n.classList.remove('highlighted');
+          }
+        });
+
+        lineEls.forEach(function(l) {
+          if (l.dataset.from === id || l.dataset.to === id) {
+            l.classList.add('highlighted');
+            l.classList.remove('dimmed');
+          } else {
+            l.classList.add('dimmed');
+            l.classList.remove('highlighted');
+          }
+        });
+      });
+
+      g.addEventListener('mouseleave', function() {
+        container.classList.remove('has-hover');
+        allNodeEls.forEach(function(n) {
+          n.classList.remove('highlighted', 'dimmed');
+        });
+        lineEls.forEach(function(l) {
+          l.classList.remove('highlighted', 'dimmed');
+        });
+      });
+    });
+  }
+})();
+</script>
+</body>
+</html>

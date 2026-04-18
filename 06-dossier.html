@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>frenchbutnice — Olivier Gillaizeau / fieldnotes</title>
+<meta name="description" content="Fieldnotes on design systems and synthetic minds. Olivier Gillaizeau — San Francisco, Google Gemini." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#0B0B0D;
+    --ink:#E8E4DB;
+    --ink-dim:#8F8B82;
+    --ink-faint:#545048;
+    --rule:#1E1C19;
+    --accent:#A8FF60;
+    --max:820px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink)}
+  body{
+    font-family:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size:15px;
+    line-height:1.65;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+  }
+  ::selection{background:var(--accent);color:#0B0B0D}
+
+  .wrap{
+    max-width:var(--max);
+    margin:0 auto;
+    padding:72px 40px 96px;
+  }
+
+  /* ───── hero ───── */
+  .hero{
+    padding:64px 0 88px;
+  }
+  .hero .line{
+    display:block;
+    color:var(--ink);
+    font-size:15px;
+    letter-spacing:0;
+    margin:0 0 36px;
+  }
+  .hero .line:last-child{margin-bottom:0}
+  .hero .comment{color:var(--ink-faint);user-select:none;margin-right:10px}
+  .wordmark{
+    font-family:'Fraunces', Georgia, serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:18px;
+    font-optical-sizing:auto;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+  }
+
+  /* ───── nav ───── */
+  .rule{
+    height:1px;
+    background:var(--rule);
+    margin:0 0 20px;
+  }
+  nav.top{
+    display:flex;
+    gap:28px;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+    color:var(--ink-dim);
+    padding-bottom:8px;
+  }
+  nav.top a{
+    color:var(--ink-dim);
+    text-decoration:none;
+    transition:none;
+  }
+  nav.top a:hover,
+  nav.top a:focus-visible{
+    color:var(--accent);
+    outline:none;
+  }
+
+  /* ───── section labels (serif) ───── */
+  .section{
+    margin-top:88px;
+  }
+  .label{
+    font-family:'Fraunces', Georgia, serif;
+    font-weight:400;
+    font-style:normal;
+    font-size:26px;
+    letter-spacing:-0.01em;
+    color:var(--ink);
+    margin:0 0 32px;
+    line-height:1.2;
+  }
+  .label .slash{
+    font-family:'JetBrains Mono', monospace;
+    font-size:18px;
+    color:var(--ink-faint);
+    margin-right:14px;
+    vertical-align:2px;
+    font-style:normal;
+  }
+
+  /* ───── essays log ───── */
+  .log{
+    display:block;
+  }
+  .entry{
+    display:grid;
+    grid-template-columns:108px 84px 1fr;
+    gap:18px;
+    padding:18px 0;
+    border-top:1px solid var(--rule);
+  }
+  .entry:last-child{border-bottom:1px solid var(--rule)}
+  .entry .date{
+    color:var(--ink-faint);
+    font-variant-numeric:tabular-nums;
+    font-size:13px;
+    padding-top:2px;
+  }
+  .entry .tag{
+    color:var(--ink-dim);
+    font-size:12px;
+    text-transform:lowercase;
+    padding-top:3px;
+    letter-spacing:0.02em;
+  }
+  .entry .body{color:var(--ink)}
+  .entry .title{
+    display:block;
+    color:var(--ink);
+    text-decoration:none;
+    font-size:15px;
+    font-weight:500;
+  }
+  .entry .title:hover,
+  .entry .title:focus-visible{
+    color:var(--accent);
+    text-decoration:underline;
+    text-underline-offset:3px;
+    outline:none;
+  }
+  .entry .preview{
+    display:block;
+    color:var(--ink-dim);
+    margin-top:6px;
+    padding-left:22px;
+    position:relative;
+    font-size:14px;
+    line-height:1.6;
+  }
+  .entry .preview::before{
+    content:"→";
+    position:absolute;
+    left:0;
+    color:var(--ink-faint);
+  }
+
+  /* ───── speaking ───── */
+  .topic{
+    border-top:1px solid var(--rule);
+    padding:24px 0 26px;
+  }
+  .topic:last-of-type{border-bottom:1px solid var(--rule)}
+  .topic .k{
+    color:var(--ink-faint);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    margin-bottom:8px;
+  }
+  .topic .name{
+    font-family:'Fraunces', Georgia, serif;
+    font-size:20px;
+    font-style:italic;
+    font-weight:500;
+    color:var(--ink);
+    margin:0 0 10px;
+    line-height:1.3;
+  }
+  .topic p{
+    margin:0;
+    color:var(--ink-dim);
+    max-width:62ch;
+  }
+  .cta{
+    margin-top:28px;
+  }
+  a.arrow{
+    color:var(--ink);
+    text-decoration:none;
+    font-size:14px;
+    border-bottom:1px solid var(--ink-faint);
+    padding-bottom:2px;
+  }
+  a.arrow::before{
+    content:"→ ";
+    color:var(--ink-faint);
+  }
+  a.arrow:hover,
+  a.arrow:focus-visible{
+    color:var(--accent);
+    border-bottom-color:var(--accent);
+    outline:none;
+  }
+  a.arrow:hover::before,
+  a.arrow:focus-visible::before{color:var(--accent)}
+
+  /* ───── about ───── */
+  .about .cred{
+    color:var(--ink-faint);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    margin-bottom:18px;
+  }
+  .about p{
+    color:var(--ink);
+    max-width:62ch;
+    margin:0 0 14px;
+  }
+  .about p.dim{color:var(--ink-dim)}
+
+  /* ───── footer ───── */
+  footer{
+    margin-top:112px;
+    padding-top:28px;
+    border-top:1px solid var(--rule);
+    display:flex;
+    flex-wrap:wrap;
+    gap:18px 34px;
+    font-size:13px;
+    color:var(--ink-dim);
+  }
+  footer a{
+    color:var(--ink-dim);
+    text-decoration:none;
+  }
+  footer a::before{content:"→ ";color:var(--ink-faint)}
+  footer a:hover,
+  footer a:focus-visible{
+    color:var(--accent);
+    outline:none;
+  }
+  footer a:hover::before,
+  footer a:focus-visible::before{color:var(--accent)}
+  footer .copy{
+    flex:1 1 100%;
+    color:var(--ink-faint);
+    font-size:12px;
+    margin-top:12px;
+  }
+
+  /* ───── responsive ───── */
+  @media (max-width: 680px){
+    .wrap{padding:40px 22px 72px}
+    body{font-size:14px}
+    .hero{padding:24px 0 56px}
+    .hero .line{font-size:13.5px;margin-bottom:28px}
+    .wordmark{font-size:16px}
+    .label{font-size:22px}
+    .label .slash{font-size:15px}
+    nav.top{gap:18px;font-size:10px;letter-spacing:0.15em;flex-wrap:wrap}
+    .section{margin-top:64px}
+
+    .entry{
+      grid-template-columns:1fr;
+      gap:4px;
+      padding:18px 0;
+    }
+    .entry .date{font-size:12px;padding-top:0}
+    .entry .tag{padding-top:0;font-size:11px}
+    .entry .meta{
+      display:flex;
+      gap:14px;
+      align-items:baseline;
+    }
+    .topic .name{font-size:18px}
+    footer{gap:12px 22px;font-size:12px}
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+
+    <!-- ───── hero ───── -->
+    <section class="hero" aria-label="intro">
+      <span class="line"><span class="comment">//</span><span class="wordmark">frenchbutnice</span></span>
+      <span class="line"><span class="comment">//</span>Olivier Gillaizeau — fieldnotes on systems &amp; synthetic minds.</span>
+      <span class="line"><span class="comment">//</span>San Francisco · Google Gemini · fmr. Frame.io, Airbnb</span>
+    </section>
+
+    <div class="rule"></div>
+    <nav class="top" aria-label="primary">
+      <a href="#essays">essays</a>
+      <a href="#speaking">speaking</a>
+      <a href="#about">about</a>
+      <a href="mailto:og@frenchbutnice.design">contact</a>
+      <a href="/rss.xml">rss</a>
+    </nav>
+
+    <!-- ───── essays ───── -->
+    <section class="section" id="essays" aria-labelledby="lbl-essays">
+      <h2 class="label" id="lbl-essays"><span class="slash">//</span>latest essays</h2>
+
+      <div class="log">
+
+        <article class="entry">
+          <div class="meta" style="display:contents">
+            <div class="date">[2026.04.10]</div>
+            <div class="tag">systems</div>
+          </div>
+          <div class="body">
+            <a class="title" href="#">Build for Adoption, Not Perfection</a>
+            <span class="preview">Your design system is not a mandate. It is a service. Act accordingly.</span>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="meta" style="display:contents">
+            <div class="date">[2026.03.24]</div>
+            <div class="tag">ai</div>
+          </div>
+          <div class="body">
+            <a class="title" href="#">GenUI Before It Had a Name</a>
+            <span class="preview">I saw models generating custom UIs for every query, and moved my team to be ready before the demand hit.</span>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="meta" style="display:contents">
+            <div class="date">[2026.03.02]</div>
+            <div class="tag">systems</div>
+          </div>
+          <div class="body">
+            <a class="title" href="#">Coherence Over Uniformity</a>
+            <span class="preview">Fifteen years taught me that sameness is the cheapest kind of consistency — and the most expensive to maintain.</span>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="meta" style="display:contents">
+            <div class="date">[2026.02.11]</div>
+            <div class="tag">ai</div>
+          </div>
+          <div class="body">
+            <a class="title" href="#">Models Don't Read Your Figma</a>
+            <span class="preview">If your system lives in a canvas the model can't reach, it isn't a system — it's a memento.</span>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="meta" style="display:contents">
+            <div class="date">[2026.01.28]</div>
+            <div class="tag">field</div>
+          </div>
+          <div class="body">
+            <a class="title" href="#">Lessons from 607 Teams</a>
+            <span class="preview">Notes from the 5→1 unification at Gemini, and what enforcement could never have bought us.</span>
+          </div>
+        </article>
+
+        <article class="entry">
+          <div class="meta" style="display:contents">
+            <div class="date">[2026.01.09]</div>
+            <div class="tag">systems</div>
+          </div>
+          <div class="body">
+            <a class="title" href="#">Why Your Design System Is a Liability</a>
+            <span class="preview">The problem isn't that design systems are hard to build. It's that most of them were never meant to be lived in.</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ───── speaking ───── -->
+    <section class="section" id="speaking" aria-labelledby="lbl-speaking">
+      <h2 class="label" id="lbl-speaking"><span class="slash">//</span>speaking</h2>
+
+      <div class="topic">
+        <div class="k">topic_01</div>
+        <p class="name">Design Systems at Scale</p>
+        <p>What breaks at 600+ teams, and how to build for adoption instead of enforcement. Drawn from the 5→1 unification at Gemini, and fifteen years of mistakes before that.</p>
+      </div>
+
+      <div class="topic">
+        <div class="k">topic_02</div>
+        <p class="name">Designing with Generative AI</p>
+        <p>From Gemini's Canvases to the generative UI frameworks that change what a design system is for. The practitioner view, from inside the model.</p>
+      </div>
+
+      <div class="cta">
+        <a class="arrow" href="mailto:og@frenchbutnice.design?subject=Speaking%20inquiry">book a talk</a>
+      </div>
+    </section>
+
+    <!-- ───── about ───── -->
+    <section class="section about" id="about" aria-labelledby="lbl-about">
+      <h2 class="label" id="lbl-about"><span class="slash">//</span>about</h2>
+      <div class="cred">previously — Gemini · Frame.io · Airbnb</div>
+      <p>Olivier Gillaizeau leads design systems at Google Gemini. Previously at Frame.io (acquired by Adobe) and Airbnb. Fifteen years shipping the infrastructure that makes creative teams faster without making them smaller.</p>
+      <p class="dim">Designer. Systems lead. French, but nice.</p>
+    </section>
+
+    <!-- ───── footer ───── -->
+    <footer>
+      <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a>
+      <a href="https://twitter.com/">twitter</a>
+      <a href="https://linkedin.com/">linkedin</a>
+      <a href="/rss.xml">rss</a>
+      <span class="copy">// © 2026 Olivier Gillaizeau — compiled in San Francisco.</span>
+    </footer>
+
+  </main>
+</body>
+</html>

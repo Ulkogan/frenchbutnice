@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Olivier Gillaizeau — Lvl 15 Creative Lead</title>
+<meta name="description" content="Olivier Gillaizeau — creative working at the edge of technology. AI practitioner at Google Gemini. French, but nice." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg:       #0a0612;
+    --bg-2:     #0d0d16;
+    --text:     #e8d5b0;
+    --dim:      #8a7a5c;
+    --cyan:     #7fdfff;
+    --cyan-mid: #5d9eb8;
+    --cyan-dim: #3a5a6a;
+    --orange:   #ff9050;
+    --green:    #7fff7f;
+    --yellow:   #ffdf60;
+    --gold:     #ffd060;
+    --red:      #ff6060;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Share Tech Mono", ui-monospace, Menlo, monospace;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* subtle CRT scanlines */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.02) 0px,
+      rgba(255,255,255,0.02) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    z-index: 9999;
+    mix-blend-mode: overlay;
+  }
+
+  /* vignette */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+    z-index: 9998;
+  }
+
+  .page {
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 28px 22px 80px;
+    position: relative;
+  }
+
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--dim);
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--cyan-dim);
+    margin-bottom: 22px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .topbar .left { color: var(--cyan-mid); }
+  .topbar .right { color: var(--dim); }
+  .topbar b { color: var(--cyan); font-weight: normal; }
+
+  pre.sheet {
+    margin: 0 0 18px 0;
+    padding: 0;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.45;
+    white-space: pre;
+    overflow-x: auto;
+    color: var(--text);
+  }
+
+  /* ASCII colorization */
+  .b  { color: var(--cyan-mid); }   /* box borders */
+  .bh { color: var(--cyan); }       /* heavy box / header */
+  .h  { color: var(--cyan); }       /* section heading word */
+  .k  { color: var(--orange); }     /* key/stat name */
+  .v  { color: var(--text); }
+  .fill { color: var(--orange); }   /* filled stat bar */
+  .empt { color: var(--cyan-dim); } /* empty stat bar */
+  .num { color: var(--gold); }
+  .tag { color: var(--gold); }
+  .on  { color: var(--green); }
+  .off { color: var(--yellow); }
+  .next { color: var(--yellow); }
+  .muted { color: var(--dim); }
+  .fr { color: var(--red); font-style: normal; }
+  .cy { color: var(--cyan); }
+  .star { color: var(--yellow); }
+
+  a {
+    color: var(--cyan);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--cyan-mid);
+  }
+  a:hover, a:focus {
+    color: var(--yellow);
+    border-bottom-color: var(--yellow);
+    outline: none;
+    background: rgba(255, 223, 96, 0.08);
+  }
+  a:focus-visible {
+    outline: 1px solid var(--yellow);
+    outline-offset: 2px;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  @media (min-width: 1000px) {
+    .grid { grid-template-columns: 1fr 1fr; gap: 0 22px; }
+    .grid .col-left, .grid .col-right { min-width: 0; }
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1em;
+    background: var(--cyan);
+    vertical-align: text-bottom;
+    animation: blink 1.1s steps(1) infinite;
+    margin-left: 2px;
+    box-shadow: 0 0 6px var(--cyan);
+  }
+  @keyframes blink {
+    0%, 49%  { opacity: 1; }
+    50%, 100%{ opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+
+  .bottombar {
+    margin-top: 24px;
+    padding-top: 14px;
+    border-top: 1px dashed var(--cyan-dim);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--dim);
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .bottombar .ready { color: var(--cyan); }
+  .press {
+    text-align: center;
+    color: var(--cyan-mid);
+    font-size: 13px;
+    margin-top: 18px;
+    letter-spacing: 0.04em;
+  }
+  .press .big { color: var(--cyan); }
+
+  /* focus aesthetic for screen readers / anchor visit */
+  .sr { position: absolute; left: -9999px; }
+
+  ::selection { background: var(--orange); color: var(--bg); }
+</style>
+</head>
+<body>
+<main class="page" role="main">
+
+  <h1 class="sr">Olivier Gillaizeau — creative working at the edge of technology</h1>
+
+  <div class="topbar" aria-hidden="true">
+    <div class="left">~/frenchbutnice.design <b>/</b> character.sheet</div>
+    <div class="right">save: <b>autosave</b> &nbsp;·&nbsp; turn <b>5,482</b> &nbsp;·&nbsp; seed <b>0xFBN15</b></div>
+  </div>
+
+<pre class="sheet" aria-label="Character header">
+<span class="bh">╔══════════════════════════════════════════════════════════════════════════════╗</span>
+<span class="bh">║</span>  <span class="star">★</span>  <span class="cy">OLIVIER GILLAIZEAU</span>                                 <span class="k">LEVEL</span> <span class="num">15</span>           <span class="bh">║</span>
+<span class="bh">║</span>     class: <span class="v">creative-lead</span>                       alignment: <span class="on">chaotic-good</span>    <span class="bh">║</span>
+<span class="bh">║</span>     title: <span class="v">ai practitioner</span> <span class="muted">/</span> <span class="fr">french but nice</span>                           <span class="bh">║</span>
+<span class="bh">║</span>     race:  <span class="v">generalist</span>     guild: <span class="v">google gemini</span>     xp: <span class="num">15 yrs</span>            <span class="bh">║</span>
+<span class="bh">╚══════════════════════════════════════════════════════════════════════════════╝</span>
+</pre>
+
+  <div class="grid">
+    <div class="col-left">
+
+<pre class="sheet" aria-label="Stats">
+<span class="b">┌───</span> <span class="h">STATS</span> <span class="b">───────────────────────────────────────────────────</span><span class="b">┐</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   <span class="k">CRE</span>  <span class="num">17</span>  <span class="fill">████████████████</span><span class="empt">░░░░</span>    <span class="muted">creativity</span>              <span class="b">│</span>
+<span class="b">│</span>   <span class="k">SYS</span>  <span class="num">16</span>  <span class="fill">███████████████</span><span class="empt">░░░░░</span>    <span class="muted">systems thinking</span>        <span class="b">│</span>
+<span class="b">│</span>   <span class="k">AI </span>  <span class="num">15</span>  <span class="fill">██████████████</span><span class="empt">░░░░░░</span>    <span class="muted">ai practice</span>             <span class="b">│</span>
+<span class="b">│</span>   <span class="k">LEA</span>  <span class="num">18</span>  <span class="fill">█████████████████</span><span class="empt">░░░</span>    <span class="muted">leadership</span>              <span class="b">│</span>
+<span class="b">│</span>   <span class="k">CRA</span>  <span class="num">16</span>  <span class="fill">███████████████</span><span class="empt">░░░░░</span>    <span class="muted">craft</span>                   <span class="b">│</span>
+<span class="b">│</span>   <span class="k">FRA</span>  <span class="num">20</span>  <span class="fill">████████████████████</span>    <span class="muted">français</span>                <span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   <span class="muted">hp</span> <span class="on">██████████</span> <span class="num">98/100</span>   <span class="muted">mp</span> <span class="fill">███████</span><span class="empt">░░░</span> <span class="num">72/100</span>            <span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">└────────────────────────────────────────────────────────────────┘</span>
+</pre>
+
+<pre class="sheet" aria-label="Inventory">
+<span class="b">┌───</span> <span class="h">INVENTORY</span> <span class="b">───────────────────────────────────────────────</span><span class="b">┐</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   <span class="k">weapon    </span> ::  <span class="v">Generative UI Framework</span>     <span class="tag">[+5 ai dmg]</span>      <span class="b">│</span>
+<span class="b">│</span>   <span class="k">armor     </span> ::  <span class="v">Design System</span>               <span class="tag">[+3 coherence]</span>   <span class="b">│</span>
+<span class="b">│</span>   <span class="k">accessory </span> ::  <span class="v">15 Years of Shipping</span>        <span class="tag">[legendary]</span>      <span class="b">│</span>
+<span class="b">│</span>   <span class="k">tome      </span> ::  <span class="v">~/.essays</span>                   <span class="tag">[unfinished]</span>     <span class="b">│</span>
+<span class="b">│</span>   <span class="k">scroll    </span> ::  <span class="v">Speaking Topic x2</span>           <span class="tag">[unused]</span>         <span class="b">│</span>
+<span class="b">│</span>   <span class="k">trinket   </span> ::  <span class="v">Beret of +1 Charm</span>           <span class="tag">[equipped]</span>       <span class="b">│</span>
+<span class="b">│</span>   <span class="k">potion    </span> ::  <span class="v">Espresso, double</span>            <span class="tag">[x3]</span>             <span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">└────────────────────────────────────────────────────────────────┘</span>
+</pre>
+
+<pre class="sheet" aria-label="Abilities unlocked">
+<span class="b">┌───</span> <span class="h">ABILITIES UNLOCKED</span> <span class="b">──────────────────────────────────────</span><span class="b">┐</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   <span class="on">[X]</span> Lead creative org across 9 regions                      <span class="b">│</span>
+<span class="b">│</span>   <span class="on">[X]</span> Scale team 0 → 25 in 18 months                          <span class="b">│</span>
+<span class="b">│</span>   <span class="on">[X]</span> Ship world-first cloud production tool                  <span class="b">│</span>
+<span class="b">│</span>   <span class="on">[X]</span> Unify 5 design libraries into 1                         <span class="b">│</span>
+<span class="b">│</span>   <span class="on">[X]</span> Pioneer generative UI frameworks                        <span class="b">│</span>
+<span class="b">│</span>   <span class="on">[X]</span> Save 15K design hours annually                          <span class="b">│</span>
+<span class="b">│</span>   <span class="on">[X]</span> Host 607 teams on one system                            <span class="b">│</span>
+<span class="b">│</span>   <span class="off">[ ]</span> Publish first public essay           <span class="next">*next quest*</span>      <span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">└────────────────────────────────────────────────────────────────┘</span>
+</pre>
+
+    </div>
+    <div class="col-right">
+
+<pre class="sheet" aria-label="Backstory">
+<span class="b">┌───</span> <span class="h">BACKSTORY</span> <span class="b">───────────────────────────────────────────────</span><span class="b">┐</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   started in flash. scaled creative orgs across continents.    <span class="b">│</span>
+<span class="b">│</span>   currently building generative UI inside google gemini —      <span class="b">│</span>
+<span class="b">│</span>   canvases, models as first-class citizens, the infrastructure <span class="b">│</span>
+<span class="b">│</span>   that is quietly reshaping what creative even means.          <span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   formerly frame.io (camera to cloud, brand rebuild) and       <span class="b">│</span>
+<span class="b">│</span>   airbnb (only on airbnb, barbie dreamhouse). fifteen years    <span class="b">│</span>
+<span class="b">│</span>   at the edge of where creative work meets the tools that      <span class="b">│</span>
+<span class="b">│</span>   make it possible.                                            <span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   <span class="k">loves:</span> <span class="v">long hikes, his daughters, his wife, espresso</span>        <span class="b">│</span>
+<span class="b">│</span>   <span class="k">fears:</span> <span class="v">pigeonholing, generic AI design, cookie banners</span>      <span class="b">│</span>
+<span class="b">│</span>   <span class="k">motto:</span> <span class="fr">"work with models, not against them."</span>               <span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">└────────────────────────────────────────────────────────────────┘</span>
+</pre>
+
+<pre class="sheet" aria-label="Active quests: essays and talks">
+<span class="b">┌───</span> <span class="h">ACTIVE QUESTS</span> <span class="b">───────────────────────────────────────────</span><span class="b">┐</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   <span class="k">ESSAYS</span>                                                       <span class="b">│</span>
+<span class="b">│</span>   <span class="cy">▸</span> <a href="#essay-1">working with models, not against them</a>     <span class="tag">[in progress]</span><span class="b">│</span>
+<span class="b">│</span>   <span class="cy">▸</span> <a href="#essay-2">notes from a creative at the edge</a>         <span class="tag">[in progress]</span><span class="b">│</span>
+<span class="b">│</span>   <span class="cy">▸</span> <a href="#essay-3">from flash to generative ui</a>                     <span class="tag">[outline]</span><span class="b">│</span>
+<span class="b">│</span>   <span class="cy">▸</span> <a href="#essay-4">why i stopped calling myself a ds person</a>        <span class="tag">[outline]</span><span class="b">│</span>
+<span class="b">│</span>   <span class="cy">▸</span> <a href="#essay-5">15 years of building tools about to vanish</a>       <span class="tag">[draft]</span><span class="b">│</span>
+<span class="b">│</span>   <span class="cy">▸</span> <a href="#essay-6">coherence over uniformity</a>                      <span class="tag">[published]</span><span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   <span class="k">TALKS</span>                                                        <span class="b">│</span>
+<span class="b">│</span>   <span class="cy">▸</span> <a href="#talk-1">designing with generative ai</a>                  <span class="tag">[available]</span><span class="b">│</span>
+<span class="b">│</span>   <span class="cy">▸</span> <a href="#talk-2">leading creative at the edge of technology</a>    <span class="tag">[available]</span><span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">└────────────────────────────────────────────────────────────────┘</span>
+</pre>
+
+<pre class="sheet" aria-label="Tavern contact">
+<span class="b">┌───</span> <span class="h">TAVERN</span> <span class="b">──────────────────────────────────────────────────</span><span class="b">┐</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   <span class="k">send a raven </span> →  <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a>                    <span class="b">│</span>
+<span class="b">│</span>   <span class="k">visit        </span> →  <a href="https://twitter.com/">twitter</a> <span class="muted">/</span> <a href="https://linkedin.com/">linkedin</a> <span class="muted">/</span> <a href="/rss.xml">rss</a>             <span class="b">│</span>
+<span class="b">│</span>   <span class="k">book to speak</span> →  <a href="mailto:og@frenchbutnice.design?subject=Speaking">mailto: og@frenchbutnice.design</a>              <span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">│</span>   <span class="muted">previously:</span> <span class="v">gemini · frame.io · airbnb</span>                       <span class="b">│</span>
+<span class="b">│</span>                                                                <span class="b">│</span>
+<span class="b">└────────────────────────────────────────────────────────────────┘</span>
+</pre>
+
+    </div>
+  </div>
+
+  <p class="press" aria-live="polite">
+    <span class="big">&gt;</span> press any key to continue your adventure<span class="cursor" aria-hidden="true"></span>
+  </p>
+
+  <div class="bottombar">
+    <div>© 2026 olivier gillaizeau &nbsp;·&nbsp; <span class="ready">hp 98/100</span> &nbsp;·&nbsp; mp 72/100</div>
+    <div>designer. systems lead. ai practitioner. <span class="ready">french, but nice.</span></div>
+  </div>
+
+</main>
+</body>
+</html>

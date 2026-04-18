@@ -1,0 +1,599 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Olivier Gillaizeau — French but Nice</title>
+<meta name="description" content="Designer. Systems lead. French, but nice. Essays on design systems as organisms and designing with AI, not around it." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Narrow:wght@400;500;600;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&family=JetBrains+Mono:wght@400;500&family=Caveat:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F6F3EA;
+    --cream-2:#EEE9D8;
+    --ink:#0B0B0B;
+    --ink-2:#1A1A1A;
+    --rule:#0B0B0B;
+    --rule-soft:rgba(11,11,11,0.14);
+    --rule-cream:rgba(246,243,234,0.2);
+    --orange:#E85A2C;
+    --display:"Anton","Archivo Narrow",Impact,sans-serif;
+    --text:"Inter",-apple-system,BlinkMacSystemFont,sans-serif;
+    --mono:"JetBrains Mono",ui-monospace,monospace;
+    --script:"Caveat",cursive;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--cream);color:var(--ink);font-family:var(--text);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{font-size:16px;line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--orange);color:var(--cream)}
+
+  .wrap{max-width:1440px;margin:0 auto;padding:0 40px}
+  @media (max-width:720px){.wrap{padding:0 20px}}
+
+  /* ---------------- PDF FOLIO BAR ---------------- */
+  .folio{
+    display:grid;
+    grid-template-columns:1fr auto 1fr;
+    align-items:center;
+    gap:24px;
+    padding:14px 40px;
+    border-bottom:1px solid var(--rule);
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+  }
+  .folio .left{justify-self:start}
+  .folio .center{justify-self:center;text-align:center}
+  .folio .right{justify-self:end;text-align:right}
+  .folio .num{font-variant-numeric:tabular-nums}
+  .folio.dark{background:var(--ink);color:var(--cream);border-color:var(--cream)}
+  @media (max-width:720px){
+    .folio{padding:12px 20px;grid-template-columns:1fr 1fr;font-size:10px;gap:12px}
+    .folio .center{display:none}
+  }
+
+  /* ---------------- TOP MASTHEAD ---------------- */
+  .masthead{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 40px;
+    border-bottom:1px solid var(--rule);
+  }
+  .masthead .mark{
+    font-family:var(--display);font-size:22px;letter-spacing:0.02em;text-transform:uppercase;
+  }
+  .masthead nav{
+    display:flex;gap:32px;
+    font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;
+  }
+  .masthead nav a{position:relative;padding-bottom:2px}
+  .masthead nav a:hover{color:var(--orange)}
+  @media (max-width:720px){
+    .masthead{padding:16px 20px}
+    .masthead nav{gap:18px;font-size:10px}
+    .masthead nav a:nth-child(3){display:none}
+  }
+
+  /* ---------------- HERO (flat bone cream, stacked type) ---------------- */
+  .hero{
+    background:var(--cream);
+    border-bottom:1px solid var(--rule);
+    padding:56px 40px 48px;
+    position:relative;
+  }
+  .hero-inner{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:40px;
+    align-items:flex-start;
+  }
+  .stack{
+    font-family:var(--display);
+    font-weight:900;
+    font-size:clamp(80px,26vw,320px);
+    line-height:0.82;
+    letter-spacing:-0.02em;
+    text-transform:uppercase;
+    color:var(--ink);
+  }
+  .stack span{display:block}
+  .stack .but{position:relative;display:inline-block}
+  .stack .but::after{
+    content:"";
+    display:block;
+    position:absolute;left:0;right:0;bottom:0.18em;
+    height:1px;background:transparent;
+  }
+  .hero-meta{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    line-height:1.9;
+    white-space:nowrap;
+    text-align:right;
+    padding-top:12px;
+    min-width:0;
+  }
+  .hero-meta .rot{
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+    display:inline-block;
+    font-size:10px;
+    letter-spacing:0.2em;
+  }
+  .hero-footer{
+    margin-top:48px;
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr;
+    gap:32px;
+    padding-top:20px;
+    border-top:1px solid var(--rule-soft);
+  }
+  .hero-footer .spine{
+    font-family:var(--text);
+    font-size:18px;
+    line-height:1.45;
+    max-width:560px;
+    font-weight:400;
+  }
+  .hero-footer .spine em{font-style:italic;color:var(--ink-2)}
+  .hero-footer .spine .mark-orange{color:var(--orange);font-weight:500;font-style:normal}
+  .hero-footer .cap{
+    font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;
+    line-height:1.8;color:var(--ink)
+  }
+  .hero-footer .cap b{display:block;font-weight:500;margin-bottom:6px;color:var(--ink)}
+  .hero-footer .cap a:hover{color:var(--orange)}
+  @media (max-width:900px){
+    .hero-inner{grid-template-columns:1fr;gap:16px}
+    .hero-meta{text-align:left;white-space:normal;padding-top:0}
+    .hero-meta .rot{writing-mode:horizontal-tb;transform:none}
+    .hero-footer{grid-template-columns:1fr;gap:18px}
+  }
+  @media (max-width:720px){
+    .hero{padding:36px 20px 32px}
+    .stack{font-size:clamp(72px,28vw,180px);line-height:0.84}
+    .hero-footer .spine{font-size:16px}
+  }
+
+  /* ---------------- SECTION HEADER ---------------- */
+  .section-head{
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:end;
+    gap:32px;
+    padding:56px 40px 24px;
+  }
+  .section-head h2{
+    font-family:var(--display);
+    font-weight:900;
+    font-size:clamp(48px,9vw,120px);
+    line-height:0.86;
+    letter-spacing:-0.01em;
+    text-transform:uppercase;
+  }
+  .section-head .meta{
+    font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+    text-align:right;line-height:1.7;
+  }
+  @media (max-width:720px){
+    .section-head{padding:36px 20px 18px;grid-template-columns:1fr;gap:10px}
+    .section-head .meta{text-align:left}
+  }
+
+  /* ---------------- ESSAYS (12-col grid) ---------------- */
+  .essays{
+    padding:0 40px 64px;
+    border-bottom:1px solid var(--rule);
+  }
+  .grid12{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    column-gap:24px;
+    row-gap:0;
+    border-top:1px solid var(--rule);
+  }
+  .cell{
+    grid-column:span 4;
+    padding:28px 20px 36px;
+    border-right:1px solid var(--rule-soft);
+    border-bottom:1px solid var(--rule-soft);
+    display:flex;flex-direction:column;gap:14px;
+    min-height:260px;
+    position:relative;
+    transition:background 180ms ease;
+  }
+  .cell:hover{background:rgba(232,90,44,0.05)}
+  .cell:hover .c-title{color:var(--orange)}
+  .cell.feat{grid-column:span 8;min-height:340px;background:rgba(11,11,11,0.02)}
+  .cell:nth-child(3n){border-right:1px solid var(--rule-soft)}
+  .c-num{
+    font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+    color:var(--ink-2);
+    display:flex;justify-content:space-between;
+  }
+  .c-num .tag{color:var(--orange)}
+  .c-title{
+    font-family:var(--display);
+    font-weight:900;
+    font-size:clamp(30px,3.2vw,52px);
+    line-height:0.92;
+    letter-spacing:-0.005em;
+    text-transform:uppercase;
+    transition:color 160ms ease;
+  }
+  .cell.feat .c-title{font-size:clamp(40px,4.6vw,76px)}
+  .c-stand{
+    font-family:var(--text);
+    font-style:italic;
+    font-size:15px;
+    line-height:1.5;
+    color:var(--ink-2);
+    max-width:52ch;
+  }
+  .cell.feat .c-stand{font-size:17px}
+  .c-foot{
+    margin-top:auto;
+    font-family:var(--mono);
+    font-size:10px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    display:flex;justify-content:space-between;
+    color:var(--ink-2);
+  }
+  .c-foot .go::after{content:" →"}
+  @media (max-width:1000px){
+    .cell{grid-column:span 6}
+    .cell.feat{grid-column:span 12}
+  }
+  @media (max-width:720px){
+    .essays{padding:0 20px 40px}
+    .grid12{column-gap:0}
+    .cell,.cell.feat{grid-column:span 12;padding:24px 0 28px;border-right:none}
+  }
+
+  /* ---------------- SPEAKING (dark flat) ---------------- */
+  .speaking{
+    background:var(--ink);
+    color:var(--cream);
+  }
+  .speaking .section-head h2{color:var(--cream)}
+  .speaking .section-head .meta{color:var(--cream)}
+  .speaking-grid{
+    display:grid;grid-template-columns:repeat(12,1fr);gap:24px;
+    padding:0 40px 56px;
+    border-top:1px solid var(--rule-cream);
+  }
+  .topic{
+    grid-column:span 5;
+    padding:40px 0 0;
+    display:flex;flex-direction:column;gap:14px;
+  }
+  .topic.two{grid-column:5 / span 5;padding-left:24px;border-left:1px solid var(--rule-cream)}
+  .topic .n{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--cream);opacity:0.7}
+  .topic h3{
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(32px,3.6vw,56px);
+    line-height:0.92;letter-spacing:-0.01em;text-transform:uppercase;
+  }
+  .topic p{font-size:15px;line-height:1.55;max-width:44ch;color:#E8E4D6}
+  .invite{
+    grid-column:11 / span 2;
+    padding:40px 0 0 24px;
+    border-left:1px solid var(--rule-cream);
+    display:flex;flex-direction:column;gap:18px;
+  }
+  .invite .label{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;opacity:0.7}
+  .invite .cta{
+    display:inline-block;
+    font-family:var(--display);font-weight:900;
+    font-size:22px;letter-spacing:0.01em;text-transform:uppercase;
+    color:var(--cream);
+    border:1px solid var(--cream);
+    padding:14px 16px;
+    text-align:center;
+    transition:all 160ms ease;
+  }
+  .invite .cta:hover{background:var(--orange);border-color:var(--orange);color:var(--cream)}
+  .invite .note{font-size:12px;line-height:1.5;opacity:0.7;font-style:italic}
+  @media (max-width:1000px){
+    .speaking-grid{padding:0 40px 48px}
+    .topic,.topic.two,.invite{grid-column:span 12;border-left:none;padding-left:0}
+    .topic.two,.invite{border-top:1px solid var(--rule-cream);padding-top:32px}
+  }
+  @media (max-width:720px){
+    .speaking-grid{padding:0 20px 40px}
+  }
+
+  /* ---------------- ABOUT (flat cream, editorial) ---------------- */
+  .about{
+    padding:0 40px 72px;
+    border-bottom:1px solid var(--rule);
+  }
+  .about-grid{
+    display:grid;grid-template-columns:repeat(12,1fr);gap:24px;
+    border-top:1px solid var(--rule);
+    padding-top:48px;
+  }
+  .about .one-liner{
+    grid-column:span 7;
+    font-family:var(--display);font-weight:900;
+    font-size:clamp(40px,5.4vw,92px);
+    line-height:0.9;letter-spacing:-0.01em;text-transform:uppercase;
+  }
+  .about .one-liner em{
+    font-family:var(--script);
+    font-weight:500;
+    font-style:normal;
+    text-transform:none;
+    font-size:0.78em;
+    letter-spacing:0;
+    color:var(--orange);
+    display:inline-block;
+    transform:translateY(-0.02em) rotate(-2deg);
+    padding:0 0.05em;
+  }
+  .about .bio{
+    grid-column:9 / span 4;
+    display:flex;flex-direction:column;gap:18px;
+    padding-top:10px;
+  }
+  .about .bio p{font-size:16px;line-height:1.6;max-width:44ch}
+  .about .bio p strong{font-weight:500}
+  .about .cred{
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    line-height:1.8;
+  }
+  .about .cred b{color:var(--orange);font-weight:500}
+  @media (max-width:1000px){
+    .about .one-liner{grid-column:span 12}
+    .about .bio{grid-column:span 12;padding-top:8px}
+  }
+  @media (max-width:720px){
+    .about{padding:0 20px 48px}
+  }
+
+  /* ---------------- FOOTER ---------------- */
+  footer{
+    background:var(--cream);
+    padding:40px;
+  }
+  .foot-grid{
+    display:grid;grid-template-columns:repeat(12,1fr);gap:24px;
+    padding-top:28px;
+    border-top:1px solid var(--rule);
+  }
+  .foot-grid .col{grid-column:span 3;display:flex;flex-direction:column;gap:8px}
+  .foot-grid .col .label{font-family:var(--mono);font-size:10px;letter-spacing:0.18em;text-transform:uppercase;opacity:0.7;margin-bottom:4px}
+  .foot-grid .col a{font-family:var(--text);font-size:14px;line-height:1.6}
+  .foot-grid .col a:hover{color:var(--orange)}
+  .foot-grid .brand{grid-column:span 3}
+  .foot-grid .brand .mark{font-family:var(--display);font-size:28px;text-transform:uppercase;letter-spacing:0.01em;line-height:0.9}
+  .foot-grid .brand .copy{font-family:var(--mono);font-size:10px;letter-spacing:0.14em;text-transform:uppercase;margin-top:12px;opacity:0.7}
+  @media (max-width:900px){
+    .foot-grid .col,.foot-grid .brand{grid-column:span 6}
+  }
+  @media (max-width:720px){
+    footer{padding:28px 20px}
+  }
+</style>
+</head>
+<body>
+
+  <!-- Folio bar: top -->
+  <div class="folio" role="presentation">
+    <div class="left">Frenchbutnice.design</div>
+    <div class="center">Vol. XV · No. 01 · The Olivier Gillaizeau Folio</div>
+    <div class="right">Spring Edition <span class="num">MMXXVI</span></div>
+  </div>
+
+  <!-- Masthead / nav -->
+  <header class="masthead">
+    <a class="mark" href="#top">O.G. — French but Nice</a>
+    <nav>
+      <a href="#essays">Essays</a>
+      <a href="#speaking">Speaking</a>
+      <a href="#about">About</a>
+      <a href="mailto:og@frenchbutnice.design">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO: flat cream, stacked typography -->
+  <section class="hero" id="top">
+    <div class="hero-inner">
+      <h1 class="stack" aria-label="French but Nice">
+        <span>French</span>
+        <span class="but">But</span>
+        <span>Nice</span>
+      </h1>
+      <div class="hero-meta" aria-hidden="true">
+        Olivier Gillaizeau<br/>
+        Design Systems &middot; Essays<br/>
+        San Francisco &middot; MMXXVI<br/>
+        <br/>
+        Folio № 01 / Issue 26
+      </div>
+    </div>
+
+    <div class="hero-footer">
+      <p class="spine">
+        Fifteen years shipping design systems as <em>organisms, not formulas</em> — from Airbnb to Frame.io to <span class="mark-orange">Gemini</span>. Writing about coherence over uniformity, and designing <em>with</em> AI, not around it.
+      </p>
+      <div class="cap">
+        <b>Subscribe</b>
+        <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a><br/>
+        RSS &middot; Twitter &middot; LinkedIn
+      </div>
+      <div class="cap">
+        <b>Currently</b>
+        Writing <i>Lessons from 607 Teams</i><br/>
+        Speaking at Config &rsquo;26
+      </div>
+    </div>
+  </section>
+
+  <!-- Folio bar: section break -->
+  <div class="folio">
+    <div class="left">Section I</div>
+    <div class="center">Essays &middot; The Living Layer</div>
+    <div class="right"><span class="num">001 — 006</span></div>
+  </div>
+
+  <!-- ESSAYS -->
+  <section class="essays" id="essays">
+    <div class="section-head">
+      <h2>Latest<br/>Essays</h2>
+      <div class="meta">
+        Published irregularly<br/>
+        Written in English<br/>
+        Occasional French
+      </div>
+    </div>
+
+    <div class="grid12">
+      <!-- Feature -->
+      <article class="cell feat">
+        <div class="c-num"><span>№ 001</span><span class="tag">&bull; Currently Writing</span></div>
+        <h3 class="c-title">Build for Adoption, <br/>Not Perfection</h3>
+        <p class="c-stand">The problem isn&rsquo;t that design systems are hard to build. It&rsquo;s that most of them were never meant to be lived in. A working theory from 607 product teams.</p>
+        <div class="c-foot"><span>Essay &middot; 14 min</span><span class="go">Read</span></div>
+      </article>
+
+      <article class="cell">
+        <div class="c-num"><span>№ 002</span><span>Systems</span></div>
+        <h3 class="c-title">Systems Are Services, Not Mandates</h3>
+        <p class="c-stand">Your design system is not a mandate. It is a service. Act accordingly.</p>
+        <div class="c-foot"><span>Essay &middot; 9 min</span><span class="go">Read</span></div>
+      </article>
+
+      <article class="cell">
+        <div class="c-num"><span>№ 003</span><span>AI</span></div>
+        <h3 class="c-title">GenUI Before It Had a Name</h3>
+        <p class="c-stand">Most teams still think AI means chat interfaces. I saw it generating custom UIs — and moved the team before the demand hit.</p>
+        <div class="c-foot"><span>Essay &middot; 11 min</span><span class="go">Read</span></div>
+      </article>
+
+      <article class="cell">
+        <div class="c-num"><span>№ 004</span><span>Systems</span></div>
+        <h3 class="c-title">Coherence Over Uniformity</h3>
+        <p class="c-stand">Uniformity is a goal for factories. Coherence is a goal for organisms. Guess which one ships.</p>
+        <div class="c-foot"><span>Essay &middot; 7 min</span><span class="go">Read</span></div>
+      </article>
+
+      <article class="cell">
+        <div class="c-num"><span>№ 005</span><span>AI</span></div>
+        <h3 class="c-title">Models Don&rsquo;t Read Your Figma</h3>
+        <p class="c-stand">Design systems of record were built for humans. The next reader is a model. Here&rsquo;s what that actually changes.</p>
+        <div class="c-foot"><span>Essay &middot; 12 min</span><span class="go">Read</span></div>
+      </article>
+
+      <article class="cell">
+        <div class="c-num"><span>№ 006</span><span>Scale</span></div>
+        <h3 class="c-title">Lessons from 607 Teams</h3>
+        <p class="c-stand">Systems are organisms, not formulas. I&rsquo;ve spent fifteen years learning the difference — mostly the hard way.</p>
+        <div class="c-foot"><span>Essay &middot; 18 min</span><span class="go">Read</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Folio bar dark -->
+  <div class="folio dark">
+    <div class="left">Section II</div>
+    <div class="center">Speaking &middot; On Stage, On the Record</div>
+    <div class="right"><span class="num">Bookings MMXXVI</span></div>
+  </div>
+
+  <!-- SPEAKING -->
+  <section class="speaking" id="speaking">
+    <div class="section-head">
+      <h2>On Stage.</h2>
+      <div class="meta">
+        Two topics<br/>
+        No keynotes on &ldquo;the future of AI&rdquo;<br/>
+        Only the present
+      </div>
+    </div>
+    <div class="speaking-grid">
+      <div class="topic">
+        <div class="n">Topic 01</div>
+        <h3>Design Systems<br/>at Scale</h3>
+        <p>What breaks at 600+ teams, and how to build for adoption instead of enforcement. The talk for heads of design who feel the system slipping.</p>
+      </div>
+      <div class="topic two">
+        <div class="n">Topic 02</div>
+        <h3>Designing with<br/>Generative AI</h3>
+        <p>From Gemini&rsquo;s Canvases to the generative UI frameworks that change what a design system is for. The practitioner view, not the forecast.</p>
+      </div>
+      <div class="invite">
+        <div class="label">Invite</div>
+        <a class="cta" href="mailto:og@frenchbutnice.design?subject=Speaking%20invitation">Book Olivier &rarr;</a>
+        <div class="note">Conferences, internal all-hands, offsites. Replies within a week.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Folio bar -->
+  <div class="folio">
+    <div class="left">Section III</div>
+    <div class="center">About &middot; The Credential Line</div>
+    <div class="right"><span class="num">MMXI — MMXXVI</span></div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="section-head">
+      <h2>About.</h2>
+      <div class="meta">
+        Born in France<br/>
+        Writes from San Francisco<br/>
+        Answers in English
+      </div>
+    </div>
+    <div class="about-grid">
+      <div class="one-liner">
+        Designer.<br/>
+        Systems Lead.<br/>
+        French, <em>but nice.</em>
+      </div>
+      <div class="bio">
+        <p><strong>Olivier Gillaizeau</strong> leads design systems at Google Gemini. Previously at Frame.io (acquired by Adobe) and Airbnb. Fifteen years shipping the infrastructure that makes creative teams faster without making them smaller.</p>
+        <div class="cred">Previously <b>Gemini</b> &middot; Frame.io &middot; Airbnb</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="foot-grid">
+      <div class="brand">
+        <div class="mark">French<br/>But Nice</div>
+        <div class="copy">&copy; MMXXVI O. Gillaizeau<br/>All rights, some reserved.</div>
+      </div>
+      <div class="col">
+        <div class="label">Elsewhere</div>
+        <a href="#">Twitter / X</a>
+        <a href="#">LinkedIn</a>
+        <a href="#">RSS</a>
+      </div>
+      <div class="col">
+        <div class="label">Index</div>
+        <a href="#essays">Essays</a>
+        <a href="#speaking">Speaking</a>
+        <a href="#about">About</a>
+      </div>
+      <div class="col">
+        <div class="label">Correspondence</div>
+        <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a>
+        <a href="mailto:og@frenchbutnice.design?subject=Speaking%20invitation">Speaking invitations</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

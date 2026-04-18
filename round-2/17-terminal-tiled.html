@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>frenchbutnice.design — tty.split</title>
+<meta name="description" content="Olivier Gillaizeau — design systems lead at Google Gemini. Essays on systems as organisms and designing with AI." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper:   #F6F3EA;
+    --ink:     #1A1814;
+    --muted:   #7A766C;
+    --accent:  #1D3557;
+    --hair:    rgba(26, 24, 20, 0.18);
+    --hair-strong: rgba(26, 24, 20, 0.28);
+    --glow:    rgba(29, 53, 87, 0.2);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.65;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 28px 32px 32px;
+  }
+
+  /* ── Page chrome header ───────────────────────────── */
+  .chrome {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .chrome .brand { color: var(--ink); }
+  .chrome .brand .dim { color: var(--muted); }
+  .chrome .right { color: var(--muted); }
+
+  /* ── Grid ─────────────────────────────────────────── */
+  .grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 16px;
+    min-height: 0;
+  }
+  @media (min-width: 1024px) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      min-height: calc(100vh - 120px);
+    }
+  }
+
+  /* ── Tile ─────────────────────────────────────────── */
+  .tile {
+    border: 1px solid var(--hair);
+    border-radius: 2px;
+    background: var(--paper);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    transition: box-shadow 180ms ease, border-color 180ms ease;
+  }
+  .tile:hover {
+    box-shadow: 0 0 0 1px var(--glow);
+    border-color: var(--hair-strong);
+  }
+
+  .titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--hair);
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .titlebar .path { }
+  .titlebar .tag {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .body {
+    padding: 24px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    overflow: auto;
+  }
+  @media (min-width: 1024px) {
+    .body { font-size: 13px; }
+  }
+
+  .prompt {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .cmd {
+    color: var(--ink);
+  }
+  .out {
+    color: var(--ink);
+    padding: 6px 0 14px 0;
+    white-space: pre-wrap;
+  }
+  .out.last { padding-bottom: 0; }
+  .muted { color: var(--muted); }
+  .accent { color: var(--accent); }
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  a:hover, a:focus {
+    border-bottom-color: var(--accent);
+    outline: none;
+  }
+
+  .line { display: block; }
+  .indent { padding-left: 2ch; }
+  .indent2 { padding-left: 4ch; }
+
+  ul.files {
+    list-style: none;
+    padding: 0 0 0 2ch;
+    margin: 6px 0 14px;
+  }
+  ul.files li {
+    padding: 1px 0;
+  }
+  ul.files li::before {
+    content: "";
+  }
+  ul.files a {
+    color: var(--ink);
+  }
+  ul.files a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  .quote {
+    padding-left: 2ch;
+    color: var(--ink);
+  }
+  .quote .arrow { color: var(--accent); }
+
+  .talk {
+    padding: 4px 0 12px 2ch;
+  }
+  .talk .title {
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .talk .title::before {
+    content: "→ ";
+    color: var(--accent);
+  }
+  .talk .desc {
+    color: var(--ink);
+    padding-left: 2ch;
+  }
+
+  /* ── Cursor (tile 4 only) ─────────────────────────── */
+  .cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.05em;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    margin-left: 2px;
+    animation: blink 1.2s steps(1, end) infinite;
+  }
+  @keyframes blink {
+    0%, 49%   { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+
+  /* ── Footer row ───────────────────────────────────── */
+  footer.chromefoot {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  footer.chromefoot a { color: var(--muted); }
+  footer.chromefoot a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+  footer.chromefoot .sep { margin: 0 10px; color: var(--hair-strong); }
+
+  /* ── Mobile tweaks ────────────────────────────────── */
+  @media (max-width: 640px) {
+    body { padding: 20px 18px 24px; font-size: 13px; }
+    .body { padding: 20px; font-size: 13px; }
+    .chrome { font-size: 10px; letter-spacing: 0.12em; }
+    .chrome .right { display: none; }
+    footer.chromefoot { flex-direction: column; gap: 8px; align-items: flex-start; }
+  }
+
+  ::selection { background: var(--accent); color: var(--paper); }
+</style>
+</head>
+<body>
+
+  <header class="chrome" aria-label="window chrome">
+    <span class="brand">[ frenchbutnice.design <span class="dim">— tty.split</span> ]</span>
+    <span class="right">designer · systems lead · french, but nice</span>
+  </header>
+
+  <main class="grid" role="main">
+
+    <!-- ── Tile 1: whoami ──────────────────────────── -->
+    <section class="tile" aria-labelledby="t1">
+      <div class="titlebar">
+        <span class="path" id="t1">~/whoami</span>
+        <span class="tag">01</span>
+      </div>
+      <div class="body">
+        <div class="line"><span class="prompt">$</span> <span class="cmd">whoami</span></div>
+        <div class="out">
+          <span class="indent line">olivier gillaizeau</span>
+          <span class="indent line">design systems lead</span>
+          <span class="indent line">google gemini <span class="muted">·</span> san francisco</span>
+        </div>
+
+        <div class="line"><span class="prompt">$</span> <span class="cmd">cat .belief</span></div>
+        <div class="out last">
+          <span class="indent line">systems are organisms,</span>
+          <span class="indent line">not formulas. and i'm</span>
+          <span class="indent line">designing with the models</span>
+          <span class="indent line">that are eating them.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Tile 2: essays ──────────────────────────── -->
+    <section class="tile" aria-labelledby="t2">
+      <div class="titlebar">
+        <span class="path" id="t2">~/essays</span>
+        <span class="tag">02</span>
+      </div>
+      <div class="body">
+        <div class="line"><span class="prompt">$</span> <span class="cmd">ls -la</span></div>
+        <ul class="files">
+          <li><a href="#">build-for-adoption-not-perfection.md</a></li>
+          <li><a href="#">coherence-over-uniformity.md</a></li>
+          <li><a href="#">genui-before-it-had-a-name.md</a></li>
+          <li><a href="#">systems-are-services-not-mandates.md</a></li>
+          <li><a href="#">models-dont-read-your-figma.md</a></li>
+          <li><a href="#">lessons-from-607-teams.md</a></li>
+        </ul>
+
+        <div class="line"><span class="prompt">$</span> <span class="cmd">cat .latest | head -2</span></div>
+        <div class="out last">
+          <div class="quote">
+            <span class="line"><span class="arrow">&gt;</span> "The problem isn't that design</span>
+            <span class="line indent">systems are hard to build.</span>
+            <span class="line indent">It's that most of them were</span>
+            <span class="line indent">never meant to be lived in."</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Tile 3: speaking ────────────────────────── -->
+    <section class="tile" aria-labelledby="t3">
+      <div class="titlebar">
+        <span class="path" id="t3">~/speaking</span>
+        <span class="tag">03</span>
+      </div>
+      <div class="body">
+        <div class="line"><span class="prompt">$</span> <span class="cmd">cat available-talks.txt</span></div>
+        <div class="out">
+          <div class="talk">
+            <div class="title">design systems at scale</div>
+            <div class="desc">what breaks at 600+ teams,</div>
+            <div class="desc">and how to build for adoption</div>
+            <div class="desc">instead of enforcement.</div>
+          </div>
+          <div class="talk">
+            <div class="title">designing with generative ai</div>
+            <div class="desc">from canvases to gen-ui frameworks.</div>
+          </div>
+        </div>
+
+        <div class="line"><span class="prompt">$</span> <span class="cmd">echo $BOOK</span></div>
+        <div class="out last">
+          <span class="indent line"><a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Tile 4: about ───────────────────────────── -->
+    <section class="tile" aria-labelledby="t4">
+      <div class="titlebar">
+        <span class="path" id="t4">~/about</span>
+        <span class="tag">04</span>
+      </div>
+      <div class="body">
+        <div class="line"><span class="prompt">$</span> <span class="cmd">cat .credentials</span></div>
+        <div class="out">
+          <span class="indent line">google gemini  <span class="muted">2022 — present</span></span>
+          <span class="indent line">frame.io       <span class="muted">2021 — 2022</span></span>
+          <span class="indent line">airbnb         <span class="muted">2018 — 2021</span></span>
+        </div>
+
+        <div class="line"><span class="prompt">$</span> <span class="cmd">history | tail -1</span></div>
+        <div class="out">
+          <span class="indent line">15 years of shipping the</span>
+          <span class="indent line">infrastructure that makes</span>
+          <span class="indent line">creative teams faster</span>
+          <span class="indent line">without making them smaller.</span>
+        </div>
+
+        <div class="line"><span class="prompt">$</span> <span class="cursor" aria-hidden="true"></span></div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="chromefoot">
+    <span>© 2026 olivier gillaizeau</span>
+    <span>
+      <a href="mailto:og@frenchbutnice.design">email</a>
+      <span class="sep">/</span>
+      <a href="#">twitter</a>
+      <span class="sep">/</span>
+      <a href="#">linkedin</a>
+      <span class="sep">/</span>
+      <a href="#">rss</a>
+    </span>
+  </footer>
+
+</body>
+</html>

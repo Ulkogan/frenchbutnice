@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>frenchbutnice.design — round 2: 8 refinements</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;700&family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f6f3ea;
+    --ink: #1a1a1a;
+    --muted: #6b6862;
+    --rule: rgba(26,26,26,.14);
+    --accent: #c44a1a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: "Newsreader", Georgia, serif; font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 56px 32px 96px; }
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 24px; margin-bottom: 48px; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .brand { font-family: "Archivo Narrow", sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 13px; }
+  .brand a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+  .brand a:hover { border-color: var(--accent); }
+  .meta { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  h1 { font-family: "Newsreader", serif; font-weight: 400; font-size: 44px; line-height: 1.15; margin: 0 0 12px; max-width: 820px; }
+  h1 em { font-style: italic; color: var(--accent); }
+  .lede { font-size: 19px; color: var(--muted); max-width: 720px; margin: 0 0 48px; }
+  .group { margin-bottom: 56px; }
+  .group-label { font-family: "JetBrains Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2px; background: var(--rule); border: 1px solid var(--rule); }
+  .card { background: var(--bg); padding: 28px 24px 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; min-height: 220px; transition: background .15s ease; }
+  .card:hover { background: #fbf9f2; }
+  .num { font-family: "Archivo Narrow", sans-serif; font-weight: 700; font-size: 44px; line-height: 1; letter-spacing: -.01em; margin-bottom: 12px; }
+  .name { font-family: "Newsreader", serif; font-size: 22px; font-weight: 500; margin: 0 0 8px; }
+  .pitch { font-size: 14px; color: var(--muted); line-height: 1.55; margin: 0 0 auto; }
+  .tags { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-family: "JetBrains Mono", monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 3px 8px; border: 1px solid var(--rule); border-radius: 2px; }
+  .tag.parent-folio { color: var(--accent); }
+  .tag.parent-terminal { color: #1d3557; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--rule); font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; display: flex; justify-content: space-between; }
+  @media (max-width: 600px) {
+    .wrap { padding: 32px 20px 64px; }
+    h1 { font-size: 32px; }
+    .lede { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand"><a href="../">← ROUND 1</a> &nbsp; <a href="../round-3/" style="color: var(--accent); border-color: var(--accent);">ROUND 3 →</a></div>
+      <div class="meta">Round 2 · 8 Refinements · Apr 2026</div>
+    </header>
+
+    <h1>Eight refinements of <em>Folio</em> and <em>Terminal</em>.</h1>
+    <p class="lede">Four directions for each of the two favorites from round 1. Pick one or two from this set to bring into Figma — or tell me to fire another round to push further.</p>
+
+    <section class="group">
+      <div class="group-label"><span>— Folio → Fold (4 variations of #01)</span><span>warm orange origin</span></div>
+      <div class="grid">
+        <a class="card" href="11-folio-refined.html">
+          <div class="num">11</div>
+          <div class="name">Folio Refined</div>
+          <p class="pitch">The original orange/grey at its most polished. Locked modular type scale, 12-col featured-essay grid, refined folio bars. The "ship Monday" version.</p>
+          <div class="tags"><span class="tag parent-folio">from 01</span><span class="tag">refined baseline</span></div>
+        </a>
+        <a class="card" href="12-folio-noir.html">
+          <div class="num">12</div>
+          <div class="name">Folio Noir</div>
+          <p class="pitch">Same identity, midnight palette. Deep navy → near-black gradient, ice-white type, a single warm lens-flare bleeding into the cool. Cinematic.</p>
+          <div class="tags"><span class="tag parent-folio">from 01</span><span class="tag">noir / cinema</span></div>
+        </a>
+        <a class="card" href="13-folio-cream.html">
+          <div class="num">13</div>
+          <div class="name">Folio Cream</div>
+          <p class="pitch">Light-mode dominant. Cream paper, near-black ink, saturated orange wordmark. One dark Speaking section as accent. The daytime brand.</p>
+          <div class="tags"><span class="tag parent-folio">from 01</span><span class="tag">monograph</span></div>
+        </a>
+        <a class="card" href="14-folio-stack.html">
+          <div class="num">14</div>
+          <div class="name">Folio Stack</div>
+          <p class="pitch">No gradient. FRENCH / BUT / NICE stacked at 26vw on bone cream. Pentagram-grade typographic restraint. Confidence as visual silence.</p>
+          <div class="tags"><span class="tag parent-folio">from 01</span><span class="tag">poster</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="group-label"><span>— Terminal (4 variations of #09)</span><span>refusal of decoration</span></div>
+      <div class="grid">
+        <a class="card" href="15-terminal-paper.html">
+          <div class="num">15</div>
+          <div class="name">Terminal Paper</div>
+          <p class="pitch">The paper terminal at its most refined. 8 prompt blocks, locked spacing, ink-blue accent. The "ship as v1" version of the refusal.</p>
+          <div class="tags"><span class="tag parent-terminal">from 09</span><span class="tag">refined baseline</span></div>
+        </a>
+        <a class="card" href="16-terminal-classic.html">
+          <div class="num">16</div>
+          <div class="name">Terminal Classic</div>
+          <p class="pitch">Dark hacker palette done right. Charcoal background, warm off-white text, phosphor-green links with a faint glow. CRT scanlines so subtle they're almost a memory.</p>
+          <div class="tags"><span class="tag parent-terminal">from 09</span><span class="tag">crt / dark</span></div>
+        </a>
+        <a class="card" href="17-terminal-tiled.html">
+          <div class="num">17</div>
+          <div class="name">Terminal Tiled</div>
+          <p class="pitch">Four mini terminal windows in a 2×2 tmux split. Each tile is one IA section. Senior practitioner's actual workspace, not one linear narrative.</p>
+          <div class="tags"><span class="tag parent-terminal">from 09</span><span class="tag">tmux split</span></div>
+        </a>
+        <a class="card" href="18-terminal-repl.html">
+          <div class="num">18</div>
+          <div class="name">Terminal REPL</div>
+          <p class="pitch">Jupyter notebook aesthetic. In[]/Out[] cells where outputs render as serif "markdown" — the only Terminal variation with a second typeface.</p>
+          <div class="tags"><span class="tag parent-terminal">from 09</span><span class="tag">notebook</span></div>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <span><a href="../" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--rule);">← back to round 1</a></span>
+      <span>Generated 2026-04-11</span>
+    </footer>
+  </div>
+</body>
+</html>

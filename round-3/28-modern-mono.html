@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Olivier Gillaizeau — creative working at the edge of technology</title>
+<meta name="description" content="Olivier Gillaizeau leads AI design at Google Gemini. Writing about working with models, not against them." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #6b6b6b;
+    --faint: #9a9a9a;
+    --line: #e5e5e5;
+    --accent: #ea580c;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+
+  body {
+    font-family: 'DM Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: var(--ink);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "liga" 0;
+  }
+
+  a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+  a:hover { border-bottom-color: var(--accent); }
+  a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* Top bar */
+  .topbar {
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    font-size: 12px;
+    line-height: 1;
+  }
+  .brand {
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: 0;
+  }
+  .nav {
+    display: flex;
+    gap: 20px;
+  }
+  .nav a {
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+  /* Hero */
+  .hero {
+    padding-top: 96px;
+    padding-bottom: 96px;
+  }
+  .hero h1 {
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.45;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .hero .sub {
+    margin: 0 0 40px 0;
+    font-size: 22px;
+    line-height: 1.45;
+    font-weight: 400;
+    color: var(--muted);
+    letter-spacing: -0.01em;
+  }
+  .hero p.body {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.7;
+    color: var(--ink);
+    max-width: 62ch;
+  }
+  .hero p.body em {
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  /* Section labels */
+  .label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin: 0 0 32px 0;
+  }
+
+  section { padding-bottom: 96px; }
+
+  /* Essays */
+  .essay-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .essay {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    column-gap: 4px;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .essay:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .essay .arrow {
+    color: var(--accent);
+    font-weight: 400;
+    line-height: 1.7;
+  }
+  .essay a.title {
+    display: block;
+    color: var(--ink);
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 1.55;
+    border-bottom: none;
+  }
+  .essay a.title:hover { color: var(--accent); }
+  .essay .stand {
+    display: block;
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    margin-top: 6px;
+  }
+
+  /* Speaking */
+  .talk {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    column-gap: 4px;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--line);
+  }
+  .talk:last-of-type { border-bottom: none; }
+  .talk .num {
+    color: var(--faint);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .talk .tt {
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  .talk .ds {
+    color: var(--muted);
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.65;
+    margin-top: 6px;
+    max-width: 58ch;
+  }
+  .booking {
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .booking a { font-weight: 500; }
+
+  /* Elsewhere */
+  .elsewhere {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    row-gap: 14px;
+    column-gap: 8px;
+    font-size: 14px;
+  }
+  .elsewhere dt {
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .elsewhere dd {
+    margin: 0;
+    color: var(--ink);
+  }
+  .elsewhere dd a { color: var(--ink); }
+  .elsewhere dd a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+  /* About */
+  .about p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 62ch;
+  }
+  .about .cred {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--faint);
+    letter-spacing: 0.02em;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 28px 0 40px 0;
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.04em;
+  }
+
+  @media (max-width: 560px) {
+    .wrap { padding: 0 24px; }
+    body { font-size: 15px; }
+    .hero { padding-top: 56px; padding-bottom: 72px; }
+    .hero h1, .hero .sub { font-size: 19px; }
+    .hero p.body { font-size: 15px; }
+    section { padding-bottom: 72px; }
+    .topbar-inner { flex-direction: column; align-items: flex-start; gap: 14px; }
+    .nav { gap: 16px; flex-wrap: wrap; }
+    .essay { grid-template-columns: 22px 1fr; }
+    .talk { grid-template-columns: 34px 1fr; }
+    .elsewhere { grid-template-columns: 92px 1fr; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <span class="brand">frenchbutnice</span>
+      <nav class="nav" aria-label="primary">
+        <a href="#currently">essays</a>
+        <a href="#speaking">speaking</a>
+        <a href="#about">about</a>
+        <a href="/feed.xml">rss</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section class="hero" aria-labelledby="name">
+      <h1 id="name">olivier gillaizeau</h1>
+      <p class="sub">creative working at the edge of technology</p>
+      <p class="body">
+        I lead <em>AI design</em> at Google Gemini, where we ship
+        <em>generative UI</em> frameworks. I write about working with
+        <em>models</em>, not against them. Previously Frame.io, Airbnb.
+        Fifteen years.
+      </p>
+    </section>
+
+    <section id="currently" aria-labelledby="currently-label">
+      <p class="label" id="currently-label">Currently</p>
+      <ul class="essay-list">
+        <li class="essay">
+          <span class="arrow" aria-hidden="true">→</span>
+          <div>
+            <a class="title" href="#">Working With Models, Not Against Them</a>
+            <span class="stand">Notes from inside Gemini's generative UI work.</span>
+          </div>
+        </li>
+        <li class="essay">
+          <span class="arrow" aria-hidden="true">→</span>
+          <div>
+            <a class="title" href="#">Notes from a Creative at the Edge of the Model</a>
+            <span class="stand">What I'm learning right now.</span>
+          </div>
+        </li>
+        <li class="essay">
+          <span class="arrow" aria-hidden="true">→</span>
+          <div>
+            <a class="title" href="#">From Flash to Generative UI</a>
+            <span class="stand">A career arc through tools that defined and broke each era.</span>
+          </div>
+        </li>
+        <li class="essay">
+          <span class="arrow" aria-hidden="true">→</span>
+          <div>
+            <a class="title" href="#">Why I Stopped Calling Myself a Design Systems Person</a>
+            <span class="stand">On the limits of category.</span>
+          </div>
+        </li>
+        <li class="essay">
+          <span class="arrow" aria-hidden="true">→</span>
+          <div>
+            <a class="title" href="#">I Have Spent 15 Years Building Tools That Are About to Disappear</a>
+            <span class="stand">And the next set will be even shorter-lived.</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section id="speaking" aria-labelledby="speaking-label">
+      <p class="label" id="speaking-label">Speaking</p>
+
+      <div class="talk">
+        <span class="num">01.</span>
+        <div>
+          <div class="tt">Designing with Generative AI</div>
+          <div class="ds">From Canvases to gen-UI frameworks.</div>
+        </div>
+      </div>
+
+      <div class="talk">
+        <span class="num">02.</span>
+        <div>
+          <div class="tt">Leading Creative at the Edge of Technology</div>
+          <div class="ds">
+            What 15 years of building with evolving tools teaches you
+            about leading teams that ship the future.
+          </div>
+          <div class="booking">
+            Book a talk <span style="color: var(--accent);">→</span>
+            <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="about" aria-labelledby="about-label" class="about">
+      <p class="label" id="about-label">About</p>
+      <p>
+        Olivier Gillaizeau is a creative working at the edge of technology.
+        He leads AI design at Google Gemini, where he has spent the past
+        four years building generative UI frameworks. Previously at
+        Frame.io and Airbnb. Fifteen years of shipping the infrastructure
+        that makes creative teams faster — and is now reshaping what
+        creative even means.
+      </p>
+      <p class="cred">Previously Gemini · Frame.io · Airbnb</p>
+    </section>
+
+    <section aria-labelledby="elsewhere-label">
+      <p class="label" id="elsewhere-label">Elsewhere</p>
+      <dl class="elsewhere">
+        <dt>twitter</dt>
+        <dd><a href="https://twitter.com/frenchbutnice">@frenchbutnice</a></dd>
+        <dt>linkedin</dt>
+        <dd><a href="https://linkedin.com/in/oliviergillaizeau">/in/oliviergillaizeau</a></dd>
+        <dt>rss</dt>
+        <dd><a href="/feed.xml">/feed.xml</a></dd>
+        <dt>email</dt>
+        <dd><a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></dd>
+      </dl>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="wrap">
+      frenchbutnice.design  ·  © 2026  ·  french but nice
+    </div>
+  </footer>
+
+</body>
+</html>

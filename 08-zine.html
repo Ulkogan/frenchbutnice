@@ -1,0 +1,814 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Olivier Gillaizeau — French but Nice</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Narrow:wght@400;600;800&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,700&family=Caveat:wght@400;700&family=Kalam:wght@400;700&family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F1E6;
+    --ink:#17150F;
+    --red:#C8373C;
+    --ochre:#C49A3A;
+    --olive:#7B7A3B;
+    --hl:#FFE570;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--paper);color:var(--ink);}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(ellipse 800px 400px at 20% 10%, rgba(196,154,58,0.06), transparent 60%),
+      radial-gradient(ellipse 600px 300px at 80% 70%, rgba(200,55,60,0.04), transparent 60%);
+  }
+  /* subtle paper grain */
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:1;
+    background-image:
+      radial-gradient(rgba(23,21,15,0.035) 1px, transparent 1px);
+    background-size:3px 3px;
+    mix-blend-mode:multiply;
+  }
+  .display{font-family:'Anton',sans-serif; letter-spacing:-0.01em; line-height:0.88; text-transform:uppercase;}
+  .narrow{font-family:'Archivo Narrow',sans-serif; text-transform:uppercase; letter-spacing:0.02em;}
+  .serif{font-family:'Fraunces',serif; font-variation-settings:"opsz" 144, "SOFT" 100;}
+  .script{font-family:'Caveat',cursive; color:var(--red);}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;}
+  .wrap{position:relative; max-width:1440px; margin:0 auto; padding:28px 48px 80px;}
+
+  /* -------- HERO -------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    min-height:92vh;
+  }
+  .wordmark{
+    position:absolute; top:0; right:0;
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:800;
+    font-size:14px;
+    letter-spacing:0.32em;
+    text-transform:uppercase;
+  }
+  .wordmark .dot{color:var(--red);}
+  .bio-vertical{
+    position:absolute;
+    top:40px; left:-6px;
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+    font-size:12px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    font-family:'Inter',sans-serif;
+    font-weight:500;
+    color:rgba(23,21,15,0.72);
+    max-height:540px;
+  }
+  .pull-main{
+    position:absolute;
+    top:70px; left:40px;
+    transform:rotate(-2.2deg);
+    font-size:clamp(64px, 11vw, 172px);
+    line-height:0.86;
+    font-weight:900;
+    max-width:1180px;
+    letter-spacing:-0.025em;
+    font-family:'Fraunces',serif;
+    font-variation-settings:"opsz" 144, "SOFT" 100, "WONK" 1;
+  }
+  .pull-main em{font-style:italic; font-weight:900;}
+  .pull-main .hl{
+    background:linear-gradient(180deg, transparent 55%, var(--hl) 55%, var(--hl) 92%, transparent 92%);
+    padding:0 0.05em;
+  }
+  .essay-tag{
+    position:absolute;
+    right:60px; top:420px;
+    font-family:'Anton',sans-serif;
+    font-size:clamp(48px,6.2vw,96px);
+    line-height:0.85;
+    text-transform:uppercase;
+    letter-spacing:-0.005em;
+    transform:rotate(-1.2deg);
+    max-width:720px;
+    text-align:right;
+  }
+  .essay-tag .num{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.2em;
+    margin-bottom:10px;
+    color:var(--red);
+    transform:none;
+  }
+  .marginalia{
+    position:absolute;
+    right:50px; top:400px;
+    font-family:'Caveat',cursive;
+    color:var(--red);
+    font-size:30px;
+    line-height:1.05;
+    transform:rotate(-5deg);
+    max-width:260px;
+  }
+  .marginalia svg{
+    position:absolute;
+    left:-80px; top:40px;
+    width:90px; height:60px;
+    stroke:var(--red);
+    fill:none;
+    stroke-width:2.2;
+    stroke-linecap:round;
+  }
+  .nav-vertical{
+    position:absolute;
+    left:20px; bottom:40px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.24em;
+    font-size:13px;
+  }
+  .nav-vertical a{
+    display:inline-block;
+    writing-mode:vertical-rl;
+    transform:rotate(180deg);
+    text-decoration:none;
+    border-right:2px solid var(--ink);
+    padding:6px 3px 6px 0;
+  }
+  .nav-vertical a:hover{color:var(--red); border-color:var(--red);}
+
+  .bylinebox{
+    position:absolute;
+    bottom:56px; right:40px;
+    max-width:420px;
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:19px;
+    line-height:1.35;
+    transform:rotate(-1deg);
+    border-top:2px solid var(--ink);
+    padding-top:12px;
+  }
+  .bylinebox .label{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-style:normal;
+    font-size:10px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+    color:var(--olive);
+  }
+  .ochreblob{
+    position:absolute;
+    right:300px; top:120px;
+    width:120px; height:120px;
+    background:var(--ochre);
+    transform:rotate(8deg);
+    z-index:0;
+    mix-blend-mode:multiply;
+    opacity:0.85;
+  }
+  .ochreblob::after{
+    content:"GEMINI / '22—";
+    position:absolute; inset:0;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.18em;
+    color:var(--ink);
+    transform:rotate(-8deg);
+  }
+
+  .folio{
+    position:absolute;
+    top:10px; left:50%;
+    transform:translateX(-50%);
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.3em;
+    text-transform:uppercase;
+    color:rgba(23,21,15,0.6);
+  }
+  .folio span{margin:0 14px;}
+
+  /* -------- ESSAYS -------- */
+  .essays-section{
+    position:relative;
+    margin-top:100px;
+    border-top:2px solid var(--ink);
+    padding-top:60px;
+  }
+  .section-kicker{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    color:var(--red);
+    margin-bottom:18px;
+  }
+  .section-title{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-weight:900;
+    font-size:clamp(40px, 5.4vw, 78px);
+    line-height:0.96;
+    letter-spacing:-0.02em;
+    max-width:1100px;
+    font-variation-settings:"opsz" 144, "SOFT" 100;
+  }
+  .section-title .amp{color:var(--red); font-family:'Fraunces',serif;}
+  .section-title .u{
+    background:linear-gradient(180deg, transparent 60%, var(--hl) 60%, var(--hl) 94%, transparent 94%);
+  }
+
+  .essay-grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    grid-auto-rows:minmax(40px,auto);
+    gap:24px 28px;
+    margin-top:60px;
+    position:relative;
+  }
+  .essay{
+    border-top:2px solid var(--ink);
+    padding:14px 2px 22px;
+    position:relative;
+    background:var(--paper);
+  }
+  .essay .num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.2em;
+    color:var(--red);
+  }
+  .essay h3{
+    font-family:'Anton',sans-serif;
+    text-transform:uppercase;
+    font-size:clamp(28px, 3.1vw, 46px);
+    line-height:0.9;
+    margin:14px 0 14px;
+    letter-spacing:-0.005em;
+  }
+  .essay p{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:16px;
+    line-height:1.4;
+    margin:0;
+    color:rgba(23,21,15,0.86);
+  }
+  .essay .read{
+    display:inline-block;
+    margin-top:16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    border-bottom:1px solid var(--ink);
+    text-decoration:none;
+    padding-bottom:2px;
+  }
+  .essay .read:hover{color:var(--red); border-color:var(--red);}
+
+  .e1{ grid-column: 1 / span 5; grid-row: 1; transform:rotate(-0.6deg); }
+  .e2{ grid-column: 7 / span 4; grid-row: 1; transform:rotate(0.4deg); margin-top:40px;}
+  .e3{ grid-column: 1 / span 3; grid-row: 2; transform:rotate(0.6deg); margin-top:30px;}
+  .e4{ grid-column: 5 / span 5; grid-row: 2; transform:rotate(-0.8deg); margin-top:60px;}
+  .e5{ grid-column: 2 / span 4; grid-row: 3; transform:rotate(-0.4deg); margin-top:40px;}
+  .e6{ grid-column: 7 / span 5; grid-row: 3; transform:rotate(0.5deg); margin-top:20px;}
+
+  .essay-marg{
+    position:absolute;
+    font-family:'Caveat',cursive;
+    color:var(--red);
+    font-size:24px;
+    line-height:1;
+    transform:rotate(-4deg);
+    pointer-events:none;
+  }
+  .essay-marg.a{ top:-30px; right:8%; }
+  .essay-marg.b{ top:48%; left:40%; transform:rotate(-2deg); font-size:20px;}
+
+  /* quote strip */
+  .quote-strip{
+    margin:120px 0 40px;
+    padding:40px 0;
+    border-top:2px solid var(--ink);
+    border-bottom:2px solid var(--ink);
+    position:relative;
+  }
+  .quote-strip p{
+    font-family:'Fraunces',serif;
+    font-size:clamp(28px, 3.6vw, 50px);
+    font-style:italic;
+    font-weight:400;
+    line-height:1.1;
+    letter-spacing:-0.01em;
+    margin:0;
+    max-width:1000px;
+  }
+  .quote-strip cite{
+    display:block;
+    margin-top:18px;
+    font-family:'JetBrains Mono',monospace;
+    font-style:normal;
+    font-size:10px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--red);
+  }
+  .quote-strip .big-quote{
+    position:absolute;
+    right:20px; top:-20px;
+    font-family:'Fraunces',serif;
+    font-size:220px;
+    line-height:1;
+    color:var(--red);
+    transform:rotate(8deg);
+    pointer-events:none;
+  }
+
+  /* -------- SPEAKING -------- */
+  .speaking{
+    position:relative;
+    margin-top:80px;
+    padding-top:60px;
+    border-top:2px solid var(--ink);
+  }
+  .speak-grid{
+    display:grid;
+    grid-template-columns:repeat(12,1fr);
+    gap:30px;
+    margin-top:60px;
+  }
+  .topic{
+    position:relative;
+    padding:24px 20px 28px;
+    background:var(--paper);
+    border-top:6px solid var(--ink);
+  }
+  .topic.t1{
+    grid-column: 1 / span 6;
+    transform:rotate(-1deg);
+    border-top-color:var(--red);
+  }
+  .topic.t2{
+    grid-column: 7 / span 6;
+    transform:rotate(0.8deg);
+    margin-top:50px;
+    background:var(--ochre);
+  }
+  .topic .roman{
+    font-family:'Fraunces',serif;
+    font-weight:900;
+    font-style:italic;
+    font-size:96px;
+    line-height:0.8;
+    color:var(--ink);
+  }
+  .topic.t1 .roman{color:var(--red);}
+  .topic h4{
+    font-family:'Anton',sans-serif;
+    font-size:46px;
+    text-transform:uppercase;
+    letter-spacing:-0.005em;
+    line-height:0.92;
+    margin:10px 0 16px;
+  }
+  .topic p{
+    font-family:'Fraunces',serif;
+    font-style:italic;
+    font-size:19px;
+    line-height:1.4;
+    margin:0;
+    max-width:480px;
+  }
+  .cta-sentence{
+    margin-top:70px;
+    font-family:'Fraunces',serif;
+    font-size:clamp(26px, 3vw, 42px);
+    line-height:1.15;
+    font-weight:400;
+    max-width:1100px;
+  }
+  .cta-sentence a{
+    text-decoration:none;
+    background:var(--hl);
+    padding:0 0.15em;
+    border-bottom:3px solid var(--ink);
+    font-weight:900;
+    font-style:italic;
+  }
+  .cta-sentence a:hover{background:var(--red); color:var(--paper);}
+
+  /* -------- ABOUT -------- */
+  .about{
+    position:relative;
+    margin-top:120px;
+    padding-top:60px;
+    border-top:2px solid var(--ink);
+    min-height:520px;
+  }
+  .about .who-q{
+    font-family:'Caveat',cursive;
+    color:var(--red);
+    font-size:120px;
+    line-height:0.9;
+    transform:rotate(-3deg);
+    position:absolute;
+    top:30px; left:20px;
+  }
+  .about .bio-serif{
+    position:relative;
+    font-family:'Fraunces',serif;
+    font-size:clamp(24px, 2.6vw, 38px);
+    line-height:1.22;
+    max-width:760px;
+    margin:140px 0 0 180px;
+    font-weight:400;
+    transform:rotate(-0.6deg);
+  }
+  .about .bio-serif em{color:var(--red);}
+  .about .script-over{
+    position:absolute;
+    top:220px; left:220px;
+    font-family:'Caveat',cursive;
+    color:var(--red);
+    font-size:34px;
+    line-height:1.1;
+    transform:rotate(-2deg);
+    max-width:380px;
+    pointer-events:none;
+  }
+  .credential-spine{
+    position:absolute;
+    top:40px; right:60px;
+    writing-mode:vertical-rl;
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:0.38em;
+    font-size:16px;
+    padding:20px 10px;
+    border-left:3px double var(--ink);
+    border-right:3px double var(--ink);
+    transform:rotate(180deg);
+  }
+  .credential-spine .dot{color:var(--red); margin:0 0.6em;}
+  .stat-block{
+    position:absolute;
+    bottom:40px; left:60px;
+    display:flex;
+    gap:40px;
+  }
+  .stat{
+    transform:rotate(-1.4deg);
+  }
+  .stat .n{
+    display:block;
+    font-family:'Anton',sans-serif;
+    font-size:72px;
+    line-height:0.85;
+    color:var(--ink);
+  }
+  .stat:nth-child(2) .n{color:var(--red);}
+  .stat:nth-child(3) .n{color:var(--olive);}
+  .stat .l{
+    display:block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    margin-top:6px;
+    max-width:140px;
+  }
+
+  /* -------- FOOTER -------- */
+  footer{
+    margin-top:160px;
+    padding-top:40px;
+    border-top:6px double var(--ink);
+    position:relative;
+    min-height:260px;
+  }
+  .foot-mark{
+    position:absolute;
+    top:30px; right:0;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    text-align:right;
+    line-height:1.6;
+  }
+  .foot-socials{
+    position:absolute;
+    bottom:20px; left:0;
+    display:flex;
+    gap:30px;
+    font-family:'Archivo Narrow',sans-serif;
+    font-weight:800;
+    font-size:16px;
+    text-transform:uppercase;
+    letter-spacing:0.18em;
+  }
+  .foot-socials a{
+    text-decoration:none;
+    border-bottom:2px solid var(--ink);
+    padding-bottom:3px;
+  }
+  .foot-socials a:hover{color:var(--red); border-color:var(--red);}
+  .foot-thanks{
+    position:absolute;
+    bottom:50px; left:50%;
+    transform:translateX(-50%) rotate(-3deg);
+    font-family:'Caveat',cursive;
+    color:var(--red);
+    font-size:40px;
+    line-height:1;
+  }
+  .foot-giant{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(90px, 16vw, 240px);
+    line-height:0.82;
+    text-transform:uppercase;
+    letter-spacing:-0.02em;
+    margin:30px 0 60px;
+    color:var(--ink);
+  }
+  .foot-giant span{color:var(--red);}
+
+  /* focus */
+  a:focus-visible{outline:3px solid var(--red); outline-offset:3px;}
+
+  /* -------- RESPONSIVE -------- */
+  @media (max-width: 860px){
+    .wrap{padding:20px 20px 60px;}
+    .folio, .bio-vertical, .marginalia, .ochreblob, .nav-vertical, .bylinebox, .essay-marg, .quote-strip .big-quote, .credential-spine, .stat-block, .foot-thanks{display:none;}
+    .hero{min-height:auto;}
+    .wordmark{position:static; display:block; margin-bottom:16px;}
+    .pull-main{position:static; transform:none; font-size:48px; max-width:100%; margin:20px 0 30px;}
+    .essay-tag{position:static; transform:none; text-align:left; font-size:34px; max-width:100%; margin-bottom:30px;}
+    .nav-mobile{
+      display:flex; flex-wrap:wrap; gap:18px;
+      font-family:'Archivo Narrow',sans-serif;
+      font-weight:800; text-transform:uppercase;
+      letter-spacing:0.18em; font-size:13px;
+      border-top:2px solid var(--ink);
+      border-bottom:2px solid var(--ink);
+      padding:12px 0;
+      margin:20px 0 40px;
+    }
+    .nav-mobile a{text-decoration:none;}
+    .essay-grid{display:flex; flex-direction:column; gap:30px;}
+    .essay{transform:none !important; margin-top:0 !important;}
+    .essay h3{font-size:30px;}
+    .section-title{font-size:34px;}
+    .speak-grid{display:flex; flex-direction:column; gap:30px;}
+    .topic{transform:none !important; margin-top:0 !important; grid-column:auto !important;}
+    .topic .roman{font-size:60px;}
+    .topic h4{font-size:28px;}
+    .cta-sentence{font-size:22px;}
+    .about{min-height:auto;}
+    .about .who-q{position:static; font-size:60px; transform:none; margin-bottom:10px;}
+    .about .bio-serif{margin:0; font-size:22px; transform:none;}
+    .about .script-over{display:none;}
+    footer{min-height:auto;}
+    .foot-mark{position:static; text-align:left; margin-bottom:20px;}
+    .foot-socials{position:static; flex-wrap:wrap; margin-top:20px;}
+    .foot-giant{font-size:54px;}
+    .quote-strip p{font-size:24px;}
+  }
+  @media (min-width: 861px){
+    .nav-mobile{display:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-label="Introduction">
+
+    <div class="folio">
+      <span>VOL. 01</span><span>—</span><span>ISSUE Nº 001</span><span>—</span><span>SAN FRANCISCO</span><span>—</span><span>MMXXVI</span>
+    </div>
+
+    <div class="wordmark">FRENCH<span class="dot">·</span>BUT<span class="dot">·</span>NICE</div>
+
+    <div class="bio-vertical" aria-hidden="true">
+      OLIVIER GILLAIZEAU · SAN FRANCISCO · DESIGN SYSTEMS LEAD AT GOOGLE GEMINI · FORMERLY FRAME.IO &amp; AIRBNB
+    </div>
+
+    <div class="ochreblob" aria-hidden="true"></div>
+
+    <h1 class="pull-main">
+      Systems are <em>organisms,</em><br>
+      not <span class="hl">formulas.</span>
+    </h1>
+
+    <div class="essay-tag">
+      <span class="num">ESSAY Nº 004 — THE ONE EVERYONE ASKS ABOUT</span>
+      GenUI<br>Before It<br>Had a Name
+    </div>
+
+    <div class="marginalia" aria-hidden="true">
+      <svg viewBox="0 0 90 60">
+        <path d="M5 55 Q 30 40, 55 25 T 85 8" />
+        <path d="M78 18 L 85 8 L 72 6" />
+      </svg>
+      the one I keep<br>getting asked<br>about →
+    </div>
+
+    <nav class="nav-vertical" aria-label="Primary">
+      <a href="#essays">Essays</a>
+      <a href="#speaking">Speaking</a>
+      <a href="#about">About</a>
+      <a href="#rss">RSS</a>
+    </nav>
+
+    <nav class="nav-mobile" aria-label="Primary mobile">
+      <a href="#essays">Essays</a>
+      <a href="#speaking">Speaking</a>
+      <a href="#about">About</a>
+      <a href="#rss">RSS</a>
+    </nav>
+
+    <div class="bylinebox">
+      <span class="label">Standfirst — Ed. note</span>
+      Most teams still think AI means chat interfaces. I saw it generating custom UIs for every query, and moved my team to be ready before the demand hit.
+    </div>
+  </section>
+
+  <!-- ============ ESSAYS ============ -->
+  <section class="essays-section" id="essays">
+    <div class="section-kicker">§ I — Dispatches</div>
+    <h2 class="section-title">
+      Essays that <span class="u">mean something</span> to me,<br>
+      <em>right now,</em> in the year of our systems MMXXVI.
+    </h2>
+
+    <div class="essay-grid">
+
+      <article class="essay e1">
+        <div class="num">01 / DISPATCH</div>
+        <h3>Build for Adoption,<br>Not Perfection</h3>
+        <p>The problem isn't that design systems are hard to build. It's that most of them were never meant to be lived in.</p>
+        <a class="read" href="#">Read →</a>
+      </article>
+
+      <article class="essay e2">
+        <div class="num">02 / DISPATCH</div>
+        <h3>Systems Are Services, Not Mandates</h3>
+        <p>Your design system is not a mandate. It is a service. Act accordingly.</p>
+        <a class="read" href="#">Read →</a>
+      </article>
+
+      <article class="essay e3">
+        <div class="num">03 / DISPATCH</div>
+        <h3>Coherence Over Uniformity</h3>
+        <p>Sameness is not a system. It's a rule nobody asked for, enforced by nobody in particular.</p>
+        <a class="read" href="#">Read →</a>
+      </article>
+
+      <article class="essay e4">
+        <div class="num">04 / THE POPULAR ONE</div>
+        <h3>GenUI Before It Had a Name</h3>
+        <p>Most teams still think AI means chat interfaces. I saw it generating custom UIs for every query, and moved early.</p>
+        <a class="read" href="#">Read →</a>
+        <div class="essay-marg a" aria-hidden="true">★ cult favorite</div>
+      </article>
+
+      <article class="essay e5">
+        <div class="num">05 / DISPATCH</div>
+        <h3>Lessons from 607 Teams</h3>
+        <p>What breaks at scale is never the component library. It is always, always the social contract around it.</p>
+        <a class="read" href="#">Read →</a>
+      </article>
+
+      <article class="essay e6">
+        <div class="num">06 / DISPATCH</div>
+        <h3>Models Don't Read Your Figma</h3>
+        <p>The next consumer of your design system is not a designer. It is a model. Nobody told it the rules. Tell it.</p>
+        <a class="read" href="#">Read →</a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============ PULL QUOTE STRIP ============ -->
+  <section class="quote-strip" aria-hidden="false">
+    <span class="big-quote" aria-hidden="true">&rdquo;</span>
+    <p>“Systems are organisms, not formulas. I've spent fifteen years learning the difference — mostly the hard way.”</p>
+    <cite>— Olivier, to himself, repeatedly</cite>
+  </section>
+
+  <!-- ============ SPEAKING ============ -->
+  <section class="speaking" id="speaking">
+    <div class="section-kicker">§ II — On a stage, ideally</div>
+    <h2 class="section-title">
+      Come watch me <em>talk about this</em><br>
+      on a stage <span class="amp">&amp;</span> answer the hard questions.
+    </h2>
+
+    <div class="speak-grid">
+      <article class="topic t1">
+        <div class="roman">I.</div>
+        <h4>Design Systems<br>at Scale</h4>
+        <p>What breaks at 600+ teams, and how to build for adoption instead of enforcement. From the trenches, not the slide template.</p>
+      </article>
+
+      <article class="topic t2">
+        <div class="roman">II.</div>
+        <h4>Designing with<br>Generative AI</h4>
+        <p>From Gemini's Canvases to the generative UI frameworks that change what a design system is for. Practitioner view. No hype.</p>
+      </article>
+    </div>
+
+    <p class="cta-sentence">
+      If any of the above could use a French accent on your stage this year —
+      <a href="mailto:og@frenchbutnice.design">write me</a> and we'll find a date.
+    </p>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="about" id="about">
+    <div class="who-q" aria-hidden="true">Who am I?</div>
+
+    <p class="bio-serif">
+      Olivier Gillaizeau leads design systems at <em>Google Gemini.</em>
+      Previously at Frame.io (acquired by Adobe) and Airbnb.
+      Fifteen years shipping the infrastructure that makes creative teams faster —
+      without making them smaller.
+    </p>
+
+    <div class="script-over" aria-hidden="true">
+      — designer. systems lead.<br>
+      french, but nice.
+    </div>
+
+    <div class="credential-spine" aria-hidden="true">
+      PREVIOUSLY<span class="dot">·</span>GEMINI<span class="dot">·</span>FRAME.IO<span class="dot">·</span>AIRBNB
+    </div>
+
+    <div class="stat-block" aria-hidden="true">
+      <div class="stat">
+        <span class="n">607</span>
+        <span class="l">teams on one system</span>
+      </div>
+      <div class="stat">
+        <span class="n">15K</span>
+        <span class="l">design hours saved / yr</span>
+      </div>
+      <div class="stat">
+        <span class="n">5→1</span>
+        <span class="l">systems unified at Gemini</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="rss">
+    <div class="foot-mark">
+      © MMXXVI · O. GILLAIZEAU<br>
+      FRENCHBUTNICE.DESIGN<br>
+      SET IN ANTON, FRAUNCES &amp; CAVEAT<br>
+      PRINTED ON THE OPEN WEB
+    </div>
+
+    <div class="foot-giant">
+      French, but <span>nice.</span>
+    </div>
+
+    <nav class="foot-socials" aria-label="Elsewhere">
+      <a href="mailto:og@frenchbutnice.design">Email</a>
+      <a href="#">Twitter / X</a>
+      <a href="#">LinkedIn</a>
+      <a href="#">RSS</a>
+    </nav>
+
+    <div class="foot-thanks" aria-hidden="true">
+      — thanks for scrolling. write me.
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

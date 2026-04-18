@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>man olivier — frenchbutnice.design</title>
+<meta name="description" content="olivier — creative working at the edge of technology. A manual page.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bone: #F6F3EA;
+    --ink:  #1A1814;
+    --ink-soft: #3a362e;
+    --red:  #A93226;
+    --rule: #2a2622;
+    --ch: 0.62em; /* approx inconsolata character width */
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html, body {
+    background: var(--bone);
+    color: var(--ink);
+  }
+
+  body {
+    font-family: "Inconsolata", ui-monospace, Menlo, monospace;
+    font-size: 15px;
+    line-height: 1.55;
+    font-weight: 400;
+    font-feature-settings: "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+    margin: 0;
+    padding: 48px 28px 64px;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  /* Man-page header/footer strip */
+  .strip {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: 13px;
+    color: var(--ink);
+    padding: 10px 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  .strip .center { text-align: center; flex: 1; }
+  .strip .right  { text-align: right; }
+  .strip .left   { text-align: left; }
+
+  .strip--footer { margin-top: 56px; }
+
+  /* Section headers */
+  section {
+    margin-top: 32px;
+  }
+  section:first-of-type { margin-top: 40px; }
+
+  h2 {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    margin: 0 0 6px 0;
+    color: var(--ink);
+    text-transform: uppercase;
+  }
+
+  /* 6-character indent for section body content */
+  .body {
+    padding-left: calc(var(--ch) * 6);
+  }
+
+  .body p {
+    margin: 0 0 14px 0;
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+  }
+  .body p:last-child { margin-bottom: 0; }
+
+  /* Synopsis block — preformatted-ish, not justified */
+  .synopsis {
+    white-space: pre-wrap;
+    text-align: left;
+  }
+
+  /* Options / Essays / Speaking entries:
+     the "term" sits at the body's left edge, the
+     description sits indented one more level (4 chars) */
+  .entry {
+    margin: 0 0 14px 0;
+  }
+  .entry:last-child { margin-bottom: 0; }
+
+  .entry .term {
+    display: block;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .entry .desc {
+    display: block;
+    padding-left: calc(var(--ch) * 4);
+    text-align: left;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+
+  /* Files table, fixed-width style */
+  .files {
+    white-space: pre-wrap;
+    text-align: left;
+  }
+
+  /* Links */
+  a {
+    color: var(--red);
+    text-decoration: none;
+  }
+  a:hover, a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  a:focus-visible {
+    outline: 1px dashed var(--red);
+    outline-offset: 2px;
+  }
+
+  /* The (7) and (1) cross-references — keep them visually tight */
+  .xref { color: var(--red); }
+
+  /* Subtle emphasis inside DESCRIPTION */
+  em {
+    font-style: italic;
+    color: var(--ink);
+  }
+
+  /* Author block */
+  .author {
+    text-align: left;
+  }
+
+  /* Mobile */
+  @media (max-width: 560px) {
+    body {
+      font-size: 13px;
+      padding: 28px 18px 44px;
+    }
+    :root { --ch: 0.6em; }
+    .body { padding-left: calc(var(--ch) * 4); }
+    .entry .desc { padding-left: calc(var(--ch) * 3); }
+    .strip { font-size: 11px; }
+    .strip .center {
+      /* keep classic man-page center title even on mobile */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .strip .center { display: none; }
+  }
+
+  ::selection {
+    background: #1A1814;
+    color: #F6F3EA;
+  }
+</style>
+</head>
+<body>
+  <main class="page" role="main">
+
+    <div class="strip" aria-hidden="true">
+      <span class="left">OLIVIER(1)</span>
+      <span class="center">FRENCHBUTNICE MANUAL</span>
+      <span class="right">OLIVIER(1)</span>
+    </div>
+
+    <section aria-labelledby="name">
+      <h2 id="name">NAME</h2>
+      <div class="body">
+        <p>olivier &mdash; creative working at the edge of technology</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="synopsis">
+      <h2 id="synopsis">SYNOPSIS</h2>
+      <div class="body">
+<div class="synopsis"><strong>olivier</strong> [--design] [--ai] [--systems] [--lead]
+        [--write] [--speak] [--ship]
+        [--flash-to-generative] [--french-but-nice]</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="description">
+      <h2 id="description">DESCRIPTION</h2>
+      <div class="body">
+        <p>Olivier Gillaizeau is a creative working at the edge of technology, currently leading AI design at Google Gemini. Fifteen years of shipping the infrastructure that makes creative teams faster &mdash; and is now reshaping what creative even means.</p>
+        <p>He started in Flash, scaled creative organizations across continents, directed global campaigns at Airbnb, launched Camera-to-Cloud at Frame.io, and now builds generative interfaces for the model that lives inside Gemini. Designer. Systems lead. AI practitioner. <em>French, but nice.</em></p>
+        <p>This is a builder's voice, not a thinkpiece voice. Most of the industry is still debating whether AI is coming. Olivier has been shipping it.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="options">
+      <h2 id="options">OPTIONS</h2>
+      <div class="body">
+        <div class="entry">
+          <span class="term"><a href="#essays">--essays</a></span>
+          <span class="desc">Read recent writing on systems, models, and the craft of working at the edge.</span>
+        </div>
+        <div class="entry">
+          <span class="term"><a href="#speaking">--speaking</a></span>
+          <span class="desc">Two topics. Available for booking.</span>
+        </div>
+        <div class="entry">
+          <span class="term"><a href="#files">--about</a></span>
+          <span class="desc">Background, credentials, contact.</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="essays" id="essays">
+      <h2 id="essays-h">ESSAYS</h2>
+      <div class="body">
+        <div class="entry">
+          <span class="term"><a href="#">build-for-adoption-not-perfection<span class="xref">(7)</span></a></span>
+          <span class="desc">Most teams chase design purity when they should be chasing adoption. Notes from 607 teams.</span>
+        </div>
+        <div class="entry">
+          <span class="term"><a href="#">from-flash-to-generative-ui<span class="xref">(7)</span></a></span>
+          <span class="desc">A career arc through the tools that defined, then broke, each era of digital craft.</span>
+        </div>
+        <div class="entry">
+          <span class="term"><a href="#">working-with-models-not-against-them<span class="xref">(7)</span></a></span>
+          <span class="desc">Notes from inside Gemini's generative UI work. Models don't read your Figma.</span>
+        </div>
+        <div class="entry">
+          <span class="term"><a href="#">why-i-stopped-calling-myself-a-design-systems-person<span class="xref">(7)</span></a></span>
+          <span class="desc">On the limits of category, and what you see when you stop defending one.</span>
+        </div>
+        <div class="entry">
+          <span class="term"><a href="#">notes-from-a-creative-at-the-edge-of-the-model<span class="xref">(7)</span></a></span>
+          <span class="desc">What I'm learning right now. Updated whenever the ground shifts.</span>
+        </div>
+        <div class="entry">
+          <span class="term"><a href="#">the-last-system-youll-ever-build<span class="xref">(7)</span></a></span>
+          <span class="desc">Fifteen years building tools that are about to disappear.</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="speaking-h" id="speaking">
+      <h2 id="speaking-h">SPEAKING</h2>
+      <div class="body">
+        <div class="entry">
+          <span class="term"><a href="mailto:og@frenchbutnice.design?subject=Speaking%3A%20Designing%20with%20Generative%20AI">designing-with-generative-ai<span class="xref">(1)</span></a></span>
+          <span class="desc">From Gemini's Canvases to the generative UI frameworks that are reshaping what design tools are for.</span>
+        </div>
+        <div class="entry">
+          <span class="term"><a href="mailto:og@frenchbutnice.design?subject=Speaking%3A%20Leading%20Creative%20at%20the%20Edge%20of%20Technology">leading-creative-at-the-edge-of-technology<span class="xref">(1)</span></a></span>
+          <span class="desc">What 15 years of building with evolving tools &mdash; Flash to AI &mdash; teaches you about leading teams that ship the future.</span>
+        </div>
+        <div class="entry">
+          <span class="term">To book: <a href="mailto:og@frenchbutnice.design?subject=Speaking%20inquiry">og@frenchbutnice.design</a></span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="files-h" id="files">
+      <h2 id="files-h">FILES</h2>
+      <div class="body">
+<div class="files"><a href="#">~/.bio</a>         long form. fifteen years, three continents, one accent.
+<a href="#">~/.cv</a>          a download nobody asked for.
+<a href="#">~/.elsewhere</a>   twitter, linkedin, rss.
+<a href="mailto:og@frenchbutnice.design">~/.contact</a>     og@frenchbutnice.design</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="see-also">
+      <h2 id="see-also">SEE ALSO</h2>
+      <div class="body">
+        <p><a href="#">gemini<span class="xref">(1)</span></a>, <a href="#">frame.io<span class="xref">(1)</span></a>, <a href="#">airbnb<span class="xref">(1)</span></a>, <a href="#">canvases<span class="xref">(7)</span></a>, <a href="#">generative-ui<span class="xref">(7)</span></a>, <a href="#">flash<span class="xref">(7)</span></a></p>
+        <p><em>Previously Gemini &middot; Frame.io &middot; Airbnb.</em></p>
+      </div>
+    </section>
+
+    <section aria-labelledby="author">
+      <h2 id="author">AUTHOR</h2>
+      <div class="body author">
+        <p>Written by Olivier Gillaizeau &lt;<a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a>&gt;.<br>
+        San Francisco, CA. French, but nice.</p>
+      </div>
+    </section>
+
+    <div class="strip strip--footer" aria-hidden="true">
+      <span class="left">frenchbutnice.design 26.04</span>
+      <span class="center">APRIL 2026</span>
+      <span class="right">OLIVIER(1)</span>
+    </div>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Olivier Gillaizeau — frenchbutnice.design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --acme-yellow:#FFFFEA;
+    --acme-tag:#EAFFFF;
+    --acme-sel:#EEEE9E;
+    --acme-rule:#888888;
+    --acme-err:#FFEEEE;
+    --acme-link:#000088;
+    --ink:#000000;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--acme-yellow);color:var(--ink);}
+  body{
+    font-family:'Atkinson Hyperlegible', -apple-system, 'Lucida Grande', sans-serif;
+    font-size:14px;
+    line-height:1.42;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  ::selection{background:var(--acme-sel);color:var(--ink);}
+
+  .rio{
+    min-height:100vh;
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    border-top:1px solid var(--acme-rule);
+    border-bottom:1px solid var(--acme-rule);
+  }
+  .col{
+    display:flex;
+    flex-direction:column;
+    border-right:1px solid var(--acme-rule);
+    min-width:0;
+  }
+  .col:first-child{border-left:1px solid var(--acme-rule);}
+  .col:last-child{/* keep right border from grid */}
+
+  .frame{
+    display:flex;
+    flex-direction:column;
+    border-bottom:1px solid var(--acme-rule);
+    min-width:0;
+  }
+  .frame:last-child{border-bottom:none;}
+  .frame.grow{flex:1;}
+
+  .tag{
+    background:var(--acme-tag);
+    color:var(--ink);
+    padding:3px 8px 4px 8px;
+    border-bottom:1px solid var(--acme-rule);
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    font-size:13px;
+    user-select:none;
+  }
+  .tag .path{font-weight:700;}
+  .tag .cmds{color:#000;}
+  .tag .sep{display:inline-block;padding:0 6px;color:#000;}
+
+  .body{
+    padding:14px 18px 22px 18px;
+    background:var(--acme-yellow);
+    flex:1;
+    min-width:0;
+  }
+  .frame.errors .body{background:var(--acme-err);}
+
+  h1{
+    font-size:22px;
+    line-height:1.18;
+    font-weight:700;
+    margin:0 0 6px 0;
+    letter-spacing:-0.01em;
+  }
+  h2{
+    font-size:14px;
+    font-weight:700;
+    margin:0 0 4px 0;
+  }
+  p{margin:0 0 12px 0;max-width:42ch;}
+  .lede{font-size:15px;margin-bottom:14px;max-width:40ch;}
+  .muted{color:#333;}
+
+  a{color:var(--acme-link);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  a:focus-visible{outline:2px solid var(--acme-link);outline-offset:2px;background:var(--acme-sel);}
+
+  ul.bare{list-style:none;margin:0 0 12px 0;padding:0;}
+  ul.bare li{padding:1px 0;}
+
+  .kv{display:grid;grid-template-columns:72px 1fr;row-gap:2px;column-gap:10px;max-width:36ch;}
+  .kv dt{color:#000;}
+  .kv dd{margin:0;}
+
+  .talk{margin-bottom:14px;max-width:42ch;}
+  .talk .title{font-weight:700;}
+  .talk .desc{display:block;padding-left:14px;}
+
+  .log{font-size:13px;max-width:42ch;}
+  .log .line{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .log .ts{color:#000;}
+  .log .src{font-weight:700;}
+
+  .essay{display:block;padding:1px 0;}
+  .essay-note{margin-top:10px;max-width:40ch;}
+
+  .cred{font-size:13px;color:#000;margin-top:6px;}
+
+  /* Tablet: 2 cols */
+  @media (max-width: 1100px){
+    .rio{grid-template-columns:1fr 1fr;}
+    .col:nth-child(3){grid-column:1 / -1;border-left:1px solid var(--acme-rule);}
+  }
+  /* Mobile: 1 col */
+  @media (max-width: 680px){
+    .rio{grid-template-columns:1fr;}
+    .col{border-right:1px solid var(--acme-rule);border-left:1px solid var(--acme-rule);}
+    .col:nth-child(3){grid-column:auto;}
+    h1{font-size:20px;}
+    .body{padding:12px 14px 18px 14px;}
+  }
+</style>
+</head>
+<body>
+<main class="rio" role="main" aria-label="Acme">
+
+  <!-- COLUMN 1 -->
+  <section class="col" aria-label="Column 1">
+
+    <article class="frame">
+      <header class="tag"><span class="path">~/olivier/about</span><span class="sep">Del Snarf</span>|<span class="sep">Look Edit</span></header>
+      <div class="body">
+        <h1>olivier gillaizeau</h1>
+        <p class="lede">creative working at the edge of technology</p>
+        <p>ai design lead at google gemini.<br>fmr. frame.io, airbnb.</p>
+        <p>15 years of shipping the infrastructure that makes creative teams faster — and is now reshaping what creative even means.</p>
+        <p>french, but nice.<br>san francisco.</p>
+        <p class="cred muted">previously <a href="#">Gemini</a> · <a href="#">Frame.io</a> · <a href="#">Airbnb</a></p>
+      </div>
+    </article>
+
+    <article class="frame grow">
+      <header class="tag"><span class="path">~/olivier/contact</span><span class="sep">Del Snarf</span>|<span class="sep">Look</span></header>
+      <div class="body">
+        <p><a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></p>
+        <dl class="kv">
+          <dt>twitter</dt><dd><a href="#">/frenchbutnice</a></dd>
+          <dt>linkedin</dt><dd><a href="#">/in/oliviergillaizeau</a></dd>
+          <dt>rss</dt><dd><a href="#">/frenchbutnice.design/rss</a></dd>
+        </dl>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- COLUMN 2 -->
+  <section class="col" aria-label="Column 2">
+
+    <article class="frame grow">
+      <header class="tag"><span class="path">~/olivier/essays/</span><span class="sep">Del Snarf</span>|<span class="sep">New Get</span></header>
+      <div class="body">
+        <ul class="bare">
+          <li><a class="essay" href="#">working-with-models-not-against-them</a></li>
+          <li><a class="essay" href="#">notes-from-a-creative-at-the-edge</a></li>
+          <li><a class="essay" href="#">from-flash-to-generative-ui</a></li>
+          <li><a class="essay" href="#">why-i-stopped-calling-myself-a-ds-person</a></li>
+          <li><a class="essay" href="#">i-have-spent-15-years-building-tools</a></li>
+          <li><a class="essay" href="#">models-dont-read-your-figma</a></li>
+        </ul>
+        <p class="essay-note muted">— writing about working with models, not against them. about the systems that hold them. about what creative even means in 2026.</p>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- COLUMN 3 -->
+  <section class="col" aria-label="Column 3">
+
+    <article class="frame">
+      <header class="tag"><span class="path">~/olivier/speaking</span><span class="sep">Del Snarf</span>|<span class="sep">Look</span></header>
+      <div class="body">
+        <div class="talk">
+          <span class="title">designing-with-generative-ai</span>
+          <span class="desc">from canvases to gen-ui frameworks. what it's like to ship interfaces that compose themselves.</span>
+        </div>
+        <div class="talk">
+          <span class="title">leading-creative-at-the-edge-of-technology</span>
+          <span class="desc">what 15 years of building with evolving tools teaches you about leading teams that ship the future.</span>
+        </div>
+        <p>book a talk: <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></p>
+      </div>
+    </article>
+
+    <article class="frame errors grow">
+      <header class="tag"><span class="path">+Errors</span><span class="sep">Del Snarf</span>|<span class="sep">Look Edit</span></header>
+      <div class="body">
+        <div class="log" aria-label="error log">
+          <span class="line"><span class="ts">2026-04-11 14:32</span>&nbsp;&nbsp;<span class="src">acme:</span> opened olivier</span>
+          <span class="line"><span class="ts">2026-04-11 14:32</span>&nbsp;&nbsp;<span class="src">acme:</span> 6 files in essays/</span>
+          <span class="line"><span class="ts">2026-04-11 14:33</span>&nbsp;&nbsp;<span class="src">acme:</span> 2 talks scheduled</span>
+          <span class="line"><span class="ts">2026-04-11 14:33</span>&nbsp;&nbsp;<span class="src">rio:</span> rendering frenchbutnice.design</span>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+</main>
+</body>
+</html>

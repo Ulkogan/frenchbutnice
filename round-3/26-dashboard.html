@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>olivier@gemini ~ htop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e0e12;
+    --panel:#131319;
+    --border:#3a3f48;
+    --border-soft:#23262d;
+    --text:#c8c8d0;
+    --muted:#6a6e78;
+    --label:#b6e3ff;
+    --green:#4ade80;
+    --yellow:#facc15;
+    --red:#f87171;
+    --orange:#f0a070;
+    --purple:#a78bfa;
+    --pink:#f0abfc;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);}
+  body{
+    font-family:'Space Mono',ui-monospace,Menlo,monospace;
+    font-size:13px;
+    line-height:1.45;
+    min-height:100vh;
+    padding:10px;
+    font-feature-settings:"liga" 0;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none}
+  a:hover,a:focus{color:var(--label);text-decoration:underline;outline:none}
+
+  /* Top bar */
+  .topbar{
+    background:#1a1d24;
+    color:#0e0e12;
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px;
+    padding:6px 12px;
+    border-radius:2px;
+    margin-bottom:10px;
+    font-weight:700;
+    font-size:12.5px;
+  }
+  .topbar .brand{background:var(--label);color:#0e0e12;padding:1px 8px;border-radius:2px}
+  .topbar .chip{color:var(--text)}
+  .topbar .dot{color:var(--green)}
+  .topbar .val{color:var(--orange)}
+
+  /* Grid */
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    grid-template-areas:
+      "stats memory"
+      "proc  proc"
+      "net   log";
+    gap:10px;
+  }
+  @media (max-width: 860px){
+    .grid{grid-template-columns:1fr;grid-template-areas:"stats" "memory" "proc" "net" "log"}
+  }
+  .panel{
+    border:1px solid var(--border);
+    border-radius:3px;
+    background:var(--panel);
+    position:relative;
+    padding:0;
+  }
+  .panel > header{
+    color:var(--label);
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:.02em;
+    padding:6px 12px 4px;
+    border-bottom:1px dashed var(--border-soft);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .panel > header .right{color:var(--muted);font-weight:400}
+  .panel .body{padding:12px}
+
+  .area-stats{grid-area:stats}
+  .area-memory{grid-area:memory}
+  .area-proc{grid-area:proc}
+  .area-net{grid-area:net}
+  .area-log{grid-area:log}
+
+  /* Stats bars */
+  .stat{display:grid;grid-template-columns:110px 1fr 56px;align-items:center;gap:10px;margin:6px 0}
+  .stat .k{color:var(--text)}
+  .stat .bar{
+    height:12px;
+    background:#1c1f26;
+    border:1px solid var(--border-soft);
+    position:relative;
+    overflow:hidden;
+  }
+  .stat .fill{
+    height:100%;
+    background:linear-gradient(90deg,var(--green),var(--yellow) 60%,var(--red));
+  }
+  .stat .v{color:var(--orange);text-align:right;font-weight:700}
+  .stat.g .fill{background:var(--green)}
+  .stat.y .fill{background:var(--yellow)}
+  .stat.r .fill{background:var(--red)}
+
+  /* Memory */
+  .mem ul{list-style:none;margin:0;padding:0}
+  .mem li{display:flex;justify-content:space-between;padding:3px 0;gap:10px}
+  .mem .mark{color:var(--purple);margin-right:6px}
+  .mem .name{color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mem .size{color:var(--orange);font-weight:700;white-space:nowrap}
+  .mem .total{
+    margin-top:10px;padding-top:8px;border-top:1px dashed var(--border-soft);
+    display:flex;justify-content:space-between;color:var(--muted)
+  }
+  .mem .total b{color:var(--label);font-weight:700}
+  .mem .mbar{margin-top:6px;height:8px;background:#1c1f26;border:1px solid var(--border-soft)}
+  .mem .mbar > i{display:block;height:100%;width:65%;background:linear-gradient(90deg,var(--green),var(--yellow))}
+
+  /* Process table */
+  .proctable{width:100%;border-collapse:collapse;font-size:12.5px}
+  .proctable th,.proctable td{text-align:left;padding:4px 10px}
+  .proctable thead th{
+    color:var(--muted);
+    font-weight:400;
+    border-bottom:1px dashed var(--border-soft);
+    text-transform:uppercase;
+    font-size:11px;
+    letter-spacing:.04em;
+  }
+  .proctable tbody tr{border-bottom:1px dotted #1e2128}
+  .proctable .pid{color:var(--muted)}
+  .proctable .cpu,.proctable .mem{color:var(--orange);font-weight:700;text-align:right;width:66px}
+  .proctable .state{width:92px;font-weight:700}
+  .proctable .user{color:var(--purple);width:92px}
+  .proctable .cmd a{color:var(--text)}
+  .proctable .cmd a:hover{color:var(--label)}
+  .state-running{color:var(--green)}
+  .state-sleeping{color:var(--yellow)}
+  .state-stopped{color:var(--muted)}
+  tr.running{position:relative}
+  @keyframes pulseRow{
+    0%,100%{background:transparent}
+    50%{background:rgba(74,222,128,.06)}
+  }
+  @media (prefers-reduced-motion: no-preference){
+    tr.running{animation:pulseRow 3.4s ease-in-out infinite}
+  }
+  tr.running td:first-child{box-shadow:inset 2px 0 0 var(--green)}
+  tr.sleeping td:first-child{box-shadow:inset 2px 0 0 var(--yellow)}
+  tr.stopped td:first-child{box-shadow:inset 2px 0 0 #3a3f48}
+  .procfoot{
+    color:var(--muted);
+    border-top:1px dashed var(--border-soft);
+    padding:8px 10px 2px;
+    font-size:12px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+  }
+  .procfoot b{color:var(--text)}
+  .procwrap{overflow-x:auto}
+
+  /* Network */
+  .conn{margin:10px 0}
+  .conn .title{color:var(--text)}
+  .conn .title .arrow{color:var(--muted);margin-right:6px}
+  .conn .meta{color:var(--muted);padding-left:18px;margin-top:2px;font-size:12px}
+  .port{color:var(--purple);font-weight:700}
+  .est{color:var(--green);font-weight:700}
+
+  /* Log */
+  .log{font-size:12.5px;margin:0;padding:0;list-style:none}
+  .log li{padding:2px 0;display:flex;gap:10px;align-items:flex-start}
+  .log .ts{color:var(--muted);white-space:nowrap}
+  .log .k{color:var(--green);width:12px;display:inline-block;text-align:center}
+  .log .k.arrow{color:var(--purple)}
+  .log .body{color:var(--text);flex:1}
+  .log a:hover{color:var(--label)}
+
+  /* Hero line as /etc/motd */
+  .motd{
+    color:var(--muted);
+    padding:10px 12px;
+    margin:0 0 10px;
+    border:1px dashed var(--border-soft);
+    border-radius:3px;
+    background:var(--panel);
+  }
+  .motd h1{
+    font-size:15px;
+    font-weight:700;
+    color:var(--text);
+    margin:0 0 4px;
+    letter-spacing:.01em;
+  }
+  .motd h1 .accent{color:var(--label)}
+  .motd p{margin:2px 0;font-size:12.5px}
+  .motd .prompt{color:var(--green)}
+  .motd .you{color:var(--orange)}
+
+  /* Status bar */
+  .statusbar{
+    margin-top:10px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:16px;
+    background:var(--label);
+    color:#0e0e12;
+    padding:6px 12px;
+    border-radius:2px;
+    font-weight:700;
+    font-size:12.5px;
+  }
+  .statusbar .right{margin-left:auto;color:#0e0e12}
+  .statusbar a{color:#0e0e12}
+  .statusbar a:hover{text-decoration:underline}
+  .fkey{background:#0e0e12;color:var(--label);padding:1px 6px;border-radius:2px;margin-right:4px}
+
+  /* About / credential inline */
+  .cred{
+    color:var(--muted);
+    font-size:12px;
+    margin-top:6px;
+  }
+  .cred b{color:var(--text);font-weight:700}
+
+  ::selection{background:#b6e3ff;color:#0e0e12}
+
+  /* Blinking cursor */
+  .cursor{
+    display:inline-block;width:8px;height:14px;background:var(--label);
+    vertical-align:-2px;margin-left:4px;
+  }
+  @media (prefers-reduced-motion: no-preference){
+    .cursor{animation:blink 1.05s steps(1) infinite}
+    @keyframes blink{50%{opacity:0}}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar" role="banner" aria-label="system status bar">
+  <span class="brand">OLIVIER</span>
+  <span class="chip">v26.04</span>
+  <span class="dot">●</span>
+  <span class="chip">uptime: <span class="val">15y 47d 14:32:08</span></span>
+  <span class="chip">load: <span class="val">0.82, 0.91, 0.87</span></span>
+  <span class="chip">proc: <span class="val">6</span></span>
+  <span class="chip">mem: <span class="val">41.6G/64G</span></span>
+</div>
+
+<div class="motd" role="note">
+  <h1>olivier.gillaizeau &mdash; <span class="accent">creative working at the edge of technology</span><span class="cursor" aria-hidden="true"></span></h1>
+  <p>I lead AI design at Google Gemini. I write about working with models, not against them.</p>
+  <p class="cred"><span class="prompt">$</span> whoami &nbsp;&rarr;&nbsp; <b>Designer. Systems lead. AI practitioner.</b> French, but nice. &nbsp;·&nbsp; previously <b>Gemini · Frame.io · Airbnb</b></p>
+</div>
+
+<main class="grid">
+
+  <!-- STATS -->
+  <section class="panel area-stats" aria-labelledby="h-stats">
+    <header><span id="h-stats">── STATS ──────────────────────────</span><span class="right">sampling 1hz</span></header>
+    <div class="body">
+      <div class="stat"><span class="k">creativity</span>  <div class="bar"><div class="fill" style="width:82%"></div></div> <span class="v">82%</span></div>
+      <div class="stat"><span class="k">ai practice</span> <div class="bar"><div class="fill" style="width:76%"></div></div> <span class="v">76%</span></div>
+      <div class="stat"><span class="k">systems</span>     <div class="bar"><div class="fill" style="width:87%"></div></div> <span class="v">87%</span></div>
+      <div class="stat"><span class="k">leadership</span>  <div class="bar"><div class="fill" style="width:82%"></div></div> <span class="v">82%</span></div>
+      <div class="stat"><span class="k">craft</span>       <div class="bar"><div class="fill" style="width:74%"></div></div> <span class="v">74%</span></div>
+      <div class="stat"><span class="k">french</span>      <div class="bar"><div class="fill" style="width:100%"></div></div> <span class="v">100%</span></div>
+    </div>
+  </section>
+
+  <!-- MEMORY -->
+  <section class="panel area-memory mem" aria-labelledby="h-mem">
+    <header><span id="h-mem">── CURRENT FOCUS ──────────────────</span><span class="right">loaded modules</span></header>
+    <div class="body">
+      <ul>
+        <li><span class="name"><span class="mark">▸</span>generative-ui-framework@gemini</span><span class="size">24.3 GB</span></li>
+        <li><span class="name"><span class="mark">▸</span>ai-practitioner-thinking</span><span class="size">8.1 GB</span></li>
+        <li><span class="name"><span class="mark">▸</span>leading-creative-at-the-edge</span><span class="size">5.7 GB</span></li>
+        <li><span class="name"><span class="mark">▸</span>writing-essays</span><span class="size">2.4 GB</span></li>
+        <li><span class="name"><span class="mark">▸</span>speaking-prep</span><span class="size">1.1 GB</span></li>
+      </ul>
+      <div class="mbar" aria-hidden="true"><i></i></div>
+      <div class="total">total used <b>41.6 GB</b> / 64 GB</div>
+    </div>
+  </section>
+
+  <!-- PROCESS LIST -->
+  <section class="panel area-proc" aria-labelledby="h-proc">
+    <header><span id="h-proc">── PROCESSES ──────────────────────</span><span class="right">sort: %cpu ↓</span></header>
+    <div class="body">
+      <div class="procwrap">
+      <table class="proctable" aria-label="essays as running processes">
+        <thead>
+          <tr><th>pid</th><th>user</th><th>state</th><th class="cpu">%cpu</th><th class="mem">%mem</th><th>command</th></tr>
+        </thead>
+        <tbody>
+          <tr class="running">
+            <td class="pid">1842</td>
+            <td class="user">olivier</td>
+            <td class="state state-running">RUNNING</td>
+            <td class="cpu">18.4</td>
+            <td class="mem">12.3</td>
+            <td class="cmd"><a href="#essays">./working-with-models-not-against-them &nbsp;<span style="color:var(--muted)">&mdash; "Most teams still think AI means chat. I saw it generating UIs."</span></a></td>
+          </tr>
+          <tr class="running">
+            <td class="pid">1843</td>
+            <td class="user">olivier</td>
+            <td class="state state-running">RUNNING</td>
+            <td class="cpu">14.2</td>
+            <td class="mem">8.7</td>
+            <td class="cmd"><a href="#essays">./notes-from-a-creative-at-the-edge-of-the-model</a></td>
+          </tr>
+          <tr class="sleeping">
+            <td class="pid">1844</td>
+            <td class="user">olivier</td>
+            <td class="state state-sleeping">SLEEPING</td>
+            <td class="cpu">6.1</td>
+            <td class="mem">4.2</td>
+            <td class="cmd"><a href="#essays">./from-flash-to-generative-ui</a></td>
+          </tr>
+          <tr class="sleeping">
+            <td class="pid">1845</td>
+            <td class="user">olivier</td>
+            <td class="state state-sleeping">SLEEPING</td>
+            <td class="cpu">4.3</td>
+            <td class="mem">3.1</td>
+            <td class="cmd"><a href="#essays">./why-i-stopped-calling-myself-a-design-systems-person</a></td>
+          </tr>
+          <tr class="stopped">
+            <td class="pid">1846</td>
+            <td class="user">olivier</td>
+            <td class="state state-stopped">STOPPED</td>
+            <td class="cpu">0.0</td>
+            <td class="mem">0.0</td>
+            <td class="cmd"><a href="#essays">./i-have-spent-15-years-building-tools-that-are-about-to-disappear</a></td>
+          </tr>
+          <tr class="stopped">
+            <td class="pid">1847</td>
+            <td class="user">olivier</td>
+            <td class="state state-stopped">STOPPED</td>
+            <td class="cpu">0.0</td>
+            <td class="mem">0.0</td>
+            <td class="cmd"><a href="#essays">./models-dont-read-your-figma</a></td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="procfoot">
+        <span>6 essays &middot; <b style="color:var(--green)">2 running</b> &middot; <b style="color:var(--yellow)">2 sleeping</b> &middot; <b style="color:var(--muted)">2 stopped</b> (published)</span>
+        <span>signal SIGHUP → <a href="https://frenchbutnice.design/feed.xml">rss://feed</a></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- NETWORK -->
+  <section class="panel area-net" aria-labelledby="h-net">
+    <header><span id="h-net">── OPEN CONNECTIONS ───────────────</span><span class="right">speaking · contact</span></header>
+    <div class="body">
+      <div class="conn">
+        <div class="title"><span class="arrow">▸</span>talk:designing-with-generative-ai</div>
+        <div class="meta"><span class="port">LISTENING</span> on port 0x1A1 &middot; from Gemini's Canvases to generative UI frameworks.</div>
+      </div>
+      <div class="conn">
+        <div class="title"><span class="arrow">▸</span>talk:leading-creative-at-the-edge-of-technology</div>
+        <div class="meta"><span class="port">LISTENING</span> on port 0x1A2 &middot; 15 years from Flash to AI, lessons in leading teams that ship the future.</div>
+      </div>
+      <div class="conn">
+        <div class="title"><span class="arrow">▸</span>contact:<a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></div>
+        <div class="meta"><span class="est">ESTABLISHED</span> · ttl 86400 · accepts book-me payloads</div>
+      </div>
+      <div class="conn">
+        <div class="title"><span class="arrow">▸</span>socket:twitter &middot; socket:linkedin &middot; socket:rss</div>
+        <div class="meta">OPEN · <a href="https://twitter.com/">@olivierg</a> · <a href="https://linkedin.com/">/in/olivierg</a> · <a href="#">/feed.xml</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOG -->
+  <section class="panel area-log" aria-labelledby="h-log">
+    <header><span id="h-log">── RECENT EVENTS ──────────────────</span><span class="right">tail -f ~/.xsession</span></header>
+    <div class="body">
+      <ul class="log">
+        <li><span class="ts">[04-10 14:32]</span><span class="k">✓</span><span class="body">shipped: gemini canvases &mdash; generative UI v2.3</span></li>
+        <li><span class="ts">[04-09 09:18]</span><span class="k arrow">▸</span><span class="body">tweet: "your design system is not a mandate. it is a service."</span></li>
+        <li><span class="ts">[04-08 22:14]</span><span class="k">✓</span><span class="body">essay published: <a href="#">models-don't-read-your-figma</a></span></li>
+        <li><span class="ts">[04-05 16:00]</span><span class="k arrow">▸</span><span class="body">link: gemini.google.com/canvases &mdash; launch note</span></li>
+        <li><span class="ts">[04-04 10:42]</span><span class="k">✓</span><span class="body">essay published: <a href="#">15-years-of-building-tools</a></span></li>
+        <li><span class="ts">[04-02 19:22]</span><span class="k arrow">▸</span><span class="body">rss: frenchbutnice/feed &mdash; 4 subscribers today</span></li>
+        <li><span class="ts">[03-30 08:06]</span><span class="k">✓</span><span class="body">talk confirmed: config 2026 &mdash; leading creative at the edge</span></li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="statusbar" role="contentinfo">
+  <span><span class="fkey">F1</span><a href="#h-proc">essays</a></span>
+  <span><span class="fkey">F2</span><a href="#h-net">speaking</a></span>
+  <span><span class="fkey">F3</span><a href="#h-mem">about</a></span>
+  <span><span class="fkey">F4</span><a href="mailto:og@frenchbutnice.design">contact</a></span>
+  <span><span class="fkey">F10</span><a href="#">quit</a></span>
+  <span class="right">olivier@gemini ~$ _</span>
+</footer>
+
+</body>
+</html>

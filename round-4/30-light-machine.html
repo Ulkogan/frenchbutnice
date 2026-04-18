@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Olivier Gillaizeau — Creative at the Edge of Technology</title>
+<meta name="description" content="Olivier Gillaizeau leads AI design at Google Gemini. A creative working at the edge of technology.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'Astro Mono';
+  src: url('../references/fonts/AstroMono-Family-axezye/AstroMono-Regular.otf') format('opentype');
+  font-weight: 400;
+}
+@font-face {
+  font-family: 'Astro Mono';
+  src: url('../references/fonts/AstroMono-Family-axezye/AstroMono-Bold.otf') format('opentype');
+  font-weight: 700;
+}
+
+/* ─── Reset & Base ─── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #F5F3EE;
+  --bg-warm: #EFEAE2;
+  --text: #1C1917;
+  --text-secondary: #57534E;
+  --text-tertiary: #A8A29E;
+  --accent: #3D5A80;
+  --accent-light: #5B7EA6;
+  --coral: #C2725A;
+  --coral-muted: #D4967E;
+  --rule: #DDD8D0;
+  --rule-light: #E8E4DC;
+  --tag-bg: #E8E4DC;
+  --tag-border: #D4CFC6;
+  --mono: 'Astro Mono', 'DM Mono', 'SF Mono', monospace;
+  --mono-secondary: 'DM Mono', 'SF Mono', monospace;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--mono);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+a:hover {
+  color: var(--accent-light);
+}
+a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* ─── Arrival Overlay ─── */
+#arrival {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+#arrival.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.arrival-cursor {
+  width: 2px;
+  height: 24px;
+  background: var(--text);
+  opacity: 0;
+  animation: cursorBlink 0.8s step-end infinite;
+}
+.arrival-cursor.visible {
+  opacity: 1;
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.arrival-name {
+  font-family: var(--mono);
+  font-size: clamp(1.4rem, 4vw, 2.4rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  color: var(--text);
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.arrival-name.typing {
+  opacity: 1;
+  animation: typewriter 1.2s steps(20) forwards;
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+.arrival-subtitle {
+  font-family: var(--mono-secondary);
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+  color: var(--text-secondary);
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.arrival-subtitle.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.arrival-rule {
+  width: 0;
+  height: 1px;
+  background: var(--rule);
+  margin-top: 24px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.arrival-rule.drawing {
+  width: min(80vw, 600px);
+}
+
+.arrival-skip {
+  position: absolute;
+  bottom: 32px;
+  font-family: var(--mono-secondary);
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.05em;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+.arrival-skip.visible {
+  opacity: 1;
+}
+
+/* ─── Status Bar ─── */
+.status-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(245, 243, 238, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--rule-light);
+  padding: 10px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--mono-secondary);
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  letter-spacing: 0.04em;
+  transform: translateY(-100%);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+.status-bar.visible {
+  transform: translateY(0);
+}
+.status-bar .status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--coral);
+  margin-right: 8px;
+  animation: statusPulse 3s ease-in-out infinite;
+}
+@keyframes statusPulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ─── Main Content ─── */
+.page-content {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.page-content.visible {
+  opacity: 1;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ─── Hero ─── */
+.hero {
+  padding: 160px 0 80px;
+}
+.hero-name {
+  font-family: var(--mono);
+  font-size: clamp(2rem, 5.5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--text);
+}
+.hero-intro {
+  font-family: var(--mono-secondary);
+  font-size: clamp(0.9rem, 2vw, 1.05rem);
+  color: var(--text-secondary);
+  margin-top: 20px;
+  max-width: 560px;
+  line-height: 1.7;
+}
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+.hero-tag {
+  font-family: var(--mono-secondary);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  padding: 5px 12px;
+  border: 1px solid var(--tag-border);
+  border-radius: 3px;
+  color: var(--text-secondary);
+  background: transparent;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.hero-tag:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ─── Section Shared ─── */
+.section {
+  padding: 64px 0;
+  border-top: 1px solid var(--rule);
+}
+.section-title {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 32px;
+}
+
+/* ─── Reveal Animations ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ─── Writing Section ─── */
+.essay-list {
+  list-style: none;
+}
+.essay-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--rule-light);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  align-items: baseline;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.essay-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.essay-item:last-child {
+  border-bottom: none;
+}
+.essay-title {
+  font-family: var(--mono);
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.4;
+}
+.essay-title a {
+  color: var(--text);
+  transition: color 0.2s ease;
+}
+.essay-title a:hover {
+  color: var(--accent);
+}
+.essay-preview {
+  font-family: var(--mono-secondary);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+  line-height: 1.5;
+}
+.essay-status {
+  font-family: var(--mono-secondary);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+.essay-status.published {
+  color: var(--accent);
+  background: rgba(61, 90, 128, 0.08);
+}
+.essay-status.draft {
+  color: var(--coral);
+  background: rgba(194, 114, 90, 0.08);
+}
+.draft-cursor {
+  display: inline-block;
+  width: 1px;
+  height: 0.65rem;
+  background: var(--coral);
+  margin-left: 4px;
+  vertical-align: middle;
+  animation: cursorBlink 0.8s step-end infinite;
+}
+
+/* ─── Speaking Section ─── */
+.speaking-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.speaking-card {
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  padding: 24px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.speaking-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 2px 12px rgba(61, 90, 128, 0.06);
+}
+.speaking-card-title {
+  font-family: var(--mono);
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.4;
+}
+.speaking-card-desc {
+  font-family: var(--mono-secondary);
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+  line-height: 1.5;
+}
+.speaking-cta {
+  font-family: var(--mono-secondary);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+.speaking-cta a {
+  color: var(--accent);
+  border-bottom: 1px solid var(--rule);
+  transition: border-color 0.2s ease;
+}
+.speaking-cta a:hover {
+  border-color: var(--accent);
+}
+
+/* ─── About Section ─── */
+.about-text {
+  font-family: var(--mono-secondary);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 640px;
+}
+
+/* ─── Node Graph Section ─── */
+.graph-section {
+  padding: 80px 0;
+  border-top: 1px solid var(--rule);
+  overflow: hidden;
+}
+.graph-title {
+  font-family: var(--mono);
+  font-size: clamp(1.2rem, 3vw, 1.6rem);
+  font-weight: 400;
+  color: var(--text);
+  margin-bottom: 48px;
+  text-align: center;
+}
+.graph-canvas {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: block;
+}
+.graph-canvas .node {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.graph-canvas .node.visible {
+  opacity: 1;
+}
+.graph-canvas .edge {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.graph-canvas .edge.drawn {
+  stroke-dashoffset: 0;
+}
+
+/* ─── Footer ─── */
+.footer {
+  padding: 48px 0 32px;
+  border-top: 1px solid var(--rule);
+}
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+.footer-link {
+  font-family: var(--mono-secondary);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+  transition: color 0.2s ease;
+}
+.footer-link:hover {
+  color: var(--accent);
+}
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.footer-copy {
+  font-family: var(--mono-secondary);
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+}
+.footer-machine {
+  font-family: var(--mono-secondary);
+  font-size: 0.65rem;
+  color: var(--text-tertiary);
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+.footer-machine:hover {
+  color: var(--accent);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  .hero {
+    padding: 120px 0 56px;
+  }
+  .section {
+    padding: 48px 0;
+  }
+  .speaking-grid {
+    grid-template-columns: 1fr;
+  }
+  .essay-item {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .essay-status {
+    justify-self: start;
+  }
+  .container {
+    padding: 0 20px;
+  }
+  .graph-section {
+    padding: 56px 0;
+  }
+  .footer-bottom {
+    flex-direction: column;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Phase 1: Arrival ─── -->
+<div id="arrival" role="presentation" aria-label="Loading animation — click or press any key to skip">
+  <div class="arrival-cursor" id="arrivalCursor"></div>
+  <div class="arrival-name" id="arrivalName">olivier.gillaizeau</div>
+  <div class="arrival-subtitle" id="arrivalSubtitle">creative at the edge of technology</div>
+  <div class="arrival-rule" id="arrivalRule"></div>
+  <div class="arrival-skip" id="arrivalSkip">click or press any key to skip</div>
+</div>
+
+<!-- ─── Status Bar ─── -->
+<header class="status-bar" id="statusBar">
+  <span><span class="status-dot" aria-hidden="true"></span>frenchbutnice.design &middot; 2026 &middot; SF, CA</span>
+  <span>v4.30</span>
+</header>
+
+<!-- ─── Page Content ─── -->
+<main class="page-content" id="pageContent">
+
+  <!-- Hero -->
+  <section class="hero container reveal">
+    <h1 class="hero-name">Olivier<br>Gillaizeau</h1>
+    <p class="hero-intro">I lead AI design at Google Gemini. I write about working with models, not against them.</p>
+    <div class="hero-tags" role="list" aria-label="Career highlights">
+      <span class="hero-tag" role="listitem">Gemini</span>
+      <span class="hero-tag" role="listitem">Frame.io</span>
+      <span class="hero-tag" role="listitem">Airbnb</span>
+    </div>
+  </section>
+
+  <!-- Writing -->
+  <section class="section container">
+    <h2 class="section-title reveal">Writing</h2>
+    <ul class="essay-list">
+      <li class="essay-item" data-stagger="0">
+        <div>
+          <div class="essay-title"><a href="#">Working With Models, Not Against Them</a></div>
+          <div class="essay-preview">Most teams think AI means chat. I saw it generating custom UIs.</div>
+        </div>
+        <span class="essay-status published">Published</span>
+      </li>
+      <li class="essay-item" data-stagger="1">
+        <div>
+          <div class="essay-title"><a href="#">From Flash to Generative UI</a></div>
+          <div class="essay-preview">Fifteen years of tools that keep disappearing.</div>
+        </div>
+        <span class="essay-status published">Published</span>
+      </li>
+      <li class="essay-item" data-stagger="2">
+        <div>
+          <div class="essay-title"><a href="#">The Last System You'll Ever Build</a></div>
+          <div class="essay-preview">What happens when the system learns to build itself.</div>
+        </div>
+        <span class="essay-status draft">Draft<span class="draft-cursor" aria-hidden="true"></span></span>
+      </li>
+      <li class="essay-item" data-stagger="3">
+        <div>
+          <div class="essay-title"><a href="#">Why I Stopped Calling Myself a Design Systems Person</a></div>
+          <div class="essay-preview">The label was a ceiling.</div>
+        </div>
+        <span class="essay-status published">Published</span>
+      </li>
+      <li class="essay-item" data-stagger="4">
+        <div>
+          <div class="essay-title"><a href="#">Coherence Over Uniformity</a></div>
+          <div class="essay-preview">Systems are organisms, not formulas.</div>
+        </div>
+        <span class="essay-status published">Published</span>
+      </li>
+      <li class="essay-item" data-stagger="5">
+        <div>
+          <div class="essay-title"><a href="#">Notes from a Creative at the Edge of the Model</a></div>
+          <div class="essay-preview">Working with models changes how you think.</div>
+        </div>
+        <span class="essay-status draft">Draft<span class="draft-cursor" aria-hidden="true"></span></span>
+      </li>
+    </ul>
+  </section>
+
+  <!-- Speaking -->
+  <section class="section container">
+    <h2 class="section-title reveal">Speaking</h2>
+    <div class="speaking-grid reveal">
+      <div class="speaking-card">
+        <div class="speaking-card-title">Designing with Generative AI</div>
+        <div class="speaking-card-desc">How generative models are changing what designers build, and how they build it. From prompt engineering to full UI generation.</div>
+      </div>
+      <div class="speaking-card">
+        <div class="speaking-card-title">Leading Creative at the Edge of Technology</div>
+        <div class="speaking-card-desc">What it means to lead creative teams when the tools are evolving faster than the team can learn them.</div>
+      </div>
+    </div>
+    <p class="speaking-cta reveal">Available for speaking &mdash; <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></p>
+  </section>
+
+  <!-- About -->
+  <section class="section container">
+    <h2 class="section-title reveal">About</h2>
+    <p class="about-text reveal">Olivier Gillaizeau is a creative working at the edge of technology. He leads AI design at Google Gemini, where he has spent the past four years building generative UI frameworks. Previously at Frame.io and Airbnb. Fifteen years of shipping the infrastructure that makes creative teams faster&thinsp;&mdash;&thinsp;and is now reshaping what <em>creative</em> even means.</p>
+  </section>
+
+  <!-- Node Graph -->
+  <section class="graph-section" id="graphSection">
+    <div class="container">
+      <h2 class="graph-title reveal">Everything connects.</h2>
+    </div>
+    <svg class="graph-canvas" id="graphCanvas" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive node graph showing connections between career chapters, skills, and ideas">
+      <!-- Edges (drawn behind nodes) -->
+      <g class="edges">
+        <!-- Career to skills -->
+        <line class="edge" x1="160" y1="160" x2="400" y2="80" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="160" y1="160" x2="320" y2="280" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="400" y1="200" x2="400" y2="80" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="400" y1="200" x2="560" y2="120" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="400" y1="200" x2="320" y2="280" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="640" y1="180" x2="560" y2="120" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="640" y1="180" x2="560" y2="280" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="640" y1="180" x2="480" y2="320" stroke="#DDD8D0" stroke-width="1"/>
+        <!-- Skills to ideas -->
+        <line class="edge" x1="400" y1="80" x2="240" y2="60" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="560" y1="120" x2="680" y2="60" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="320" y1="280" x2="200" y2="340" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="560" y1="280" x2="680" y2="340" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="480" y1="320" x2="560" y2="280" stroke="#DDD8D0" stroke-width="1"/>
+        <line class="edge" x1="160" y1="160" x2="120" y2="280" stroke="#DDD8D0" stroke-width="1"/>
+      </g>
+      <!-- Career nodes (large) -->
+      <g class="node" data-delay="0">
+        <circle cx="160" cy="160" r="28" fill="none" stroke="#3D5A80" stroke-width="1.5"/>
+        <text x="160" y="164" text-anchor="middle" font-family="'Astro Mono', 'DM Mono', monospace" font-size="9" fill="#3D5A80" font-weight="700">Airbnb</text>
+      </g>
+      <g class="node" data-delay="100">
+        <circle cx="400" cy="200" r="28" fill="none" stroke="#3D5A80" stroke-width="1.5"/>
+        <text x="400" y="204" text-anchor="middle" font-family="'Astro Mono', 'DM Mono', monospace" font-size="9" fill="#3D5A80" font-weight="700">Frame.io</text>
+      </g>
+      <g class="node" data-delay="200">
+        <circle cx="640" cy="180" r="32" fill="rgba(61,90,128,0.06)" stroke="#3D5A80" stroke-width="2"/>
+        <text x="640" y="184" text-anchor="middle" font-family="'Astro Mono', 'DM Mono', monospace" font-size="9" fill="#3D5A80" font-weight="700">Gemini</text>
+      </g>
+      <!-- Skill nodes (medium) -->
+      <g class="node" data-delay="300">
+        <circle cx="400" cy="80" r="20" fill="none" stroke="#A8A29E" stroke-width="1"/>
+        <text x="400" y="84" text-anchor="middle" font-family="'DM Mono', monospace" font-size="8" fill="#57534E">Systems</text>
+      </g>
+      <g class="node" data-delay="350">
+        <circle cx="560" cy="120" r="20" fill="none" stroke="#A8A29E" stroke-width="1"/>
+        <text x="560" y="124" text-anchor="middle" font-family="'DM Mono', monospace" font-size="8" fill="#57534E">AI</text>
+      </g>
+      <g class="node" data-delay="400">
+        <circle cx="320" cy="280" r="20" fill="none" stroke="#A8A29E" stroke-width="1"/>
+        <text x="320" y="284" text-anchor="middle" font-family="'DM Mono', monospace" font-size="8" fill="#57534E">Brand</text>
+      </g>
+      <g class="node" data-delay="450">
+        <circle cx="560" cy="280" r="20" fill="none" stroke="#A8A29E" stroke-width="1"/>
+        <text x="560" y="284" text-anchor="middle" font-family="'DM Mono', monospace" font-size="8" fill="#57534E">Motion</text>
+      </g>
+      <g class="node" data-delay="500">
+        <circle cx="480" cy="320" r="20" fill="none" stroke="#A8A29E" stroke-width="1"/>
+        <text x="480" y="324" text-anchor="middle" font-family="'DM Mono', monospace" font-size="8" fill="#57534E">Leadership</text>
+      </g>
+      <!-- Idea nodes (small) -->
+      <g class="node" data-delay="550">
+        <circle cx="240" cy="60" r="12" fill="none" stroke="#D4CFC6" stroke-width="1"/>
+        <text x="240" y="46" text-anchor="middle" font-family="'DM Mono', monospace" font-size="7" fill="#A8A29E">Coherence</text>
+      </g>
+      <g class="node" data-delay="600">
+        <circle cx="680" cy="60" r="12" fill="none" stroke="#D4CFC6" stroke-width="1"/>
+        <text x="680" y="46" text-anchor="middle" font-family="'DM Mono', monospace" font-size="7" fill="#A8A29E">Gen UI</text>
+      </g>
+      <g class="node" data-delay="650">
+        <circle cx="200" cy="340" r="12" fill="none" stroke="#D4CFC6" stroke-width="1"/>
+        <text x="200" y="360" text-anchor="middle" font-family="'DM Mono', monospace" font-size="7" fill="#A8A29E">Identity</text>
+      </g>
+      <g class="node" data-delay="700">
+        <circle cx="680" cy="340" r="12" fill="none" stroke="#D4CFC6" stroke-width="1"/>
+        <text x="680" y="360" text-anchor="middle" font-family="'DM Mono', monospace" font-size="7" fill="#A8A29E">Craft</text>
+      </g>
+      <g class="node" data-delay="750">
+        <circle cx="120" cy="280" r="12" fill="none" stroke="#D4CFC6" stroke-width="1"/>
+        <text x="120" y="300" text-anchor="middle" font-family="'DM Mono', monospace" font-size="7" fill="#A8A29E">Tools</text>
+      </g>
+    </svg>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer container">
+    <nav class="footer-links reveal" aria-label="Contact and social links">
+      <a href="mailto:og@frenchbutnice.design" class="footer-link">Email</a>
+      <a href="https://twitter.com/ogillaizeau" class="footer-link" target="_blank" rel="noopener">X / Twitter</a>
+      <a href="https://linkedin.com/in/gillaizeau" class="footer-link" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="#" class="footer-link">RSS</a>
+    </nav>
+    <div class="footer-bottom reveal">
+      <span class="footer-copy">&copy; 2026 Olivier Gillaizeau. French, but nice.</span>
+      <span class="footer-machine" title="View machine-readable version">This site is also machine-readable. &rarr;</span>
+    </div>
+  </footer>
+
+</main>
+
+<script>
+(function() {
+  'use strict';
+
+  // ─── Phase 1: Arrival ───
+  const arrival = document.getElementById('arrival');
+  const cursor = document.getElementById('arrivalCursor');
+  const name = document.getElementById('arrivalName');
+  const subtitle = document.getElementById('arrivalSubtitle');
+  const rule = document.getElementById('arrivalRule');
+  const skipHint = document.getElementById('arrivalSkip');
+  const pageContent = document.getElementById('pageContent');
+  const statusBar = document.getElementById('statusBar');
+
+  let arrivalComplete = false;
+  let arrivalTimers = [];
+
+  function clearTimers() {
+    arrivalTimers.forEach(t => clearTimeout(t));
+    arrivalTimers = [];
+  }
+
+  function completeArrival() {
+    if (arrivalComplete) return;
+    arrivalComplete = true;
+    clearTimers();
+    arrival.classList.add('hidden');
+    pageContent.classList.add('visible');
+    // Init scroll observer after content visible
+    setTimeout(initScrollObserver, 100);
+  }
+
+  function skipArrival() {
+    completeArrival();
+  }
+
+  // Skip on click or key
+  document.addEventListener('keydown', skipArrival, { once: true });
+  arrival.addEventListener('click', skipArrival);
+
+  // Run arrival sequence
+  arrivalTimers.push(setTimeout(function() {
+    cursor.classList.add('visible');
+  }, 200));
+
+  arrivalTimers.push(setTimeout(function() {
+    skipHint.classList.add('visible');
+  }, 600));
+
+  arrivalTimers.push(setTimeout(function() {
+    cursor.style.display = 'none';
+    name.classList.add('typing');
+  }, 1000));
+
+  arrivalTimers.push(setTimeout(function() {
+    subtitle.classList.add('visible');
+  }, 2200));
+
+  arrivalTimers.push(setTimeout(function() {
+    rule.classList.add('drawing');
+  }, 2600));
+
+  arrivalTimers.push(setTimeout(function() {
+    completeArrival();
+  }, 3800));
+
+
+  // ─── Phase 2: Scroll Animations ───
+  function initScrollObserver() {
+    // Status bar on scroll
+    let lastScroll = 0;
+    window.addEventListener('scroll', function() {
+      const st = window.scrollY;
+      if (st > 60) {
+        statusBar.classList.add('visible');
+      } else {
+        statusBar.classList.remove('visible');
+      }
+      lastScroll = st;
+    }, { passive: true });
+
+    // Reveal observer
+    const revealEls = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(function(el) {
+      revealObserver.observe(el);
+    });
+
+    // Essay stagger
+    const essayItems = document.querySelectorAll('.essay-item');
+    const essayObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          const delay = parseInt(entry.target.getAttribute('data-stagger')) * 80;
+          setTimeout(function() {
+            entry.target.classList.add('visible');
+          }, delay);
+          essayObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -20px 0px' });
+
+    essayItems.forEach(function(el) {
+      essayObserver.observe(el);
+    });
+
+    // ─── Phase 3: Node Graph ───
+    const graphSection = document.getElementById('graphSection');
+    const nodes = document.querySelectorAll('.graph-canvas .node');
+    const edges = document.querySelectorAll('.graph-canvas .edge');
+
+    const graphObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          // Animate nodes with stagger
+          nodes.forEach(function(node) {
+            const delay = parseInt(node.getAttribute('data-delay')) || 0;
+            setTimeout(function() {
+              node.classList.add('visible');
+            }, delay);
+          });
+          // Animate edges after nodes start appearing
+          edges.forEach(function(edge, i) {
+            setTimeout(function() {
+              edge.classList.add('drawn');
+            }, 300 + i * 60);
+          });
+          graphObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    graphObserver.observe(graphSection);
+  }
+
+  // If arrival was skipped before timers ran
+  if (arrivalComplete) {
+    initScrollObserver();
+  }
+
+})();
+</script>
+</body>
+</html>

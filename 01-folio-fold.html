@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Olivier Gillaizeau — French but Nice · Folio 26'</title>
+<meta name="description" content="Olivier Gillaizeau. Designer, systems lead. Essays on design systems and the models that are eating them." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Oswald:wght@500;700;900&family=Inter:wght@400;500;600&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --orange:#E85A2C;
+    --orange-soft:#F0805A;
+    --grey:#6F6E70;
+    --ink:#0E0E10;
+    --cream:#F4EFE7;
+    --paper:#FFFFFF;
+    --rule:rgba(14,14,16,.18);
+    --rule-dark:rgba(255,255,255,.22);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Inter',-apple-system,system-ui,sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    color:var(--ink);
+    background:var(--paper);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  a{color:inherit;text-decoration:none}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--orange);outline-offset:3px}
+  .display{
+    font-family:'Anton','Oswald',sans-serif;
+    font-weight:400;
+    letter-spacing:-.01em;
+    line-height:.86;
+    text-transform:uppercase;
+  }
+  .osw{
+    font-family:'Oswald',sans-serif;
+    font-weight:900;
+    letter-spacing:-.005em;
+    text-transform:uppercase;
+    line-height:.92;
+  }
+  .script{
+    font-family:'Caveat',cursive;
+    font-weight:500;
+  }
+
+  /* top bar per section ----------------------------------- */
+  .topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    font-weight:500;
+    padding:18px 40px;
+    border-bottom:1px solid var(--rule);
+  }
+  .topbar.dark{border-bottom-color:var(--rule-dark)}
+  .topbar .mid{opacity:.7;font-weight:400}
+  .topbar .dot{display:inline-block;width:6px;height:6px;background:currentColor;border-radius:50%;margin:0 10px;vertical-align:middle;opacity:.6}
+
+  /* section chrome ---------------------------------------- */
+  section{position:relative}
+  .wrap{padding:0 40px}
+  .section-num{
+    position:absolute;
+    right:28px;
+    top:80px;
+    font-family:'Anton',sans-serif;
+    font-size:180px;
+    line-height:.8;
+    color:transparent;
+    -webkit-text-stroke:1px currentColor;
+    opacity:.18;
+    pointer-events:none;
+    user-select:none;
+  }
+
+  /* HERO --------------------------------------------------- */
+  .hero{
+    background:linear-gradient(152deg,#E85A2C 0%,#D24E22 28%,#9A5B46 58%,#6F6E70 100%);
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";
+    position:absolute;inset:0;
+    background:
+      radial-gradient(1200px 600px at 80% 10%,rgba(255,255,255,.08),transparent 60%),
+      radial-gradient(900px 500px at 10% 90%,rgba(0,0,0,.25),transparent 60%);
+    pointer-events:none;
+  }
+  .hero .topbar{color:#fff;border-bottom-color:var(--rule-dark)}
+  .hero-body{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    padding:60px 40px 56px;
+    position:relative;
+    z-index:2;
+  }
+  .hero .kicker{
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    opacity:.85;
+    margin-bottom:24px;
+    display:flex;
+    align-items:center;
+    gap:14px;
+  }
+  .hero .kicker .line{flex:0 0 64px;height:1px;background:#fff;opacity:.8}
+  .hero h1{
+    margin:0;
+    font-size:clamp(72px,16vw,260px);
+    letter-spacing:-.015em;
+  }
+  .hero h1 span{display:block}
+  .hero h1 .row2{margin-left:.08em}
+  .hero .sub{
+    max-width:640px;
+    margin-top:36px;
+    font-size:20px;
+    line-height:1.55;
+    font-weight:400;
+    opacity:.95;
+  }
+  .hero .sub em{font-style:italic;opacity:.85}
+  .hero .meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-top:56px;
+    gap:24px;
+    font-size:11px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+    opacity:.85;
+  }
+  .hero .meta .right{text-align:right}
+  .hero .folio{
+    position:absolute;
+    right:40px;
+    top:50%;
+    transform:translateY(-50%) rotate(-90deg);
+    transform-origin:right center;
+    font-family:'Anton',sans-serif;
+    font-size:14px;
+    letter-spacing:.3em;
+    opacity:.7;
+    z-index:2;
+  }
+  .hero .scroll{
+    position:absolute;
+    left:40px;
+    bottom:30px;
+    font-size:10px;
+    letter-spacing:.25em;
+    text-transform:uppercase;
+    opacity:.75;
+    z-index:3;
+  }
+  .hero .scroll::before{
+    content:"";
+    display:inline-block;
+    width:40px;height:1px;background:#fff;
+    vertical-align:middle;margin-right:10px;
+  }
+
+  /* SECTION 2 — essays ----------------------------------- */
+  .essays{background:var(--paper);color:var(--ink);padding-bottom:96px}
+  .section-head{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:40px;
+    padding:80px 40px 40px;
+    border-bottom:1px solid var(--rule);
+    position:relative;
+  }
+  .section-head .lead h2{
+    margin:0;
+    font-size:clamp(48px,8vw,120px);
+    max-width:10ch;
+  }
+  .section-head .aside{
+    max-width:360px;
+    font-size:14px;
+    line-height:1.6;
+    padding-bottom:14px;
+  }
+  .section-head .aside .tag{
+    display:inline-block;
+    font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase;margin-bottom:10px;opacity:.6;
+  }
+  .essays-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0;
+    padding:0 40px;
+  }
+  .card{
+    padding:36px 28px 40px;
+    border-right:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    position:relative;
+  }
+  .card:nth-child(3n){border-right:none}
+  .card::before{
+    content:"";
+    position:absolute;left:0;top:0;right:0;height:1px;background:var(--ink);
+  }
+  .card .cat{
+    font-size:10px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    font-weight:600;
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:28px;
+  }
+  .card .cat .n{opacity:.5;font-weight:400}
+  .card h3{
+    margin:0 0 18px;
+    font-size:38px;
+    line-height:.95;
+    letter-spacing:-.01em;
+    min-height:108px;
+  }
+  .card p{
+    margin:0 0 24px;
+    font-size:14px;
+    line-height:1.6;
+    color:#333;
+    max-width:32ch;
+  }
+  .card .read{
+    font-size:10px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    opacity:.6;
+    display:flex;
+    justify-content:space-between;
+  }
+  .card:hover{background:#FAF7F2}
+  .card:hover h3{color:var(--orange)}
+  .card.featured{background:#FAF7F2}
+  .card .scribble{
+    position:absolute;
+    top:18px;right:20px;
+    font-family:'Caveat',cursive;
+    font-size:22px;
+    color:var(--orange);
+    transform:rotate(-6deg);
+  }
+
+  /* SECTION 3 — speaking --------------------------------- */
+  .speak{background:var(--ink);color:#fff;padding-bottom:120px;position:relative}
+  .speak .topbar{color:#fff;border-bottom-color:var(--rule-dark)}
+  .speak .section-head{border-bottom-color:var(--rule-dark)}
+  .speak h2{color:#fff}
+  .speak .aside{color:rgba(255,255,255,.75)}
+  .topics{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:0;
+    padding:0 40px;
+  }
+  .topic{
+    padding:56px 40px 56px 0;
+    border-right:1px solid var(--rule-dark);
+    position:relative;
+  }
+  .topic:last-child{border-right:none;padding-left:40px;padding-right:0}
+  .topic .num{
+    font-family:'Anton',sans-serif;
+    font-size:14px;
+    letter-spacing:.3em;
+    opacity:.55;
+    margin-bottom:20px;
+  }
+  .topic h3{
+    margin:0 0 20px;
+    font-size:clamp(36px,5vw,64px);
+    line-height:.95;
+    letter-spacing:-.01em;
+    max-width:14ch;
+  }
+  .topic p{
+    margin:0;
+    max-width:44ch;
+    font-size:16px;
+    line-height:1.65;
+    color:rgba(255,255,255,.8);
+  }
+  .topic .wink{
+    font-family:'Caveat',cursive;
+    color:var(--orange-soft);
+    font-size:26px;
+    margin-top:18px;
+    display:inline-block;
+    transform:rotate(-2deg);
+  }
+  .speak-cta{
+    padding:80px 40px 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+  .speak-cta .bigline{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(40px,6vw,88px);
+    line-height:.9;
+    text-transform:uppercase;
+    letter-spacing:-.01em;
+    max-width:18ch;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:14px;
+    padding:22px 34px;
+    border:1px solid #fff;
+    border-radius:999px;
+    font-size:12px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    color:#fff;
+    font-weight:500;
+    transition:all .2s ease;
+  }
+  .btn:hover{background:var(--orange);border-color:var(--orange)}
+  .btn .arrow{font-family:'Anton',sans-serif;font-size:18px;}
+
+  /* SECTION 4 — about ------------------------------------ */
+  .about{background:var(--cream);color:var(--ink);padding-bottom:120px;position:relative}
+  .about-body{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:80px;
+    padding:80px 40px 0;
+  }
+  .about-body .lede{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(40px,5.5vw,88px);
+    line-height:.92;
+    letter-spacing:-.01em;
+    text-transform:uppercase;
+    margin:0;
+  }
+  .about-body .lede .wink{
+    display:block;
+    font-family:'Caveat',cursive;
+    font-size:.42em;
+    color:var(--orange);
+    text-transform:none;
+    letter-spacing:0;
+    transform:rotate(-3deg);
+    margin-top:12px;
+  }
+  .about-body .col p{
+    margin:0 0 22px;
+    font-size:16px;
+    line-height:1.7;
+    max-width:50ch;
+  }
+  .credential{
+    margin-top:40px;
+    padding-top:28px;
+    border-top:1px solid var(--rule);
+    font-size:11px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px 18px;
+    align-items:center;
+    position:relative;
+  }
+  .credential .prev{opacity:.55;margin-right:6px}
+  .credential .dot{width:4px;height:4px;background:var(--ink);border-radius:50%;opacity:.4}
+  .credential .annot{
+    position:absolute;
+    top:-34px;
+    left:118px;
+    font-family:'Caveat',cursive;
+    font-size:22px;
+    color:var(--orange);
+    transform:rotate(-6deg);
+    text-transform:none;
+    letter-spacing:0;
+    white-space:nowrap;
+  }
+  .credential .annot svg{
+    position:absolute;
+    left:96%;
+    top:60%;
+    width:40px;
+    height:30px;
+  }
+  .email-line{
+    margin-top:48px;
+    font-family:'Anton',sans-serif;
+    font-size:clamp(28px,3.6vw,48px);
+    text-transform:uppercase;
+    letter-spacing:-.005em;
+  }
+  .email-line a{border-bottom:1px solid var(--ink);padding-bottom:2px}
+  .email-line a:hover{color:var(--orange);border-color:var(--orange)}
+
+  /* FOOTER ----------------------------------------------- */
+  footer{background:var(--ink);color:#fff}
+  footer .topbar{color:#fff;border-bottom-color:var(--rule-dark);border-top:1px solid var(--rule-dark)}
+  .foot-grid{
+    padding:70px 40px 40px;
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    gap:40px;
+    border-bottom:1px solid var(--rule-dark);
+  }
+  .foot-grid h4{
+    font-size:10px;
+    letter-spacing:.22em;
+    text-transform:uppercase;
+    margin:0 0 18px;
+    opacity:.55;
+    font-weight:500;
+  }
+  .foot-grid .brand .big{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(56px,9vw,140px);
+    line-height:.82;
+    text-transform:uppercase;
+    letter-spacing:-.015em;
+    margin:0 0 18px;
+  }
+  .foot-grid .brand p{max-width:34ch;color:rgba(255,255,255,.7);font-size:14px;margin:0}
+  .foot-grid ul{list-style:none;padding:0;margin:0}
+  .foot-grid li{font-size:14px;margin-bottom:10px}
+  .foot-grid li a{opacity:.85}
+  .foot-grid li a:hover{color:var(--orange-soft);opacity:1}
+  .foot-bottom{
+    padding:28px 40px 60px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    font-size:11px;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.6);
+  }
+
+  /* RESPONSIVE ------------------------------------------- */
+  @media (max-width:960px){
+    .essays-grid{grid-template-columns:repeat(2,1fr)}
+    .card:nth-child(3n){border-right:1px solid var(--rule)}
+    .card:nth-child(2n){border-right:none}
+    .topics{grid-template-columns:1fr}
+    .topic,.topic:last-child{padding:48px 0;border-right:none;border-bottom:1px solid var(--rule-dark)}
+    .topic:last-child{border-bottom:none}
+    .about-body{grid-template-columns:1fr;gap:48px}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:40px 24px}
+    .foot-grid .brand{grid-column:1/-1}
+    .section-num{font-size:120px;top:40px;right:12px}
+  }
+  @media (max-width:640px){
+    .wrap, .topbar, .section-head, .essays-grid, .topics, .about-body, .speak-cta, .foot-grid, .foot-bottom, .hero-body{padding-left:20px;padding-right:20px}
+    .topbar{padding-left:20px;padding-right:20px;font-size:9px;letter-spacing:.15em}
+    .topbar .mid{display:none}
+    .hero h1{font-size:22vw}
+    .hero .sub{font-size:16px;margin-top:24px}
+    .hero .meta{font-size:9px}
+    .hero .folio{display:none}
+    .section-head{flex-direction:column;align-items:flex-start;gap:20px;padding-top:56px}
+    .essays-grid{grid-template-columns:1fr}
+    .card{border-right:none!important;padding:32px 0}
+    .card h3{font-size:34px;min-height:0}
+    .speak-cta{padding-top:56px}
+    .credential .annot{display:none}
+    .foot-grid{grid-template-columns:1fr;padding-top:48px}
+    .section-num{display:none}
+  }
+  @media (max-width:380px){
+    .hero h1{font-size:24vw}
+  }
+</style>
+</head>
+<body>
+
+<!-- =============== HERO =============== -->
+<section class="hero" aria-label="Hero">
+  <div class="topbar dark" role="banner">
+    <span>Olivier Gillaizeau</span>
+    <span class="mid">Frenchbutnice<span class="dot"></span>Essays<span class="dot"></span>Folio 26'</span>
+    <span>San Francisco</span>
+  </div>
+
+  <div class="folio" aria-hidden="true">FOLIO · MMXXVI</div>
+
+  <div class="hero-body">
+    <div class="kicker"><span class="line"></span><span>01 — Cover</span></div>
+    <h1 class="display">
+      <span>French</span>
+      <span class="row2">but Nice.</span>
+    </h1>
+    <p class="sub">
+      I write about <em>design systems</em> and the models that are eating them.<br/>
+      Fifteen years shipping the infrastructure that makes creative teams faster — without making them smaller.
+    </p>
+    <div class="meta">
+      <div>
+        <div>Designer · Systems Lead</div>
+        <div style="opacity:.65;margin-top:4px">Currently at Google Gemini</div>
+      </div>
+      <div class="right">
+        <div>Essays · Speaking · Notes</div>
+        <div style="opacity:.65;margin-top:4px">Edition 26'</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll">Scroll — 01 / 05</div>
+</section>
+
+<!-- =============== ESSAYS =============== -->
+<section class="essays" aria-labelledby="essays-h">
+  <div class="topbar">
+    <span>Frenchbutnice</span>
+    <span class="mid">Section 02<span class="dot"></span>Currently Thinking<span class="dot"></span>Folio 26'</span>
+    <span>Essays</span>
+  </div>
+  <div class="section-num" aria-hidden="true">02</div>
+
+  <div class="section-head">
+    <div class="lead">
+      <h2 id="essays-h" class="display">Currently<br/>thinking<br/>about.</h2>
+    </div>
+    <div class="aside">
+      <div class="tag">The living layer</div>
+      Short essays on the two things I keep coming back to: design systems that behave like organisms, and what it actually means to design <em>with</em> AI — not around it. New pieces most weeks.
+    </div>
+  </div>
+
+  <div class="essays-grid" role="list">
+    <article class="card featured" role="listitem">
+      <span class="scribble" aria-hidden="true">currently writing →</span>
+      <div class="cat"><span>Systems</span><span class="n">№ 01</span></div>
+      <h3 class="osw">Build for adoption, not perfection</h3>
+      <p>The problem isn't that design systems are hard to build. It's that most of them were never meant to be lived in.</p>
+      <div class="read"><span>Essay · 8 min read</span><span>→</span></div>
+    </article>
+
+    <article class="card" role="listitem">
+      <div class="cat"><span>Systems</span><span class="n">№ 02</span></div>
+      <h3 class="osw">Systems are services, not mandates</h3>
+      <p>Your design system is not a mandate. It is a service. Act accordingly — or watch 607 teams quietly route around you.</p>
+      <div class="read"><span>Essay · 6 min read</span><span>→</span></div>
+    </article>
+
+    <article class="card" role="listitem">
+      <div class="cat"><span>AI</span><span class="n">№ 03</span></div>
+      <h3 class="osw">GenUI before it had a name</h3>
+      <p>Most teams still think AI means chat interfaces. I saw it generating custom UIs for every query, and moved my team to be ready before the demand hit.</p>
+      <div class="read"><span>Essay · 11 min read</span><span>→</span></div>
+    </article>
+
+    <article class="card" role="listitem">
+      <div class="cat"><span>Systems</span><span class="n">№ 04</span></div>
+      <h3 class="osw">Coherence over uniformity</h3>
+      <p>Organisms, not formulas. Fifteen years learning the difference — mostly the hard way, usually in review cycles that lasted too long.</p>
+      <div class="read"><span>Essay · 7 min read</span><span>→</span></div>
+    </article>
+
+    <article class="card" role="listitem">
+      <div class="cat"><span>AI</span><span class="n">№ 05</span></div>
+      <h3 class="osw">Models don't read your Figma</h3>
+      <p>What a design system owes a generative model, and what a generative model owes back to the system it's borrowing from.</p>
+      <div class="read"><span>Essay · 9 min read</span><span>→</span></div>
+    </article>
+
+    <article class="card" role="listitem">
+      <div class="cat"><span>Systems</span><span class="n">№ 06</span></div>
+      <h3 class="osw">Lessons from 607 teams</h3>
+      <p>What breaks when you unify five systems into one — and what only starts working once you stop calling it a unification.</p>
+      <div class="read"><span>Essay · 10 min read</span><span>→</span></div>
+    </article>
+  </div>
+</section>
+
+<!-- =============== SPEAKING =============== -->
+<section class="speak" aria-labelledby="speak-h">
+  <div class="topbar dark">
+    <span>Frenchbutnice</span>
+    <span class="mid">Section 03<span class="dot"></span>Speaking<span class="dot"></span>Folio 26'</span>
+    <span>Invite a talk</span>
+  </div>
+  <div class="section-num" aria-hidden="true">03</div>
+
+  <div class="section-head">
+    <div class="lead">
+      <h2 id="speak-h" class="display">I speak<br/>about.</h2>
+    </div>
+    <div class="aside">
+      <div class="tag">Conferences · In-house · Podcasts</div>
+      Two topics, both earned on the ground. I bring receipts, not slides about slides. Happy to travel; happier when there's good coffee.
+    </div>
+  </div>
+
+  <div class="topics">
+    <div class="topic">
+      <div class="num">— 01</div>
+      <h3 class="osw">Design Systems at Scale</h3>
+      <p>What breaks at 600+ teams, and how to build for adoption instead of enforcement. The 5→1 unification at Gemini, the 15K hours we got back, and the politics nobody puts on the roadmap.</p>
+      <div class="wink">organisms, not formulas.</div>
+    </div>
+    <div class="topic">
+      <div class="num">— 02</div>
+      <h3 class="osw">Designing with Generative AI</h3>
+      <p>From Gemini's Canvases to the generative UI frameworks that change what a design system is for. How I moved my team to treat the model as a first-class citizen — and what that quietly breaks.</p>
+      <div class="wink">with AI, not around it.</div>
+    </div>
+  </div>
+
+  <div class="speak-cta">
+    <div class="bigline">Book a talk,<br/>or a long email.</div>
+    <a class="btn" href="mailto:og@frenchbutnice.design?subject=Speaking%20invitation">Invite Olivier <span class="arrow">→</span></a>
+  </div>
+</section>
+
+<!-- =============== ABOUT =============== -->
+<section class="about" aria-labelledby="about-h">
+  <div class="topbar">
+    <span>Frenchbutnice</span>
+    <span class="mid">Section 04<span class="dot"></span>About<span class="dot"></span>Folio 26'</span>
+    <span>Olivier Gillaizeau</span>
+  </div>
+  <div class="section-num" aria-hidden="true">04</div>
+
+  <div class="about-body">
+    <h2 id="about-h" class="lede">
+      Designer.<br/>Systems lead.<br/>French,
+      <span class="wink">— but nice.</span>
+    </h2>
+    <div class="col">
+      <p>Olivier Gillaizeau leads design systems at Google Gemini. Previously at Frame.io (acquired by Adobe) and Airbnb. Fifteen years shipping the infrastructure that makes creative teams faster without making them smaller.</p>
+      <p>At Gemini, he led the 5→1 unification that put 607 teams on one system, clawed back 15K design hours a year, and pioneered the generative UI frameworks — Canvases — that now sit inside the product. Before that: Camera-to-Cloud at Frame.io, Only On Airbnb, the Barbie Dreamhouse. Systems as services, not mandates.</p>
+
+      <div class="credential" aria-label="Previous companies">
+        <span class="prev">Previously</span>
+        <span>Gemini</span><span class="dot" aria-hidden="true"></span>
+        <span>Frame.io</span><span class="dot" aria-hidden="true"></span>
+        <span>Airbnb</span>
+        <span class="annot" aria-hidden="true">
+          I joined in '22
+          <svg viewBox="0 0 40 30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <path d="M2 4 C 14 14, 22 22, 34 26"/>
+            <path d="M30 18 L 34 26 L 26 26"/>
+          </svg>
+        </span>
+      </div>
+
+      <div class="email-line">
+        <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =============== FOOTER =============== -->
+<footer aria-labelledby="foot-h">
+  <div class="topbar dark">
+    <span>Frenchbutnice</span>
+    <span class="mid">Section 05<span class="dot"></span>Colophon<span class="dot"></span>Folio 26'</span>
+    <span>End of folio</span>
+  </div>
+  <div class="section-num" aria-hidden="true" style="color:#fff">05</div>
+
+  <h2 id="foot-h" class="sr-only" style="position:absolute;left:-9999px">Footer</h2>
+
+  <div class="foot-grid">
+    <div class="brand">
+      <div class="big">Frenchbutnice</div>
+      <p>Essays and speaking by Olivier Gillaizeau. Written in San Francisco. Usually on a Tuesday, usually after a second coffee.</p>
+    </div>
+    <div>
+      <h4>Write</h4>
+      <ul>
+        <li><a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></li>
+        <li><a href="/rss.xml">Subscribe (RSS)</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Elsewhere</h4>
+      <ul>
+        <li><a href="https://x.com/" rel="me">Twitter / X</a></li>
+        <li><a href="https://linkedin.com/" rel="me">LinkedIn</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Index</h4>
+      <ul>
+        <li><a href="#essays-h">Essays</a></li>
+        <li><a href="#speak-h">Speaking</a></li>
+        <li><a href="#about-h">About</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="foot-bottom">
+    <span>© 2026 · Olivier Gillaizeau</span>
+    <span>Set in Anton, Oswald &amp; Inter</span>
+    <span>Folio 26' · Edition 01</span>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>frenchbutnice.design — round 3: 10 terminal variations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Newsreader:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #fbfbf8;
+    --ink: #1a1a1a;
+    --muted: #6b6862;
+    --rule: rgba(26,26,26,.14);
+    --accent: #1d3557;
+    --orange: #c44a1a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); font-family: "Newsreader", Georgia, serif; font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 56px 32px 96px; }
+  header { border-bottom: 1px solid var(--rule); padding-bottom: 24px; margin-bottom: 48px; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+  .brand { font-family: "JetBrains Mono", monospace; font-weight: 500; letter-spacing: .04em; font-size: 12px; }
+  .brand a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px; margin-right: 16px; }
+  .brand a:hover { border-color: var(--orange); }
+  .meta { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  h1 { font-family: "Newsreader", serif; font-weight: 400; font-size: 44px; line-height: 1.15; margin: 0 0 12px; max-width: 920px; }
+  h1 em { font-style: italic; color: var(--orange); }
+  .lede { font-size: 19px; color: var(--muted); max-width: 760px; margin: 0 0 16px; }
+  .positioning { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--accent); background: rgba(29,53,87,.05); border-left: 2px solid var(--accent); padding: 12px 16px; margin: 0 0 48px; max-width: 720px; }
+  .group { margin-bottom: 56px; }
+  .group-label { font-family: "JetBrains Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); border-top: 1px solid var(--rule); padding-top: 16px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2px; background: var(--rule); border: 1px solid var(--rule); }
+  .card { background: var(--bg); padding: 28px 24px 24px; text-decoration: none; color: inherit; display: flex; flex-direction: column; min-height: 240px; transition: background .15s ease; }
+  .card:hover { background: #f6f3ea; }
+  .num { font-family: "JetBrains Mono", monospace; font-weight: 500; font-size: 32px; line-height: 1; letter-spacing: -.01em; margin-bottom: 12px; color: var(--muted); }
+  .name { font-family: "Newsreader", serif; font-size: 22px; font-weight: 500; margin: 0 0 4px; }
+  .typeface { font-family: "JetBrains Mono", monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--accent); margin-bottom: 12px; }
+  .pitch { font-size: 14px; color: var(--muted); line-height: 1.55; margin: 0 0 auto; }
+  .tags { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag { font-family: "JetBrains Mono", monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 3px 8px; border: 1px solid var(--rule); border-radius: 2px; }
+  footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--rule); font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; display: flex; justify-content: space-between; }
+  footer a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); padding-bottom: 2px; }
+  @media (max-width: 600px) {
+    .wrap { padding: 32px 20px 64px; }
+    h1 { font-size: 30px; }
+    .lede { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <a href="../">← round 1</a><a href="../round-2/">← round 2</a>
+      </div>
+      <div class="meta">round 3 · 10 terminal variations · apr 2026</div>
+    </header>
+
+    <h1>Ten ways to be a <em>creative working at the edge of technology</em>.</h1>
+    <p class="lede">All 10 stay inside the terminal / CLI / computing-tool family. Each uses a different typeface and a different layout pattern.</p>
+    <p class="positioning">→ The spine widens for round 3: not "design systems leader." A creative whose work has evolved alongside the tools — Flash, agencies, Airbnb, Frame.io, Gemini, generative UI. AI practitioner, not commentator.</p>
+
+    <section class="group">
+      <div class="group-label"><span>— Documentation &amp; reference forms</span><span>3 directions</span></div>
+      <div class="grid">
+        <a class="card" href="19-man-page.html">
+          <div class="num">19</div>
+          <div class="name">man olivier</div>
+          <div class="typeface">Inconsolata</div>
+          <p class="pitch">A unix man page. NAME / SYNOPSIS / DESCRIPTION / OPTIONS / SEE ALSO. Section headers in caps, body indented 6 chars, BSD-style cross-references in ink red.</p>
+          <div class="tags"><span class="tag">unix man page</span><span class="tag">BSD</span></div>
+        </a>
+        <a class="card" href="22-readme.html">
+          <div class="num">22</div>
+          <div class="name">README.md</div>
+          <div class="typeface">JetBrains Mono</div>
+          <p class="pitch">A GitHub README rendered as Olivier's identity. Markdown headers, shields.io-style pills, a dark fenced bash code block, tables for talks &amp; experience. MIT (Mostly In Tension).</p>
+          <div class="tags"><span class="tag">github</span><span class="tag">markdown</span></div>
+        </a>
+        <a class="card" href="23-org-mode.html">
+          <div class="num">23</div>
+          <div class="name">org-mode</div>
+          <div class="typeface">IBM Plex Mono</div>
+          <p class="pitch">Emacs org-mode outline. Asterisk hierarchy, TODO/DONE pills, [#A]/[#B] priorities, :tag: chips, DEADLINE properties. Doom Emacs colors.</p>
+          <div class="tags"><span class="tag">emacs</span><span class="tag">outliner</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="group-label"><span>— Editor &amp; tool aesthetics</span><span>3 directions</span></div>
+      <div class="grid">
+        <a class="card" href="21-vim-split.html">
+          <div class="num">21</div>
+          <div class="name">Vim Split</div>
+          <div class="typeface">Fira Code (with ligatures)</div>
+          <p class="pitch">Three vertical buffers under a real -- NORMAL -- modeline. Gruvbox dark colorscheme. Line-number gutters. Yellow markdown headings. Ligatures rendering.</p>
+          <div class="tags"><span class="tag">vim</span><span class="tag">gruvbox</span></div>
+        </a>
+        <a class="card" href="27-acme.html">
+          <div class="num">27</div>
+          <div class="name">Plan 9 / Acme</div>
+          <div class="typeface">Atkinson Hyperlegible (sans!)</div>
+          <p class="pitch">Acme editor from Plan 9. The only sans-serif variation in round 3 — historically accurate. Pale yellow paper, inverse tag-line headers with real Plan 9 commands, pink +Errors frame.</p>
+          <div class="tags"><span class="tag">plan 9</span><span class="tag">deep cut</span></div>
+        </a>
+        <a class="card" href="28-modern-mono.html">
+          <div class="num">28</div>
+          <div class="name">Modern Mono</div>
+          <div class="typeface">DM Mono</div>
+          <p class="pitch">A 2026 dev-tool aesthetic. Pure white, restraint, generous spacing, one warm-orange arrow as the only ornament. The variation that proves you can do "back to basics" without nostalgia.</p>
+          <div class="tags"><span class="tag">linear / vercel</span><span class="tag">no nostalgia</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="group-label"><span>— Conversational &amp; agentive forms</span><span>1 direction</span></div>
+      <div class="grid">
+        <a class="card" href="20-ai-chat.html">
+          <div class="num">20</div>
+          <div class="name">AI Conversation</div>
+          <div class="typeface">Space Mono + JetBrains Mono</div>
+          <p class="pitch">The site is a chat session between Olivier and an AI describing him in the third person. The only round-3 variation with two distinct mono typefaces — one per speaker.</p>
+          <div class="tags"><span class="tag">chat log</span><span class="tag">two voices</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="group-label"><span>— Vintage / retro forms</span><span>2 directions</span></div>
+      <div class="grid">
+        <a class="card" href="24-mainframe.html">
+          <div class="num">24</div>
+          <div class="name">Mainframe TUI</div>
+          <div class="typeface">VT323</div>
+          <p class="pitch">IBM 3270 / AS/400 form interface. Boxed sections in ASCII border characters, F-key prompts at the bottom, phosphor-green-on-black with a CRT scanline whisper.</p>
+          <div class="tags"><span class="tag">IBM 3270</span><span class="tag">phosphor</span></div>
+        </a>
+        <a class="card" href="25-roguelike.html">
+          <div class="num">25</div>
+          <div class="name">Roguelike Sheet</div>
+          <div class="typeface">Share Tech Mono</div>
+          <p class="pitch">A Nethack/Caves of Qud character sheet. Stats (CRE 17 / SYS 16 / AI 15 / FRA 20), inventory (Beret of +1 Charm), abilities, active quests. The most playful of the 10.</p>
+          <div class="tags"><span class="tag">nethack</span><span class="tag">caves of qud</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="group">
+      <div class="group-label"><span>— Live system / dashboard forms</span><span>1 direction</span></div>
+      <div class="grid">
+        <a class="card" href="26-dashboard.html">
+          <div class="num">26</div>
+          <div class="name">Status Dashboard</div>
+          <div class="typeface">Space Mono</div>
+          <p class="pitch">btop / htop / k9s — but the processes are essays. Stat bars for creativity / ai practice / leadership. Process table where essays appear as RUNNING / SLEEPING / STOPPED with a faint pulse.</p>
+          <div class="tags"><span class="tag">btop / k9s</span><span class="tag">live monitor</span></div>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <span><a href="../">← back to all rounds</a></span>
+      <span>Generated 2026-04-11</span>
+    </footer>
+  </div>
+</body>
+</html>

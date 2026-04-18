@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Round 4 — Interactive Variations</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { background: #111; color: #eee; font-family: system-ui, -apple-system, sans-serif; padding: 48px 24px; }
+  h1 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.15em; color: #666; margin-bottom: 48px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1200px; }
+  a { text-decoration: none; color: inherit; }
+  .card {
+    border: 1px solid #2a2a2a; border-radius: 8px; padding: 32px;
+    transition: border-color 200ms, background 200ms;
+  }
+  .card:hover { border-color: #555; background: #1a1a1a; }
+  .card h2 { font-size: 18px; margin-bottom: 8px; }
+  .card .num { font-size: 13px; color: #555; margin-bottom: 12px; }
+  .card p { font-size: 14px; color: #888; line-height: 1.5; }
+  .card .tags { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .card .tag { font-size: 11px; padding: 3px 8px; border: 1px solid #333; border-radius: 3px; color: #666; }
+</style>
+</head>
+<body>
+<h1>Round 4 — Interactive Variations</h1>
+<div class="grid">
+  <a href="29-boot-sequence.html">
+    <div class="card">
+      <div class="num">#29</div>
+      <h2>Boot Sequence</h2>
+      <p>Dark, cinematic. NASA flight panel meets dev tools. Full terminal boot sequence → split-pane workspace → node graph.</p>
+      <div class="tags">
+        <span class="tag">dark</span>
+        <span class="tag">cinematic boot</span>
+        <span class="tag">flight panel</span>
+        <span class="tag">Astro Mono + Space Mono</span>
+      </div>
+    </div>
+  </a>
+  <a href="30-light-machine.html">
+    <div class="card">
+      <div class="num">#30</div>
+      <h2>Light Machine</h2>
+      <p>Light, warm, machine-native. Cream palette with indigo accents. Typewriter arrival → editorial workspace → clean node graph.</p>
+      <div class="tags">
+        <span class="tag">light</span>
+        <span class="tag">warm cream</span>
+        <span class="tag">editorial</span>
+        <span class="tag">Astro Mono + DM Mono</span>
+      </div>
+    </div>
+  </a>
+  <a href="31-the-index.html">
+    <div class="card">
+      <div class="num">#31</div>
+      <h2>The Index</h2>
+      <p>Mid-tone, dense, numbered. Everything is an index. Card-pop arrival → rapid cascade → interactive connection graph.</p>
+      <div class="tags">
+        <span class="tag">mid-tone</span>
+        <span class="tag">dense index</span>
+        <span class="tag">numbered</span>
+        <span class="tag">Astro Mono + Share Tech Mono</span>
+      </div>
+    </div>
+  </a>
+</div>
+</body>
+</html>

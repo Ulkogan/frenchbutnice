@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Olivier Gillaizeau — a digital garden</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400;1,6..72,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F1E8;
+    --bg-2: #EFE9DB;
+    --ink: #1A1814;
+    --ink-soft: #4A4740;
+    --ink-mute: #7A766C;
+    --hairline: #D9D2BF;
+    --seedling: #B5C7A8;
+    --growing: #7A9B63;
+    --evergreen: #2E5233;
+    --ochre: #B08730;
+    --ochre-deep: #8C6A22;
+    --serif: "Newsreader", Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.6;
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  a { color: var(--ochre-deep); text-decoration: none; border-bottom: 1px solid rgba(176, 135, 48, 0.35); transition: border-color .2s ease, color .2s ease; }
+  a:hover { color: var(--ochre); border-bottom-color: var(--ochre); }
+  ::selection { background: #E8DFC4; }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 72px 48px 96px;
+  }
+
+  /* ——— Masthead ——— */
+  .masthead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 88px;
+  }
+  .wordmark {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 15px;
+    letter-spacing: 0.01em;
+    color: var(--ink);
+    border: none;
+  }
+  .masthead-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+
+  /* ——— Hero ——— */
+  .hero {
+    max-width: 720px;
+    margin-bottom: 28px;
+  }
+  .hero p {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+    font-style: italic;
+    color: var(--ink);
+    margin: 0 0 28px;
+  }
+  .hero .byline {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    font-style: normal;
+  }
+  .rule {
+    border: 0;
+    border-top: 1px solid var(--hairline);
+    margin: 56px 0 56px;
+  }
+
+  /* ——— Garden ——— */
+  .garden-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .garden-label::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--hairline);
+  }
+
+  .garden {
+    position: relative;
+  }
+  .garden-grid {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 56px 44px;
+  }
+  .connectors {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .node {
+    position: relative;
+    padding: 20px 20px 22px;
+    background: transparent;
+    border: 1px solid var(--hairline);
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    min-height: 240px;
+    transition: background .25s ease, border-color .25s ease, transform .25s ease;
+  }
+  .node:hover {
+    background: rgba(255,255,255,0.35);
+    border-color: #C9C0A6;
+  }
+
+  .maturity {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+  }
+  .maturity::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .maturity.seedling { color: #6B8259; }
+  .maturity.seedling::before { background: var(--seedling); }
+  .maturity.growing  { color: var(--growing); }
+  .maturity.growing::before  { background: var(--growing); }
+  .maturity.evergreen { color: var(--evergreen); }
+  .maturity.evergreen::before { background: var(--evergreen); }
+
+  .node h3 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 21px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin: 0 0 12px;
+    color: var(--ink);
+  }
+  .node h3 a {
+    color: inherit;
+    border-bottom: none;
+  }
+  .node h3 a:hover { color: var(--ochre-deep); }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin-bottom: 14px;
+  }
+  .tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    border: none;
+    text-decoration: none;
+    border-bottom: 1px dotted transparent;
+  }
+  .tag:hover { border-bottom-color: var(--ink-soft); color: var(--ink); }
+
+  .standfirst {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0 0 auto;
+  }
+  .tended {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    margin-top: 18px;
+  }
+
+  /* ——— Sections below ——— */
+  .section {
+    max-width: 720px;
+    margin-top: 80px;
+  }
+  .section h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 22px;
+    letter-spacing: -0.005em;
+    margin: 0 0 18px;
+    color: var(--ink);
+  }
+  .section p {
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+  }
+  .section p em { color: var(--ink); }
+
+  .topic-inline {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--evergreen);
+    margin-right: 4px;
+  }
+
+  /* ——— Footer ——— */
+  footer {
+    margin-top: 96px;
+    padding-top: 24px;
+    border-top: 1px solid var(--hairline);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px 28px;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  footer a {
+    color: var(--ink-mute);
+    border-bottom: none;
+  }
+  footer a:hover { color: var(--ink); }
+  footer .links { display: flex; gap: 22px; flex-wrap: wrap; }
+
+  /* ——— Responsive ——— */
+  @media (max-width: 960px) {
+    .wrap { padding: 56px 36px 80px; }
+    .garden-grid { grid-template-columns: repeat(2, 1fr); gap: 44px 32px; }
+    .connectors { display: none; }
+  }
+  @media (max-width: 620px) {
+    .wrap { padding: 44px 24px 72px; }
+    .masthead { margin-bottom: 56px; }
+    .hero p { font-size: 21px; }
+    .garden-grid { grid-template-columns: 1fr; gap: 32px; }
+    .section { margin-top: 64px; }
+    .connectors { display: none; }
+    .rule { margin: 44px 0; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="masthead">
+      <span class="wordmark">frenchbutnice.design</span>
+      <span class="masthead-meta">a digital garden · est. 2026</span>
+    </header>
+
+    <section class="hero">
+      <p>Notes on building systems that flex, adapt, and occasionally survive a little chaos. I believe design systems are organisms, not formulas — and I am learning how to tend to them.</p>
+      <div class="byline">Olivier Gillaizeau · tending this garden since 2026 · San Francisco</div>
+    </section>
+
+    <hr class="rule" />
+
+    <div class="garden-label">The garden · six notes, variously ripened</div>
+
+    <section class="garden">
+      <!-- Connector lines between thematically-linked notes -->
+      <svg class="connectors" viewBox="0 0 1120 880" preserveAspectRatio="none" aria-hidden="true">
+        <!-- 01 systems -> 04 systems (across row 1 to row 2, col 1) -->
+        <path d="M 180 240 C 220 340, 140 380, 180 460"
+              fill="none" stroke="#B5C7A8" stroke-width="1" stroke-dasharray="2 4" />
+        <!-- 01 systems -> 06 systems (row 1 col 1 to row 2 col 3) -->
+        <path d="M 300 220 C 520 300, 740 320, 940 460"
+              fill="none" stroke="#B5C7A8" stroke-width="1" stroke-dasharray="2 4" />
+        <!-- 02 ai -> 05 ai (row 1 col 2 to row 2 col 2) -->
+        <path d="M 560 240 C 600 340, 520 380, 560 460"
+              fill="none" stroke="#B5C7A8" stroke-width="1" stroke-dasharray="2 4" />
+        <!-- 03 craft -> 04 craft (row 1 col 3 to row 2 col 1) -->
+        <path d="M 940 240 C 780 320, 340 380, 200 460"
+              fill="none" stroke="#B5C7A8" stroke-width="1" stroke-dasharray="2 4" />
+        <!-- 05 leadership -> 06 leadership (row 2 col 2 to row 2 col 3) -->
+        <path d="M 680 560 C 760 540, 820 560, 900 560"
+              fill="none" stroke="#B5C7A8" stroke-width="1" stroke-dasharray="2 4" />
+      </svg>
+
+      <div class="garden-grid">
+
+        <!-- 01 -->
+        <article class="node">
+          <span class="maturity evergreen">evergreen</span>
+          <h3><a href="#">Systems Are Services, Not Mandates</a></h3>
+          <div class="tags">
+            <a class="tag" href="#">#systems</a>
+            <a class="tag" href="#">#leadership</a>
+          </div>
+          <p class="standfirst">Your design system is not a mandate. It is a service. Act accordingly.</p>
+          <div class="tended">last tended 2026.04.08</div>
+        </article>
+
+        <!-- 02 -->
+        <article class="node">
+          <span class="maturity growing">growing</span>
+          <h3><a href="#">GenUI Before It Had a Name</a></h3>
+          <div class="tags">
+            <a class="tag" href="#">#ai</a>
+            <a class="tag" href="#">#systems</a>
+          </div>
+          <p class="standfirst">Most teams still think AI means chat interfaces. I saw it generating custom UIs for every query, and moved my team to be ready before the demand hit.</p>
+          <div class="tended">last tended 2026.04.02</div>
+        </article>
+
+        <!-- 03 -->
+        <article class="node">
+          <span class="maturity seedling">seedling</span>
+          <h3><a href="#">Models Don't Read Your Figma</a></h3>
+          <div class="tags">
+            <a class="tag" href="#">#ai</a>
+            <a class="tag" href="#">#craft</a>
+          </div>
+          <p class="standfirst">A rough note on what happens to a design system when its primary consumer stops being human.</p>
+          <div class="tended">last tended 2026.03.28</div>
+        </article>
+
+        <!-- 04 -->
+        <article class="node">
+          <span class="maturity evergreen">evergreen</span>
+          <h3><a href="#">Build for Adoption, Not Perfection</a></h3>
+          <div class="tags">
+            <a class="tag" href="#">#systems</a>
+            <a class="tag" href="#">#craft</a>
+          </div>
+          <p class="standfirst">The problem isn't that design systems are hard to build. It's that most of them were never meant to be lived in.</p>
+          <div class="tended">last tended 2026.03.19</div>
+        </article>
+
+        <!-- 05 -->
+        <article class="node">
+          <span class="maturity growing">growing</span>
+          <h3><a href="#">Lessons from 607 Teams</a></h3>
+          <div class="tags">
+            <a class="tag" href="#">#leadership</a>
+            <a class="tag" href="#">#ai</a>
+          </div>
+          <p class="standfirst">Field notes from unifying five design systems into one, and the unglamorous politics of persuasion at scale.</p>
+          <div class="tended">last tended 2026.03.11</div>
+        </article>
+
+        <!-- 06 -->
+        <article class="node">
+          <span class="maturity seedling">seedling</span>
+          <h3><a href="#">Coherence Over Uniformity</a></h3>
+          <div class="tags">
+            <a class="tag" href="#">#systems</a>
+            <a class="tag" href="#">#leadership</a>
+          </div>
+          <p class="standfirst">Systems are organisms, not formulas. I've spent fifteen years learning the difference — mostly the hard way.</p>
+          <div class="tended">last tended 2026.02.27</div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>What I tend to think about</h2>
+      <p>Two beds, mostly. <span class="topic-inline">design systems at scale</span>— adoption over perfection, coherence over uniformity, systems as services rather than mandates; fifteen years of watching what breaks past the hundredth team. And <span class="topic-inline">designing with ai, not around it</span>— the practitioner view from inside Gemini, where generative UI stopped being a demo and became something a design system has to host as a first-class citizen.</p>
+    </section>
+
+    <section class="section">
+      <h2>Come talk about it</h2>
+      <p>I give talks and workshops on exactly these two subjects — <em>Design Systems at Scale</em>, about what breaks at 600+ teams and how to build for adoption instead of enforcement; and <em>Designing with Generative AI</em>, from Gemini's Canvases to the generative UI frameworks that change what a design system is for. If either is useful to your team or event, <a href="mailto:og@frenchbutnice.design">email me — og@frenchbutnice.design</a>.</p>
+    </section>
+
+    <section class="section">
+      <h2>Who I am</h2>
+      <p><em>Previously Gemini · Frame.io · Airbnb.</em></p>
+      <p>Olivier Gillaizeau leads design systems at Google Gemini. Previously at Frame.io (acquired by Adobe) and Airbnb. Fifteen years shipping the infrastructure that makes creative teams faster without making them smaller. Designer. Systems lead. French, but nice.</p>
+    </section>
+
+    <footer>
+      <span>&copy; 2026 Olivier Gillaizeau</span>
+      <div class="links">
+        <a href="mailto:og@frenchbutnice.design">email</a>
+        <a href="#">twitter</a>
+        <a href="#">linkedin</a>
+        <a href="#">rss</a>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

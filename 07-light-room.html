@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Olivier Gillaizeau — frenchbutnice.design</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;700&family=Fraunces:opsz,wght,SOFT@9..144,300..800,0..100&family=JetBrains+Mono:wght@400;500&family=Archivo+Narrow:wght@600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FBF6E9;
+    --paper-deep: #F6EFD8;
+    --ink: #1A1814;
+    --ink-soft: #4A4539;
+    --ink-mute: #8A8372;
+    --pen: #1C2540;
+    --pen-bright: #1D4ED8;
+    --rule: #CDC5AA;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Fraunces", Georgia, serif;
+    font-optical-sizing: auto;
+    font-variation-settings: "SOFT" 30;
+    font-size: 19px;
+    line-height: 1.6;
+  }
+
+  a { color: var(--pen); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; transition: color .2s ease; }
+  a:hover { color: var(--pen-bright); }
+  a:focus-visible { outline: 2px solid var(--pen-bright); outline-offset: 3px; border-radius: 2px; }
+
+  .wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* Header */
+  header.top {
+    padding-top: 40px;
+    padding-bottom: 24px;
+  }
+  .top-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .wordmark {
+    font-family: "Archivo Narrow", "Oswald", sans-serif;
+    font-weight: 800;
+    font-size: 16px;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .wordmark:hover { color: var(--ink); }
+  nav.top-nav {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  nav.top-nav a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    margin-left: 18px;
+  }
+  nav.top-nav a:hover { color: var(--pen); }
+  nav.top-nav span { color: var(--ink-mute); }
+  .hairline {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    margin: 20px 0 0;
+  }
+
+  /* Hero */
+  section.hero {
+    padding: 96px 0 72px;
+  }
+  .script {
+    font-family: "Caveat", cursive;
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .hero-greeting {
+    font-family: "Caveat", cursive;
+    font-weight: 500;
+    font-size: 128px;
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    margin: 0 0 28px;
+    color: var(--ink);
+  }
+  .hero-lede {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 72, "SOFT" 40;
+    font-weight: 360;
+    font-size: 26px;
+    line-height: 1.45;
+    color: var(--ink);
+    margin: 0 0 48px;
+    max-width: 640px;
+  }
+  .hero-lede em { font-style: italic; }
+  .hero-rule {
+    border: 0;
+    border-top: 1px solid var(--rule);
+    width: 96px;
+    margin: 0 0 18px;
+  }
+  .hero-meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-mute);
+    letter-spacing: 0.02em;
+  }
+  .hero-meta a { color: var(--ink-soft); text-decoration: none; }
+  .hero-meta a:hover { color: var(--pen); }
+
+  /* Section labels */
+  .section-label {
+    font-family: "Caveat", cursive;
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--pen);
+    margin: 0 0 40px;
+    line-height: 1;
+  }
+  .section-label::before {
+    content: "→ ";
+    color: var(--pen);
+  }
+
+  /* Essays */
+  section.essays { padding: 48px 0; }
+  .essay {
+    padding: 36px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .essay:first-of-type { padding-top: 0; }
+  .essay:last-of-type { border-bottom: 0; padding-bottom: 0; }
+  .essay a.title-link { text-decoration: none; color: var(--ink); }
+  .essay a.title-link:hover .essay-title { color: var(--pen); }
+  .essay-title {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    font-weight: 420;
+    font-size: 38px;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin: 0 0 14px;
+    transition: color .2s ease;
+  }
+  .essay-standfirst {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 72;
+    font-style: italic;
+    font-weight: 340;
+    font-size: 20px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+    max-width: 620px;
+  }
+  .essay-meta {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .essay-meta .dot { margin: 0 10px; color: var(--rule); }
+
+  /* Speaking */
+  section.speaking {
+    padding: 96px 0 72px;
+    border-top: 1px solid var(--rule);
+    margin-top: 72px;
+  }
+  .speaking p {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 72, "SOFT" 40;
+    font-weight: 360;
+    font-size: 22px;
+    line-height: 1.6;
+    margin: 0 0 22px;
+    max-width: 660px;
+  }
+  .speaking em { font-style: italic; color: var(--ink); }
+  .speaking .topic {
+    font-style: italic;
+    font-weight: 440;
+    color: var(--ink);
+  }
+  .speaking .write-link {
+    font-family: "Caveat", cursive;
+    font-size: 32px;
+    color: var(--pen);
+    text-decoration: none;
+    border-bottom: 1px solid var(--pen);
+    padding-bottom: 2px;
+  }
+  .speaking .write-link:hover { color: var(--pen-bright); border-color: var(--pen-bright); }
+
+  /* About */
+  section.about {
+    padding: 72px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .about p {
+    font-family: "Fraunces", serif;
+    font-variation-settings: "opsz" 72, "SOFT" 40;
+    font-weight: 360;
+    font-size: 22px;
+    line-height: 1.65;
+    max-width: 660px;
+    margin: 0 0 20px;
+  }
+  .about .credential {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-mute);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-style: normal;
+  }
+
+  /* Marginalia script note */
+  .margin-note {
+    font-family: "Caveat", cursive;
+    font-size: 24px;
+    color: var(--pen);
+    line-height: 1.2;
+    display: inline-block;
+    transform: rotate(-2deg);
+    margin-top: 6px;
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--rule);
+    padding: 28px 0 56px;
+    margin-top: 24px;
+  }
+  footer .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-mute);
+    letter-spacing: 0.04em;
+  }
+  footer a {
+    color: var(--ink-soft);
+    text-decoration: none;
+    margin-right: 16px;
+  }
+  footer a:hover { color: var(--pen); }
+
+  /* Responsive */
+  @media (max-width: 720px) {
+    body { font-size: 17px; }
+    .wrap { padding: 0 22px; }
+    header.top { padding-top: 28px; }
+    .top-row { flex-direction: column; align-items: flex-start; gap: 10px; }
+    nav.top-nav a { margin-left: 0; margin-right: 14px; }
+    section.hero { padding: 56px 0 48px; }
+    .hero-greeting { font-size: 76px; margin-bottom: 20px; }
+    .hero-lede { font-size: 21px; margin-bottom: 36px; }
+    .section-label { font-size: 28px; margin-bottom: 28px; }
+    .essay-title { font-size: 28px; }
+    .essay-standfirst { font-size: 17px; }
+    .speaking p, .about p { font-size: 18px; }
+    .speaking .write-link { font-size: 26px; }
+    section.speaking { padding: 64px 0 48px; margin-top: 48px; }
+    section.about { padding: 48px 0; }
+  }
+
+  @media (max-width: 400px) {
+    .hero-greeting { font-size: 64px; }
+  }
+
+  ::selection { background: var(--pen); color: var(--paper); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="top-row">
+      <a href="/" class="wordmark">FRENCHBUTNICE</a>
+      <nav class="top-nav" aria-label="Primary">
+        <a href="#essays">Essays</a>
+        <a href="#speaking">Speaking</a>
+        <a href="#about">About</a>
+        <a href="/rss.xml">RSS</a>
+      </nav>
+    </div>
+    <hr class="hairline" />
+  </header>
+
+  <main>
+
+    <section class="hero" aria-labelledby="hero-greeting">
+      <h1 id="hero-greeting" class="hero-greeting">Bonjour.</h1>
+      <p class="hero-lede">
+        I think about design systems in a way that has gotten me into trouble — and occasionally into Google. Fifteen years learning that systems are <em>organisms, not formulas</em>. These days I'm designing <em>with</em> AI, not around it.
+      </p>
+      <hr class="hero-rule" />
+      <p class="hero-meta">
+        Olivier Gillaizeau &nbsp;·&nbsp; San Francisco &nbsp;·&nbsp; <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a>
+      </p>
+    </section>
+
+    <section class="essays" id="essays" aria-labelledby="essays-label">
+      <h2 id="essays-label" class="section-label">A few things I've been thinking about</h2>
+
+      <article class="essay">
+        <a class="title-link" href="/essays/build-for-adoption">
+          <h3 class="essay-title">Build for Adoption, Not Perfection</h3>
+        </a>
+        <p class="essay-standfirst">
+          The problem isn't that design systems are hard to build. It's that most of them were never meant to be lived in.
+        </p>
+        <p class="essay-meta">Essay<span class="dot">·</span>14 min<span class="dot">·</span>Mar 2026</p>
+      </article>
+
+      <article class="essay">
+        <a class="title-link" href="/essays/systems-are-services">
+          <h3 class="essay-title">Systems Are Services, Not Mandates</h3>
+        </a>
+        <p class="essay-standfirst">
+          Your design system is not a mandate. It is a service. Act accordingly.
+        </p>
+        <p class="essay-meta">Essay<span class="dot">·</span>9 min<span class="dot">·</span>Feb 2026</p>
+      </article>
+
+      <article class="essay">
+        <a class="title-link" href="/essays/genui-before-it-had-a-name">
+          <h3 class="essay-title">GenUI Before It Had a Name</h3>
+        </a>
+        <p class="essay-standfirst">
+          Most teams still think AI means chat interfaces. I saw it generating custom UIs for every query, and moved my team to be ready before the demand hit.
+        </p>
+        <p class="essay-meta">Essay<span class="dot">·</span>12 min<span class="dot">·</span>Jan 2026</p>
+      </article>
+
+      <article class="essay">
+        <a class="title-link" href="/essays/lessons-from-607-teams">
+          <h3 class="essay-title">Lessons from 607 Teams</h3>
+        </a>
+        <p class="essay-standfirst">
+          Systems are organisms, not formulas. I've spent fifteen years learning the difference — mostly the hard way.
+        </p>
+        <p class="essay-meta">Field Notes<span class="dot">·</span>11 min<span class="dot">·</span>Dec 2025</p>
+      </article>
+
+      <article class="essay">
+        <a class="title-link" href="/essays/models-dont-read-your-figma">
+          <h3 class="essay-title">Models Don't Read Your Figma</h3>
+        </a>
+        <p class="essay-standfirst">
+          If the model is going to compose the interface at runtime, the system had better host it as a first-class citizen — or get out of the way.
+        </p>
+        <p class="essay-meta">Essay<span class="dot">·</span>10 min<span class="dot">·</span>Nov 2025</p>
+      </article>
+    </section>
+
+    <section class="speaking" id="speaking" aria-labelledby="speaking-label">
+      <h2 id="speaking-label" class="section-label">I'll come talk to your team</h2>
+      <p>
+        I give two talks right now, and I give them properly — not as a pitch deck, but as the conversation I wish someone had given me five years ago.
+      </p>
+      <p>
+        The first is <span class="topic">Design Systems at Scale</span> — what breaks at 600+ teams, and how to build for adoption instead of enforcement. The second is <span class="topic">Designing with Generative AI</span> — from Gemini's Canvases to the generative UI frameworks that change what a design system is for.
+      </p>
+      <p>
+        If either sounds like the talk your offsite, all-hands, or conference is missing — <a class="write-link" href="mailto:og@frenchbutnice.design">write me</a>.
+      </p>
+      <p class="margin-note">(yes, even the small ones.)</p>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-label">
+      <h2 id="about-label" class="section-label">Who I am when I'm not writing</h2>
+      <p>
+        I lead design systems at Google Gemini, where my team unified five systems into one and now serves 607 product teams across the company — about fifteen thousand design hours saved a year, give or take. Before Gemini, I led design at Frame.io through the Camera-to-Cloud launch and the Adobe acquisition, and before that I was Global Creative Director for Guest Marketing at Airbnb.
+      </p>
+      <p>
+        Short version: designer, systems lead, French, but nice.
+      </p>
+      <p class="credential">Previously Gemini · Frame.io · Airbnb</p>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="row">
+      <div>
+        <a href="https://twitter.com/frenchbutnice">Twitter</a>
+        <a href="https://linkedin.com/in/gillaizeau">LinkedIn</a>
+        <a href="/rss.xml">RSS</a>
+        <a href="mailto:og@frenchbutnice.design">Email</a>
+      </div>
+      <div>© 2026 Olivier Gillaizeau</div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

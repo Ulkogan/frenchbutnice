@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>FRENCHBUTNICE TERMINAL — OLIVIER.GILLAIZEAU</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #000000;
+    --green: #33ff33;
+    --dim: #1c8a1c;
+    --bright: #88ff88;
+    --glow: 0 0 4px rgba(51, 255, 51, 0.5);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--green);
+    font-family: 'VT323', 'Courier New', monospace;
+    font-size: 20px;
+    line-height: 1.1;
+    min-height: 100vh;
+    text-shadow: var(--glow);
+    -webkit-font-smoothing: none;
+    font-smooth: never;
+  }
+
+  a { color: inherit; text-decoration: none; }
+  a:hover, a:focus { color: var(--bright); outline: none; }
+
+  /* Scanlines overlay */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(0,0,0,0) 0px,
+      rgba(0,0,0,0) 2px,
+      rgba(0,0,0,0.25) 3px,
+      rgba(0,0,0,0) 4px
+    );
+    mix-blend-mode: multiply;
+    z-index: 9998;
+  }
+
+  /* Subtle flicker */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: rgba(51,255,51,0.015);
+    z-index: 9997;
+    animation: flicker 3.2s infinite;
+  }
+
+  @keyframes flicker {
+    0%, 92%, 100% { opacity: 0.6; }
+    94% { opacity: 0.2; }
+    96% { opacity: 0.9; }
+    98% { opacity: 0.4; }
+  }
+
+  .screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+  }
+
+  .bar {
+    background: var(--green);
+    color: #000000;
+    text-shadow: none;
+    padding: 4px 16px;
+    font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+  }
+
+  .bar.top {
+    border-bottom: 1px solid var(--green);
+  }
+  .bar.bottom {
+    border-top: 1px solid var(--green);
+    margin-top: auto;
+  }
+
+  .bar .k {
+    display: inline-block;
+    margin-right: 22px;
+  }
+  .bar .k b {
+    background: #000;
+    color: var(--green);
+    padding: 0 4px;
+    font-weight: normal;
+  }
+
+  .main {
+    flex: 1;
+    padding: 18px 20px 24px 20px;
+    overflow-x: auto;
+  }
+
+  pre.box {
+    margin: 0 0 14px 0;
+    font-family: inherit;
+    font-size: 20px;
+    line-height: 1.05;
+    color: var(--green);
+    text-shadow: var(--glow);
+    white-space: pre;
+  }
+
+  pre.box .lbl { color: var(--dim); }
+  pre.box .val { color: var(--green); }
+  pre.box .hi  { color: var(--bright); }
+  pre.box .inv {
+    background: var(--green);
+    color: #000;
+    text-shadow: none;
+    padding: 0 2px;
+  }
+  pre.box .caret {
+    color: var(--bright);
+    animation: blink 1.05s steps(1) infinite;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+
+  .cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1em;
+    background: var(--bright);
+    vertical-align: text-bottom;
+    animation: blink 1.05s steps(1) infinite;
+    margin-left: 4px;
+  }
+
+  /* responsive: mobile keeps layout, shrink font, allow h-scroll */
+  @media (max-width: 760px) {
+    html, body { font-size: 13px; }
+    .bar { font-size: 13px; padding: 4px 10px; }
+    pre.box { font-size: 13px; }
+    .main { padding: 10px 10px 14px 10px; }
+  }
+</style>
+</head>
+<body>
+  <div class="screen" role="document">
+
+    <div class="bar top" aria-label="Terminal header">
+===================== FRENCHBUTNICE TERMINAL&nbsp;&nbsp;v26.04 ==== SESSION: 0x4F47 ==== 10.APR.2026 ====
+    </div>
+
+    <main class="main">
+
+<pre class="box" aria-label="User session">
++---------------------------------------------------------------------+
+|                                                                     |
+|   <span class="lbl">USER ID  :</span> <span class="val">OLIVIER.GILLAIZEAU</span>                                     |
+|   <span class="lbl">ROLE     :</span> <span class="val">CREATIVE WORKING AT THE EDGE OF TECHNOLOGY</span>             |
+|   <span class="lbl">LOCATION :</span> <span class="val">SAN FRANCISCO, CA</span>                                      |
+|   <span class="lbl">STATUS   :</span> <span class="val">ONLINE</span>                                  <span class="inv">[ACTIVE]</span>       |
+|   <span class="lbl">TAGLINE  :</span> <span class="val">DESIGNER. SYSTEMS LEAD. AI PRACTITIONER. FRENCH, BUT NICE.</span>|
+|                                                                     |
++---------------------------------------------------------------------+</pre>
+
+<pre class="box" aria-label="About">
++---- ABOUT ----------------------------------------------------------+
+|                                                                     |
+|   <span class="val">AI DESIGN LEAD AT GOOGLE GEMINI. PREVIOUSLY AT FRAME.IO</span>             |
+|   <span class="val">(ACQUIRED BY ADOBE) AND AIRBNB. FIFTEEN YEARS SHIPPING</span>              |
+|   <span class="val">THE INFRASTRUCTURE THAT MAKES CREATIVE TEAMS FASTER —</span>               |
+|   <span class="val">AND IS NOW RESHAPING WHAT CREATIVE EVEN MEANS.</span>                      |
+|                                                                     |
+|   <span class="lbl">CREDENTIALS:</span> <span class="val">GEMINI  ·  FRAME.IO  ·  AIRBNB</span>                        |
+|                                                                     |
++---------------------------------------------------------------------+</pre>
+
+<pre class="box" aria-label="Essays">
++---- ESSAYS (6 RECORDS) ---------------------------------------------+
+|                                                                     |
+|   <span class="caret">&gt;</span> <span class="hi">001  WORKING WITH MODELS, NOT AGAINST THEM</span>        <span class="inv">[DRAFT  ]</span>  |
+|     <span class="val">002  NOTES FROM A CREATIVE AT THE EDGE OF MODEL</span>    <span class="inv">[DRAFT  ]</span>  |
+|     <span class="val">003  FROM FLASH TO GENERATIVE UI</span>                   <span class="inv">[DRAFT  ]</span>  |
+|     <span class="val">004  WHY I STOPPED CALLING MYSELF A DS PERSON</span>      <span class="inv">[DRAFT  ]</span>  |
+|     <span class="val">005  15 YEARS BUILDING TOOLS ABOUT TO DISAPPEAR</span>    <span class="inv">[PUBLISH]</span>  |
+|     <span class="val">006  MODELS DON'T READ YOUR FIGMA</span>                  <span class="inv">[PUBLISH]</span>  |
+|                                                                     |
+|   <span class="lbl">STANDFIRST:</span> <span class="val">"MOST TEAMS STILL THINK AI MEANS CHAT. I SAW IT</span>         |
+|   <span class="val">GENERATING CUSTOM UIS FOR EVERY QUERY — AND MOVED MY TEAM TO</span>        |
+|   <span class="val">BE READY BEFORE THE DEMAND HIT."</span>                                    |
+|                                                                     |
+|   <span class="lbl">PRESS F2 TO LIST ALL ESSAYS</span>                                         |
++---------------------------------------------------------------------+</pre>
+
+<pre class="box" aria-label="Speaking">
++---- SPEAKING -------------------------------------------------------+
+|                                                                     |
+|   <span class="hi">01</span>  <span class="val">DESIGNING WITH GENERATIVE AI</span>                                  |
+|       <span class="lbl">FROM GEMINI'S CANVASES TO THE GEN-UI FRAMEWORKS THAT</span>             |
+|       <span class="lbl">ARE RESHAPING WHAT DESIGN TOOLS ARE FOR.</span>                         |
+|                                                                     |
+|   <span class="hi">02</span>  <span class="val">LEADING CREATIVE AT THE EDGE OF TECHNOLOGY</span>                    |
+|       <span class="lbl">FIFTEEN YEARS OF BUILDING WITH EVOLVING TOOLS —</span>                  |
+|       <span class="lbl">FROM FLASH TO AI — AND WHAT IT TEACHES ABOUT LEADING</span>             |
+|       <span class="lbl">TEAMS THAT SHIP THE FUTURE.</span>                                      |
+|                                                                     |
+|   <span class="lbl">BOOK  :</span> <a href="mailto:og@frenchbutnice.design"><span class="val">OG@FRENCHBUTNICE.DESIGN</span></a>                             |
+|                                                                     |
++---------------------------------------------------------------------+</pre>
+
+<pre class="box" aria-label="Elsewhere">
++---- ELSEWHERE ------------------------------------------------------+
+|                                                                     |
+|   <span class="lbl">TWITTER   ...............</span> <a href="https://twitter.com/frenchbutnice"><span class="val">@frenchbutnice</span></a>                          |
+|   <span class="lbl">LINKEDIN  ...............</span> <a href="https://linkedin.com/in/olivier"><span class="val">linkedin.com/in/olivier</span></a>                 |
+|   <span class="lbl">RSS       ...............</span> <a href="/rss"><span class="val">frenchbutnice.design/rss</span></a>                |
+|   <span class="lbl">EMAIL     ...............</span> <a href="mailto:og@frenchbutnice.design"><span class="val">og@frenchbutnice.design</span></a>                 |
+|                                                                     |
++---------------------------------------------------------------------+</pre>
+
+<pre class="box" aria-label="Prompt">
+<span class="lbl">READY.</span> <span class="val">TYPE COMMAND OR PRESS A FUNCTION KEY.</span>
+<span class="hi">OG&gt;</span> _<span class="caret">&#9608;</span>
+</pre>
+
+    </main>
+
+    <div class="bar bottom" aria-label="Function keys">
+<span class="k"><b>F1</b>=HELP</span><span class="k"><b>F2</b>=ESSAYS</span><span class="k"><b>F3</b>=SPEAKING</span><span class="k"><b>F4</b>=ABOUT</span><span class="k"><b>F5</b>=ELSEWHERE</span><span class="k"><b>F12</b>=EXIT</span>
+    </div>
+
+  </div>
+</body>
+</html>

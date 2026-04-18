@@ -1,0 +1,491 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>olivier.org — olivier gillaizeau</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #282c34;
+    --bg-drawer: #2f333d;
+    --bg-drawer-border: #3c4048;
+    --fg: #bbc2cf;
+    --muted: #5b6268;
+    --muted-2: #7a818e;
+    --h1: #51afef;   /* blue */
+    --h2: #c678dd;   /* magenta */
+    --h3: #98be65;   /* green */
+    --h4: #ECBE7B;   /* yellow */
+    --h5: #46d9ff;   /* cyan */
+    --red: #ff6c6b;
+    --green: #98be65;
+    --yellow: #ECBE7B;
+    --purple: #a9a1e1;
+    --cyan: #46d9ff;
+    --keyword: #5b6268;
+    --keyword-val: #7a818e;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+    font-size: 15px;
+    line-height: 1.7;
+    font-feature-settings: "liga" 0, "calt" 0;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: #3e4451; color: #fff; }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 28px 120px 28px;
+  }
+
+  /* status line */
+  .status {
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .status .sep { color: #3c4048; }
+  .status .star { color: var(--yellow); }
+
+  .hairline {
+    border: 0;
+    border-top: 1px solid #3c4048;
+    margin: 14px 0 28px 0;
+  }
+
+  /* org document container */
+  .org {
+    white-space: normal;
+  }
+
+  /* keyword lines (#+TITLE: etc) */
+  .kw-line {
+    display: block;
+    color: var(--muted-2);
+    margin: 0;
+  }
+  .kw-key { color: #7a818e; }
+  .kw-val { color: #bbc2cf; }
+
+  .kw-block { margin-bottom: 28px; }
+
+  /* headings */
+  .h {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 32px 0 6px 0;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .h .stars {
+    color: var(--muted);
+    font-weight: 400;
+    flex-shrink: 0;
+  }
+  .h1 { color: var(--h1); font-size: 19px; margin-top: 44px; }
+  .h1:first-of-type { margin-top: 8px; }
+  .h2 { color: var(--h2); font-size: 16px; padding-left: 0; }
+  .h-comment { color: var(--muted); font-style: italic; font-weight: 400; }
+  .h-comment .stars { color: #3c4048; }
+
+  .h .title-text { flex: 1 1 auto; min-width: 0; }
+
+  /* TODO / DONE pills */
+  .kw-todo, .kw-done {
+    display: inline-block;
+    padding: 1px 7px 2px 7px;
+    border-radius: 2px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    vertical-align: 2px;
+    margin-right: 2px;
+  }
+  .kw-todo { background: var(--red); color: var(--bg); }
+  .kw-done { background: var(--green); color: var(--bg); }
+
+  /* priorities */
+  .pri { font-weight: 700; margin-right: 2px; }
+  .pri-a { color: var(--red); }
+  .pri-b { color: var(--yellow); }
+  .pri-c { color: var(--muted); }
+
+  /* tags */
+  .tags {
+    margin-left: auto;
+    display: inline-flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-weight: 400;
+  }
+  .tag {
+    display: inline-block;
+    background: rgba(169, 161, 225, 0.12);
+    color: var(--purple);
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-size: 12px;
+    letter-spacing: 0.02em;
+  }
+
+  /* body paragraphs under headings */
+  .body {
+    color: var(--fg);
+    margin: 6px 0 0 0;
+    padding-left: 18px;
+  }
+  .h1 + .body, .h1 ~ .body { padding-left: 18px; }
+  .h2 ~ .body, .h2 + .body { padding-left: 21px; }
+
+  .body p { margin: 4px 0; }
+
+  /* metadata lines (DEADLINE/CLOSED/SCHEDULED) */
+  .meta {
+    padding-left: 21px;
+    margin: 2px 0;
+    font-size: 14px;
+    color: var(--muted-2);
+  }
+  .meta-label {
+    color: var(--red);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .meta-label.closed { color: var(--muted); }
+  .ts {
+    color: var(--cyan);
+  }
+  .ts::before { content: "<"; }
+  .ts::after { content: ">"; }
+  .ts.inactive::before { content: "["; }
+  .ts.inactive::after { content: "]"; }
+
+  /* property drawers */
+  .drawer {
+    margin: 4px 0 6px 21px;
+    background: var(--bg-drawer);
+    border-left: 2px solid var(--bg-drawer-border);
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--muted-2);
+  }
+  .drawer .drawer-edge { color: var(--muted); display: block; }
+  .drawer .prop { display: block; }
+  .drawer .prop-key { color: var(--purple); }
+  .drawer .prop-val { color: var(--fg); }
+
+  /* list items */
+  ul.org-list {
+    list-style: none;
+    padding-left: 21px;
+    margin: 6px 0 0 0;
+  }
+  ul.org-list li { position: relative; padding-left: 16px; }
+  ul.org-list li::before {
+    content: "-";
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+  }
+  ul.org-list a,
+  .body a,
+  .inline-link {
+    color: var(--cyan);
+    text-decoration: none;
+    border-bottom: 1px dotted rgba(70, 217, 255, 0.35);
+  }
+  ul.org-list a:hover, .body a:hover, .inline-link:hover {
+    border-bottom-color: var(--cyan);
+  }
+
+  /* experience rows */
+  .exp {
+    padding-left: 21px;
+    font-size: 14px;
+    margin: 10px 0 0 0;
+  }
+  .exp .date { color: var(--muted-2); }
+  .exp .sep { color: var(--muted); padding: 0 4px; }
+  .exp .place { color: var(--h5); }
+  .exp .desc { color: var(--fg); margin-top: 2px; }
+
+  /* cursor at end */
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1.05em;
+    background: var(--fg);
+    vertical-align: text-bottom;
+    animation: blink 1.1s steps(1) infinite;
+    margin-left: 2px;
+  }
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  /* minibuffer */
+  .minibuffer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #21242b;
+    border-top: 1px solid #3c4048;
+    color: var(--muted-2);
+    font-size: 11px;
+    padding: 6px 16px;
+    letter-spacing: 0.04em;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    text-transform: uppercase;
+  }
+  .minibuffer .mb-k { color: var(--h1); }
+  .minibuffer .mb-sep { color: #3c4048; }
+
+  a:focus-visible, .kw-todo:focus-visible, .kw-done:focus-visible {
+    outline: 1px solid var(--cyan);
+    outline-offset: 2px;
+  }
+
+  /* responsive */
+  @media (max-width: 640px) {
+    html, body { font-size: 13px; line-height: 1.65; }
+    .page { padding: 26px 16px 100px 16px; }
+    .h1 { font-size: 16px; }
+    .h2 { font-size: 14px; }
+    .body, .meta, .drawer, ul.org-list, .exp { padding-left: 14px; }
+    .drawer { margin-left: 14px; }
+    .tags { margin-left: 0; flex-basis: 100%; }
+    .status { font-size: 10px; gap: 8px; }
+    .minibuffer { font-size: 10px; padding: 5px 12px; gap: 10px; }
+  }
+</style>
+</head>
+<body>
+  <main class="page" role="main">
+
+    <div class="status" aria-label="emacs status line">
+      <span>~/olivier.org</span>
+      <span class="sep">|</span>
+      <span class="star">&#9733;</span>
+      <span class="sep">|</span>
+      <span>org-mode 9.6</span>
+      <span class="sep">|</span>
+      <span>GNU Emacs 29</span>
+      <span class="sep">|</span>
+      <span>UTF-8</span>
+    </div>
+    <hr class="hairline" />
+
+    <article class="org">
+
+      <div class="kw-block" aria-label="document keywords">
+        <span class="kw-line"><span class="kw-key">#+TITLE:</span> <span class="kw-val">olivier</span></span>
+        <span class="kw-line"><span class="kw-key">#+AUTHOR:</span> <span class="kw-val">olivier gillaizeau</span></span>
+        <span class="kw-line"><span class="kw-key">#+EMAIL:</span> <span class="kw-val"><a class="inline-link" href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></span></span>
+        <span class="kw-line"><span class="kw-key">#+DATE:</span> <span class="kw-val">2026-04-11</span></span>
+        <span class="kw-line"><span class="kw-key">#+STARTUP:</span> <span class="kw-val">showall</span></span>
+        <span class="kw-line"><span class="kw-key">#+DESCRIPTION:</span> <span class="kw-val">a creative working at the edge of technology</span></span>
+      </div>
+
+      <!-- * about -->
+      <h1 class="h h1" id="about"><span class="stars">*</span><span class="title-text">about</span></h1>
+      <div class="drawer" aria-label="properties">
+        <span class="drawer-edge">:PROPERTIES:</span>
+        <span class="prop"><span class="prop-key">:ROLE:</span> <span class="prop-val">creative working at the edge of technology</span></span>
+        <span class="prop"><span class="prop-key">:LOCATION:</span> <span class="prop-val">san francisco</span></span>
+        <span class="prop"><span class="prop-key">:PRONOUN:</span> <span class="prop-val">il / he</span></span>
+        <span class="drawer-edge">:END:</span>
+      </div>
+      <div class="body">
+        <p>Olivier is a creative working at the edge of technology. He leads AI design at Google Gemini, where he has spent the past four years building generative UI frameworks.</p>
+        <p>Previously at Frame.io and Airbnb. Fifteen years of shipping the infrastructure that makes creative teams faster &mdash; and is now reshaping what creative even means.</p>
+        <p><em style="color:var(--muted-2)">Designer. Systems lead. AI practitioner. French, but nice.</em></p>
+      </div>
+
+      <!-- * essays -->
+      <h1 class="h h1" id="essays">
+        <span class="stars">*</span>
+        <span class="title-text">essays</span>
+        <span class="tags"><span class="tag">:writing:</span></span>
+      </h1>
+
+      <!-- ** TODO [#A] working with models -->
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="kw-todo">TODO</span>
+        <span class="pri pri-a">[#A]</span>
+        <span class="title-text">working with models, not against them</span>
+        <span class="tags"><span class="tag">:ai:</span><span class="tag">:practice:</span></span>
+      </h2>
+      <div class="meta"><span class="meta-label">DEADLINE:</span> <span class="ts">2026-04-25 Sat</span></div>
+      <div class="body"><p>Notes from inside Gemini's generative UI work. What it feels like when the model becomes a collaborator instead of a tool.</p></div>
+
+      <!-- ** TODO [#A] notes from a creative at the edge -->
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="kw-todo">TODO</span>
+        <span class="pri pri-a">[#A]</span>
+        <span class="title-text">notes from a creative at the edge of the model</span>
+        <span class="tags"><span class="tag">:ai:</span></span>
+      </h2>
+      <div class="meta"><span class="meta-label">DEADLINE:</span> <span class="ts">2026-05-02 Sat</span></div>
+      <div class="body"><p>What I'm learning right now &mdash; written weekly, while it's still wet.</p></div>
+
+      <!-- ** TODO [#B] from flash to generative ui -->
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="kw-todo">TODO</span>
+        <span class="pri pri-b">[#B]</span>
+        <span class="title-text">from flash to generative ui</span>
+        <span class="tags"><span class="tag">:career:</span></span>
+      </h2>
+      <div class="body"><p>A career arc through the tools that defined and broke each era of the web.</p></div>
+
+      <!-- ** TODO [#B] why i stopped calling myself a design systems person -->
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="kw-todo">TODO</span>
+        <span class="pri pri-b">[#B]</span>
+        <span class="title-text">why i stopped calling myself a design systems person</span>
+        <span class="tags"><span class="tag">:systems:</span></span>
+      </h2>
+      <div class="body"><p>On the limits of category. The work outgrew the label a long time ago.</p></div>
+
+      <!-- ** DONE [#A] 15 years of building tools -->
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="kw-done">DONE</span>
+        <span class="pri pri-a">[#A]</span>
+        <span class="title-text">i have spent 15 years building tools that are about to disappear</span>
+        <span class="tags"><span class="tag">:essay:</span></span>
+      </h2>
+      <div class="meta"><span class="meta-label closed">CLOSED:</span> <span class="ts inactive">2026-03-28 Sat 14:32</span></div>
+      <div class="drawer">
+        <span class="drawer-edge">:PROPERTIES:</span>
+        <span class="prop"><span class="prop-key">:PUBLISHED:</span> <span class="prop-val">t</span></span>
+        <span class="prop"><span class="prop-key">:URL:</span> <span class="prop-val"><a class="inline-link" href="#">/essays/15-years</a></span></span>
+        <span class="drawer-edge">:END:</span>
+      </div>
+      <div class="body"><p>"The problem isn't that design systems are hard to build. It's that most of them were never meant to be lived in."</p></div>
+
+      <!-- ** DONE [#A] models don't read your figma -->
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="kw-done">DONE</span>
+        <span class="pri pri-a">[#A]</span>
+        <span class="title-text">models don't read your figma</span>
+        <span class="tags"><span class="tag">:ai:</span></span>
+      </h2>
+      <div class="meta"><span class="meta-label closed">CLOSED:</span> <span class="ts inactive">2026-02-14 Fri 09:11</span></div>
+      <div class="body"><p>Most teams still think AI means chat interfaces. I saw it generating custom UIs for every query, and moved my team to be ready before the demand hit.</p></div>
+
+      <!-- * speaking -->
+      <h1 class="h h1" id="speaking">
+        <span class="stars">*</span>
+        <span class="title-text">speaking</span>
+        <span class="tags"><span class="tag">:public:</span></span>
+      </h1>
+
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="title-text">Designing with Generative AI</span>
+        <span class="tags"><span class="tag">:ai:</span></span>
+      </h2>
+      <div class="body"><p>From Gemini's Canvases to the generative UI frameworks that are reshaping what design tools are for &mdash; what it's like to ship interfaces that compose themselves.</p></div>
+
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="title-text">Leading Creative at the Edge of Technology</span>
+        <span class="tags"><span class="tag">:leadership:</span></span>
+      </h2>
+      <div class="body"><p>What 15 years of building with evolving tools (Flash to AI) teaches you about leading teams that ship the future.</p></div>
+
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="title-text">book a talk</span>
+      </h2>
+      <div class="body"><p>&rarr; <a class="inline-link" href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></p></div>
+
+      <!-- * experience -->
+      <h1 class="h h1" id="experience">
+        <span class="stars">*</span>
+        <span class="title-text">experience</span>
+        <span class="tags"><span class="tag">:history:</span></span>
+      </h1>
+
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="title-text"><span style="color:var(--muted-2)">2022&ndash;present</span> &nbsp;::&nbsp; google gemini</span>
+      </h2>
+      <div class="body"><p>ai design lead. generative ui frameworks. canvases. four years shipping the thing most of the industry is still debating.</p></div>
+
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="title-text"><span style="color:var(--muted-2)">2021&ndash;2022</span> &nbsp;&nbsp;&nbsp;&nbsp;::&nbsp; frame.io</span>
+      </h2>
+      <div class="body"><p>creative direction. camera-to-cloud launch. acquired by adobe.</p></div>
+
+      <h2 class="h h2">
+        <span class="stars">**</span>
+        <span class="title-text"><span style="color:var(--muted-2)">2018&ndash;2021</span> &nbsp;&nbsp;&nbsp;&nbsp;::&nbsp; airbnb</span>
+      </h2>
+      <div class="body"><p>global creative director, guest marketing. Only On Airbnb. Barbie Dreamhouse.</p></div>
+
+      <!-- * elsewhere -->
+      <h1 class="h h1" id="elsewhere">
+        <span class="stars">*</span>
+        <span class="title-text">elsewhere</span>
+      </h1>
+      <ul class="org-list">
+        <li><a href="https://twitter.com/" rel="me">twitter</a></li>
+        <li><a href="https://www.linkedin.com/" rel="me">linkedin</a></li>
+        <li><a href="/rss.xml">rss</a></li>
+        <li><a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></li>
+      </ul>
+
+      <!-- * COMMENT meta -->
+      <h1 class="h h1 h-comment" id="meta">
+        <span class="stars">*</span>
+        <span class="title-text">COMMENT meta</span>
+      </h1>
+      <div class="body" style="color:var(--muted); font-style: italic;">
+        <p>french, but nice. &copy; 2026 olivier gillaizeau. hand-written in org-mode, rendered for the web.<span class="cursor" aria-hidden="true"></span></p>
+      </div>
+
+    </article>
+  </main>
+
+  <div class="minibuffer" role="status" aria-label="emacs minibuffer">
+    <span><span class="mb-k">C-x C-s</span> save</span>
+    <span class="mb-sep">|</span>
+    <span><span class="mb-k">C-c C-t</span> cycle todo</span>
+    <span class="mb-sep">|</span>
+    <span><span class="mb-k">S-TAB</span> fold all</span>
+    <span class="mb-sep">|</span>
+    <span>M-x&nbsp;send-email &rarr; og@frenchbutnice.design</span>
+  </div>
+</body>
+</html>

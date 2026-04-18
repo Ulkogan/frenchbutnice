@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>frenchbutnice.design / notebook</title>
+<meta name="description" content="Olivier Gillaizeau — design systems lead at Google Gemini. Essays and speaking on design systems and designing with generative AI." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400;1,6..72,500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --paper: #FBFBF8;
+    --ink: #1A1814;
+    --ink-soft: #514B40;
+    --ink-faint: #8A8374;
+    --blue: #5D7B9E;
+    --blue-faint: rgba(93, 123, 158, 0.4);
+    --blue-wash: rgba(93, 123, 158, 0.08);
+    --brick: #B05A50;
+    --rule: rgba(26, 24, 20, 0.12);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--paper);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 14px;
+    line-height: 1.65;
+    font-feature-settings: "ss01", "ss02";
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 32px 120px;
+  }
+
+  /* ---------- Header ---------- */
+  .masthead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 56px;
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  .masthead .left { font-weight: 500; }
+  .masthead .right { color: var(--ink-faint); }
+  .masthead .sep { color: var(--ink-faint); padding: 0 10px; }
+
+  /* ---------- Cell ---------- */
+  .cell {
+    margin-bottom: 52px;
+  }
+  .cell:last-child { margin-bottom: 0; }
+
+  .line {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .prompt {
+    flex-shrink: 0;
+    width: 64px;
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0;
+    padding-top: 2px;
+    user-select: none;
+  }
+  .prompt.in  { color: var(--blue); }
+  .prompt.out { color: var(--brick); }
+
+  .in-line {
+    margin-bottom: 14px;
+  }
+  .in-line .code {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13.5px;
+    color: var(--ink);
+    padding-top: 2px;
+  }
+  .in-line .code .tok-obj { color: var(--ink); }
+  .in-line .code .tok-dot { color: var(--ink-faint); }
+  .in-line .code .tok-fn  { color: var(--ink); }
+  .in-line .code .tok-punc{ color: var(--ink-faint); }
+  .in-line .code .tok-arg { color: var(--brick); }
+  .in-line .code .tok-num { color: var(--blue); }
+
+  /* Output body */
+  .out-body {
+    flex: 1 1 auto;
+    border-left: 2px solid var(--blue-faint);
+    padding: 2px 0 2px 18px;
+    min-width: 0;
+  }
+
+  /* Rich (serif) output */
+  .rich {
+    font-family: "Newsreader", Georgia, serif;
+    font-optical-sizing: auto;
+    color: var(--ink);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.45;
+    letter-spacing: -0.005em;
+  }
+  .rich p { margin: 0 0 0.75em; }
+  .rich p:last-child { margin-bottom: 0; }
+  .rich .muted { color: var(--ink-soft); }
+
+  /* Mono (plain) output */
+  .mono-out {
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    line-height: 1.75;
+    color: var(--ink);
+    white-space: pre;
+    overflow-x: auto;
+  }
+  .mono-out .dim { color: var(--ink-faint); }
+  .mono-out .blue { color: var(--blue); }
+  .mono-out a {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .mono-out a:hover,
+  .mono-out a:focus-visible {
+    border-bottom-color: var(--blue);
+  }
+
+  /* Spine list (numbered serif) */
+  .spine-list {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 20px;
+    line-height: 1.5;
+    counter-reset: spine;
+    list-style: none;
+    margin: 0.35em 0 0;
+    padding: 0;
+  }
+  .spine-list li {
+    counter-increment: spine;
+    position: relative;
+    padding-left: 2.2em;
+    margin-bottom: 0.35em;
+  }
+  .spine-list li:last-child { margin-bottom: 0; }
+  .spine-list li::before {
+    content: counter(spine) ".";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.6em;
+    text-align: right;
+    font-feature-settings: "lnum", "tnum";
+    color: var(--blue);
+    font-weight: 500;
+  }
+
+  /* Essay list */
+  .essay-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.2em 0 0;
+    counter-reset: essay;
+  }
+  .essay-list li {
+    counter-increment: essay;
+    position: relative;
+    padding: 6px 0 6px 2.4em;
+    border-bottom: 1px dashed var(--rule);
+  }
+  .essay-list li:last-child { border-bottom: none; }
+  .essay-list li::before {
+    content: counter(essay) ".";
+    position: absolute;
+    left: 0;
+    top: 6px;
+    width: 1.8em;
+    text-align: right;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-faint);
+    padding-top: 6px;
+  }
+  .essay-list .title {
+    display: block;
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 19px;
+    line-height: 1.35;
+    color: var(--ink);
+    text-decoration: none;
+    transition: color .15s ease;
+  }
+  .essay-list .title:hover,
+  .essay-list .title:focus-visible {
+    color: var(--blue);
+    outline: none;
+  }
+  .essay-list .standfirst {
+    display: block;
+    font-family: "Newsreader", Georgia, serif;
+    font-style: italic;
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height .25s ease, opacity .2s ease, margin-top .25s ease;
+  }
+  .essay-list li:hover .standfirst,
+  .essay-list li:focus-within .standfirst {
+    max-height: 4em;
+    opacity: 1;
+    margin-top: 4px;
+  }
+
+  /* Speaking block */
+  .speaking {
+    font-family: "Newsreader", Georgia, serif;
+    font-size: 20px;
+    line-height: 1.5;
+  }
+  .speaking ul {
+    list-style: none;
+    padding: 0;
+    margin: 0.4em 0;
+  }
+  .speaking ul li {
+    padding-left: 1.8em;
+    position: relative;
+    margin-bottom: 0.15em;
+  }
+  .speaking ul li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: var(--blue);
+    font-family: "JetBrains Mono", monospace;
+    font-size: 15px;
+    top: 0.2em;
+  }
+  .speaking .em { font-style: italic; color: var(--ink-soft); }
+  .speaking .cta {
+    margin-top: 0.6em;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+  }
+  .speaking .cta a {
+    color: var(--blue);
+    text-decoration: none;
+    border-bottom: 1px solid var(--blue-faint);
+  }
+  .speaking .cta a:hover { border-bottom-color: var(--blue); }
+
+  /* Cursor */
+  .cursor {
+    display: inline-block;
+    width: 0.55em;
+    height: 1.05em;
+    background: var(--ink);
+    vertical-align: -0.15em;
+    margin-left: 2px;
+    animation: blink 1.05s steps(1) infinite;
+  }
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+
+  /* Footer note */
+  .colophon {
+    margin-top: 80px;
+    padding-top: 16px;
+    border-top: 1px solid var(--rule);
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Focus */
+  a:focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 2px;
+    border-radius: 1px;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 640px) {
+    .page { padding: 28px 20px 90px; }
+    .masthead { font-size: 9.5px; margin-bottom: 40px; }
+    .prompt { width: 52px; font-size: 12px; }
+    .line { gap: 10px; }
+    .in-line .code { font-size: 12.5px; }
+    .rich { font-size: 17px; }
+    .spine-list { font-size: 17px; }
+    .essay-list .title { font-size: 16.5px; }
+    .essay-list .standfirst { font-size: 13.5px; }
+    .speaking { font-size: 17px; }
+    .mono-out { font-size: 11.5px; }
+    .cell { margin-bottom: 44px; }
+    .out-body { padding-left: 14px; }
+  }
+
+  @media (max-width: 380px) {
+    .prompt { width: 46px; font-size: 11px; }
+    .in-line .code { font-size: 11.5px; }
+    .rich { font-size: 16px; }
+    .spine-list { font-size: 16px; }
+    .essay-list .title { font-size: 15.5px; }
+    .speaking { font-size: 16px; }
+  }
+
+  @media print {
+    body { background: #fff; }
+    .cursor { display: none; }
+  }
+</style>
+</head>
+<body>
+  <main class="page" role="main">
+
+    <header class="masthead" aria-label="site header">
+      <span class="left">[ frenchbutnice.design / notebook ]</span>
+      <span class="right">
+        <span>og@frenchbutnice.design</span>
+        <span class="sep">·</span>
+        <span>sf / ca</span>
+      </span>
+    </header>
+
+    <!-- ───── Cell 1 — Identity ───── -->
+    <section class="cell" aria-label="about">
+      <div class="line in-line">
+        <span class="prompt in">In&nbsp;[1]:</span>
+        <span class="code"><span class="tok-obj">olivier</span><span class="tok-dot">.</span><span class="tok-fn">about</span><span class="tok-punc">()</span></span>
+      </div>
+      <div class="line">
+        <span class="prompt out">Out[1]:</span>
+        <div class="out-body">
+          <div class="rich">
+            <p>Olivier Gillaizeau leads design systems at Google&nbsp;Gemini. Previously at Frame.io (acquired by Adobe) and Airbnb.</p>
+            <p>Fifteen years shipping the infrastructure that makes creative teams faster without making them smaller.</p>
+            <p class="muted"><em>Designer. Systems lead. French, but nice.</em></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───── Cell 2 — Spine ───── -->
+    <section class="cell" aria-label="beliefs">
+      <div class="line in-line">
+        <span class="prompt in">In&nbsp;[2]:</span>
+        <span class="code"><span class="tok-obj">olivier</span><span class="tok-dot">.</span><span class="tok-fn">believes</span><span class="tok-punc">()</span></span>
+      </div>
+      <div class="line">
+        <span class="prompt out">Out[2]:</span>
+        <div class="out-body">
+          <div class="rich">
+            <p>Two things, mostly&nbsp;—</p>
+          </div>
+          <ol class="spine-list">
+            <li>Design systems are <em>organisms</em>, not formulas. Adoption over perfection. Coherence over uniformity. Systems as services, not mandates.</li>
+            <li>Designing <em>with</em> AI, not around it. Generative UI, Canvases, and what it means for a design system to host models as first-class citizens.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───── Cell 3 — Essays ───── -->
+    <section class="cell" aria-label="essays">
+      <div class="line in-line">
+        <span class="prompt in">In&nbsp;[3]:</span>
+        <span class="code"><span class="tok-obj">olivier</span><span class="tok-dot">.</span><span class="tok-fn">essays</span><span class="tok-punc">(</span><span class="tok-arg">limit</span><span class="tok-punc">=</span><span class="tok-num">6</span><span class="tok-punc">)</span></span>
+      </div>
+      <div class="line">
+        <span class="prompt out">Out[3]:</span>
+        <div class="out-body">
+          <ol class="essay-list">
+            <li>
+              <a class="title" href="#essay-adoption" tabindex="0">Build for Adoption, Not Perfection</a>
+              <span class="standfirst">The problem isn't that design systems are hard to build. It's that most of them were never meant to be lived in.</span>
+            </li>
+            <li>
+              <a class="title" href="#essay-coherence" tabindex="0">Coherence Over Uniformity</a>
+              <span class="standfirst">Sameness is cheap. Coherence is the thing teams can feel but rarely name.</span>
+            </li>
+            <li>
+              <a class="title" href="#essay-genui" tabindex="0">GenUI Before It Had a Name</a>
+              <span class="standfirst">Most teams still think AI means chat. I saw it generating custom UIs for every query, and moved early.</span>
+            </li>
+            <li>
+              <a class="title" href="#essay-services" tabindex="0">Systems Are Services, Not Mandates</a>
+              <span class="standfirst">Your design system is not a mandate. It is a service. Act accordingly.</span>
+            </li>
+            <li>
+              <a class="title" href="#essay-models" tabindex="0">Models Don't Read Your Figma</a>
+              <span class="standfirst">Components aren't the contract anymore. Intent is. Here is what changes next.</span>
+            </li>
+            <li>
+              <a class="title" href="#essay-607" tabindex="0">Lessons from 607 Teams</a>
+              <span class="standfirst">Fifteen thousand hours saved a year — and what it really took to get one system to hold them all.</span>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───── Cell 4 — Speaking ───── -->
+    <section class="cell" aria-label="speaking">
+      <div class="line in-line">
+        <span class="prompt in">In&nbsp;[4]:</span>
+        <span class="code"><span class="tok-obj">olivier</span><span class="tok-dot">.</span><span class="tok-fn">speaking</span><span class="tok-punc">()</span></span>
+      </div>
+      <div class="line">
+        <span class="prompt out">Out[4]:</span>
+        <div class="out-body">
+          <div class="speaking">
+            <p style="margin:0;">I speak about two things&nbsp;—</p>
+            <ul>
+              <li><strong>Design Systems at Scale.</strong> <span class="em">What breaks at 600+ teams, and how to build for adoption instead of enforcement.</span></li>
+              <li><strong>Designing with Generative AI.</strong> <span class="em">From Gemini's Canvases to the generative UI frameworks that change what a design system is for.</span></li>
+            </ul>
+            <p class="cta">Book me &nbsp;→&nbsp; <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───── Cell 5 — Experience (pure mono) ───── -->
+    <section class="cell" aria-label="experience">
+      <div class="line in-line">
+        <span class="prompt in">In&nbsp;[5]:</span>
+        <span class="code"><span class="tok-obj">olivier</span><span class="tok-dot">.</span><span class="tok-fn">experience</span><span class="tok-punc">()</span></span>
+      </div>
+      <div class="line">
+        <span class="prompt out">Out[5]:</span>
+        <div class="out-body">
+<pre class="mono-out">  <span class="blue">2022 — present</span>   google gemini            <span class="dim">design systems lead · genui · canvases</span>
+  <span class="blue">2021 — 2022</span>      frame.io                 <span class="dim">(acquired by adobe) · camera-to-cloud · rebrand</span>
+  <span class="blue">2018 — 2021</span>      airbnb                   <span class="dim">global creative director, guest marketing</span>
+  <span class="blue">2008 — 2018</span>      prior                    <span class="dim">agencies · studios · independent</span></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───── Cell 6 — Elsewhere ───── -->
+    <section class="cell" aria-label="elsewhere">
+      <div class="line in-line">
+        <span class="prompt in">In&nbsp;[6]:</span>
+        <span class="code"><span class="tok-obj">olivier</span><span class="tok-dot">.</span><span class="tok-fn">elsewhere</span><span class="tok-punc">()</span></span>
+      </div>
+      <div class="line">
+        <span class="prompt out">Out[6]:</span>
+        <div class="out-body">
+<pre class="mono-out">  → <a href="https://twitter.com/" rel="me">twitter</a>
+  → <a href="https://linkedin.com/" rel="me">linkedin</a>
+  → <a href="/rss.xml">rss</a>
+  → <a href="mailto:og@frenchbutnice.design">email</a></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───── Cell 7 — Cursor ───── -->
+    <section class="cell" aria-label="prompt">
+      <div class="line in-line">
+        <span class="prompt in">In&nbsp;[7]:</span>
+        <span class="code"><span class="cursor" aria-hidden="true"></span></span>
+      </div>
+    </section>
+
+    <footer class="colophon">
+      <span>© 2026 olivier gillaizeau</span>
+      <span>kernel: frenchbutnice · v2</span>
+    </footer>
+
+  </main>
+</body>
+</html>

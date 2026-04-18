@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>olivier gillaizeau — frenchbutnice.design</title>
+<meta name="description" content="Olivier Gillaizeau. Design systems lead at Google Gemini. Essays on systems as organisms and designing with AI, not around it." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F6F3EA;
+    --ink: #1A1A1A;
+    --ink-dim: #5C5C57;
+    --link: #1D4ED8;
+    --rule: #1A1A1A;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "calt" 0, "liga" 0;
+  }
+
+  ::selection {
+    background: var(--ink);
+    color: var(--bg);
+  }
+
+  .chrome {
+    border-bottom: 1px solid var(--ink);
+    padding: 14px 40px;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+  }
+
+  .chrome span {
+    color: var(--ink);
+  }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 72px 40px 120px;
+  }
+
+  .session {
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .block {
+    margin: 0 0 1.6em 0;
+  }
+
+  .block:last-child {
+    margin-bottom: 0;
+  }
+
+  .prompt {
+    font-weight: 700;
+    font-size: 18px;
+    display: block;
+    margin-bottom: 0.35em;
+  }
+
+  .user { color: var(--ink); }
+  .at { color: var(--ink-dim); }
+  .host { color: var(--ink); }
+  .path { color: var(--ink-dim); }
+  .sigil { color: var(--ink); padding-right: 0.4ch; }
+  .cmd { color: var(--ink); }
+
+  .out {
+    display: block;
+    padding-left: 2ch;
+    color: var(--ink);
+  }
+
+  .out .dim { color: var(--ink-dim); }
+
+  a {
+    color: var(--link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  a:hover, a:focus-visible {
+    border-bottom-color: var(--link);
+    outline: none;
+  }
+  a:focus-visible {
+    background: rgba(29, 78, 216, 0.08);
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.6ch;
+    height: 1em;
+    background: var(--ink);
+    vertical-align: -2px;
+    margin-left: 0.2ch;
+    animation: blink 1.05s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+  }
+
+  @media (max-width: 640px) {
+    html, body { font-size: 14px; line-height: 1.65; }
+    .prompt { font-size: 15px; }
+    .chrome { padding: 12px 20px; font-size: 12px; }
+    main { padding: 40px 20px 80px; }
+    .out { padding-left: 0; }
+  }
+
+  @media (min-width: 1200px) {
+    main { padding-top: 96px; }
+  }
+</style>
+</head>
+<body>
+  <header class="chrome" role="banner">
+    <span>[ frenchbutnice.design ]</span>
+  </header>
+
+  <main>
+    <section class="session" aria-label="Terminal session">
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">whoami</span></span>
+<span class="out">olivier gillaizeau
+design systems lead &middot; google gemini
+<span class="dim">fmr. frame.io, airbnb &middot; san francisco</span></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">cat .about</span></span>
+<span class="out">I write about design systems and the models
+that are eating them. Systems as organisms,
+not formulas. Designing with AI, not around it.
+Fifteen years of shipping systems that live.
+
+<span class="dim">&mdash; previously gemini &middot; frame.io &middot; airbnb</span></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">ls -la ~/essays</span></span>
+<span class="out"><span class="dim">total 6</span>
+<span class="dim">-rw-r--r--</span>  <a href="/essays/build-for-adoption-not-perfection">build-for-adoption-not-perfection.md</a>
+<span class="dim">-rw-r--r--</span>  <a href="/essays/coherence-over-uniformity">coherence-over-uniformity.md</a>
+<span class="dim">-rw-r--r--</span>  <a href="/essays/systems-are-services-not-mandates">systems-are-services-not-mandates.md</a>
+<span class="dim">-rw-r--r--</span>  <a href="/essays/genui-before-it-had-a-name">genui-before-it-had-a-name.md</a>
+<span class="dim">-rw-r--r--</span>  <a href="/essays/models-dont-read-your-figma">models-dont-read-your-figma.md</a>
+<span class="dim">-rw-r--r--</span>  <a href="/essays/lessons-from-607-teams">lessons-from-607-teams.md</a></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">head -1 ~/essays/*.md</span></span>
+<span class="out"><span class="dim">==&gt; systems-are-services-not-mandates.md &lt;==</span>
+Your design system is not a mandate.
+It is a service. Act accordingly.
+
+<span class="dim">==&gt; models-dont-read-your-figma.md &lt;==</span>
+Most teams still think AI means chat interfaces.
+I saw it generating custom UIs for every query,
+and moved my team to be ready before the demand hit.</span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">cat ~/speaking.txt</span></span>
+<span class="out">I speak about:
+  &rarr; design systems at scale
+    <span class="dim">what breaks at 600+ teams, and how to build
+    for adoption instead of enforcement.</span>
+
+  &rarr; designing with generative ai
+    <span class="dim">from gemini's canvases to the generative ui
+    frameworks that change what a design system is for.</span>
+
+book: <a href="mailto:og@frenchbutnice.design?subject=Speaking%20inquiry">og@frenchbutnice.design</a></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">cat ~/.elsewhere</span></span>
+<span class="out">twitter   <a href="https://x.com/frenchbutnice" rel="me">@frenchbutnice</a>
+linkedin  <a href="https://www.linkedin.com/in/gillaizeau" rel="me">/in/gillaizeau</a>
+rss       <a href="/feed.xml">/feed.xml</a>
+email     <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span aria-hidden="true" class="cursor"></span><span class="sr-only" style="position:absolute;left:-9999px;">prompt</span></span>
+</div>
+
+    </section>
+  </main>
+</body>
+</html>

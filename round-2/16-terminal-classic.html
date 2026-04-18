@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>olivier gillaizeau — frenchbutnice.design</title>
+<meta name="description" content="Olivier Gillaizeau. Design systems lead at Google Gemini. Essays on systems as organisms and designing with AI, not around it." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0D0D0F;
+    --ink: #E8E4DB;
+    --ink-dim: #7A756A;
+    --ink-dimmer: #4F4B44;
+    --green: #A8FF60;
+    --green-bright: #C8FF80;
+    --rule: rgba(232, 228, 219, 0.12);
+    --glow: 0 0 6px rgba(168, 255, 96, 0.4);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "zero" 1, "ss01" 1, "calt" 0, "liga" 0;
+    font-variant-numeric: slashed-zero;
+  }
+
+  body {
+    min-height: 100vh;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.45) 100%),
+      repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 2px,
+        rgba(255,255,255,0.025) 2px,
+        rgba(255,255,255,0.025) 3px
+      );
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: var(--green);
+    color: var(--bg);
+    text-shadow: none;
+  }
+
+  .chrome {
+    border-bottom: 1px solid var(--rule);
+    padding: 14px 40px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+  }
+
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 72px 40px 120px;
+  }
+
+  .session {
+    white-space: pre-wrap;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .block {
+    margin: 0 0 1.75em 0;
+  }
+
+  .block:last-child {
+    margin-bottom: 0;
+  }
+
+  .prompt {
+    font-weight: 700;
+    font-size: 16px;
+    display: block;
+    margin-bottom: 0.4em;
+  }
+
+  .user { color: var(--ink); }
+  .at { color: var(--ink-dim); }
+  .host { color: var(--ink); }
+  .path { color: var(--ink-dim); }
+  .sigil { color: var(--ink-dim); padding-right: 0.4ch; }
+  .cmd { color: var(--ink); }
+
+  .out {
+    display: block;
+    padding-left: 2ch;
+    color: var(--ink);
+  }
+
+  .out .dim { color: var(--ink-dim); }
+  .out .dimmer { color: var(--ink-dimmer); }
+
+  a {
+    color: var(--green);
+    text-decoration: none;
+    text-shadow: var(--glow);
+    border-bottom: 1px solid transparent;
+  }
+  a:hover, a:focus-visible {
+    color: var(--green-bright);
+    border-bottom-color: var(--green-bright);
+    outline: none;
+  }
+  a:focus-visible {
+    background: rgba(168, 255, 96, 0.08);
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 0.6ch;
+    height: 1em;
+    background: var(--green);
+    box-shadow: 0 0 8px rgba(168, 255, 96, 0.55);
+    vertical-align: -2px;
+    margin-left: 0.2ch;
+    animation: blink 1.05s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    50.01%, 100% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cursor { animation: none; opacity: 1; }
+    a { text-shadow: none; }
+    .cursor { box-shadow: none; }
+  }
+
+  @media (max-width: 640px) {
+    html, body { font-size: 13.5px; line-height: 1.62; }
+    body {
+      background-image: none;
+      background-color: var(--bg);
+    }
+    .prompt { font-size: 14px; }
+    .chrome { padding: 12px 20px; font-size: 10px; }
+    main { padding: 40px 20px 80px; }
+    .out { padding-left: 0; }
+  }
+
+  @media (min-width: 1200px) {
+    main { padding-top: 96px; }
+  }
+</style>
+</head>
+<body>
+  <header class="chrome" role="banner">
+    <span>[ frenchbutnice.design &mdash; tty ]</span>
+  </header>
+
+  <main>
+    <section class="session" aria-label="Terminal session">
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">whoami</span></span>
+<span class="out">olivier gillaizeau
+design systems lead &middot; google gemini
+<span class="dim">french, but nice &middot; san francisco</span></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">cat .about</span></span>
+<span class="out">I write about design systems and the models
+that are eating them. Systems are organisms,
+not formulas. Designing with AI, not around it.
+Fifteen years shipping the infrastructure that
+makes creative teams faster without making them
+smaller.
+
+<span class="dim">&mdash; previously gemini &middot; frame.io &middot; airbnb</span></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">ls -la ~/essays</span></span>
+<span class="out"><span class="dim">total 6</span>
+<span class="dimmer">-rw-r--r--</span>  <a href="/essays/build-for-adoption-not-perfection">build-for-adoption-not-perfection.md</a>
+<span class="dimmer">-rw-r--r--</span>  <a href="/essays/coherence-over-uniformity">coherence-over-uniformity.md</a>
+<span class="dimmer">-rw-r--r--</span>  <a href="/essays/systems-are-services-not-mandates">systems-are-services-not-mandates.md</a>
+<span class="dimmer">-rw-r--r--</span>  <a href="/essays/genui-before-it-had-a-name">genui-before-it-had-a-name.md</a>
+<span class="dimmer">-rw-r--r--</span>  <a href="/essays/models-dont-read-your-figma">models-dont-read-your-figma.md</a>
+<span class="dimmer">-rw-r--r--</span>  <a href="/essays/lessons-from-607-teams">lessons-from-607-teams.md</a></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">cat ~/essays/build-for-adoption-not-perfection.md | head -3</span></span>
+<span class="out">The problem isn't that design systems are hard
+to build. It's that most of them were never
+meant to be lived in.</span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">cat ~/speaking.txt</span></span>
+<span class="out">I speak about:
+  &rarr; design systems at scale
+    <span class="dim">what breaks at 600+ teams, and how to build
+    for adoption instead of enforcement.</span>
+
+  &rarr; designing with generative ai
+    <span class="dim">from gemini's canvases to the generative ui
+    frameworks that change what a design system is for.</span>
+
+book: <a href="mailto:og@frenchbutnice.design?subject=Speaking%20inquiry">og@frenchbutnice.design</a></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">cat ~/.about/credentials</span></span>
+<span class="out">now       <span class="dim">google gemini &middot; design systems lead (2022&ndash;)</span>
+                <span class="dimmer">5&rarr;1 system unification. 607 teams.
+                15k design hours saved annually.
+                generative ui &middot; canvases.</span>
+
+before    <span class="dim">frame.io &middot; acquired by adobe (2021&ndash;22)</span>
+                <span class="dimmer">camera-to-cloud launch. brand rebuild.</span>
+
+before    <span class="dim">airbnb &middot; global creative director (2018&ndash;21)</span>
+                <span class="dimmer">only on airbnb. barbie dreamhouse.</span></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">cat ~/.elsewhere</span></span>
+<span class="out">twitter   <a href="https://x.com/frenchbutnice" rel="me">@frenchbutnice</a>
+linkedin  <a href="https://www.linkedin.com/in/gillaizeau" rel="me">/in/gillaizeau</a>
+rss       <a href="/feed.xml">/feed.xml</a>
+email     <a href="mailto:og@frenchbutnice.design">og@frenchbutnice.design</a></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span class="cmd">whoami --soul</span></span>
+<span class="out">designer. systems lead. french, but nice.
+<span class="dim">systems as services, not mandates.</span></span>
+</div>
+
+<div class="block">
+<span class="prompt"><span class="user">olivier</span><span class="at">@</span><span class="host">frenchbutnice</span><span class="at">:</span><span class="path">~</span><span class="sigil">$</span><span aria-hidden="true" class="cursor"></span><span style="position:absolute;left:-9999px;">prompt</span></span>
+</div>
+
+    </section>
+  </main>
+</body>
+</html>

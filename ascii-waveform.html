@@ -247,16 +247,16 @@
   </div>
   <div class="dock" role="group" aria-label="Waveform controls">
     <div class="knob">
-      <div class="knob-head"><span class="knob-label">Energy</span><span class="knob-value" id="vEnergy">0.70</span></div>
-      <input class="slider" id="energy" type="range" min="0" max="100" value="70" aria-label="Energy">
+      <div class="knob-head"><span class="knob-label">Swell</span><span class="knob-value" id="vEnergy">0.45</span></div>
+      <input class="slider" id="energy" type="range" min="0" max="100" value="45" aria-label="Swell">
     </div>
     <div class="knob">
-      <div class="knob-head"><span class="knob-label">Turbulence</span><span class="knob-value" id="vTurb">0.35</span></div>
-      <input class="slider" id="turb" type="range" min="0" max="100" value="35" aria-label="Turbulence">
+      <div class="knob-head"><span class="knob-label">Chop</span><span class="knob-value" id="vTurb">0.12</span></div>
+      <input class="slider" id="turb" type="range" min="0" max="100" value="12" aria-label="Chop">
     </div>
     <div class="knob">
-      <div class="knob-head"><span class="knob-label">Trails</span><span class="knob-value" id="vTrails">4</span></div>
-      <input class="slider" id="trails" type="range" min="0" max="10" value="4" step="1" aria-label="Trails">
+      <div class="knob-head"><span class="knob-label">Trace</span><span class="knob-value" id="vTrails">6</span></div>
+      <input class="slider" id="trails" type="range" min="0" max="10" value="6" step="1" aria-label="Trace">
     </div>
     <div class="knob">
       <div class="knob-head"><span class="knob-label">Size</span><span class="knob-value" id="vSize">14</span></div>
@@ -300,9 +300,9 @@
   let lastThemeKey = '';
 
   const params = {
-    energy: 0.70,
-    turbulence: 0.35,
-    trails: 4,
+    energy: 0.45,
+    turbulence: 0.12,
+    trails: 6,
     size: 14,
     particle: 'dots',
     color: '#E8B468',
@@ -388,52 +388,44 @@
     return hash(i) * (1 - u) + hash(i + 1) * u;
   }
 
-  function envelope(u, t) {
+  // Gentle traveling wave — single curve with a slow swell envelope.
+  // Returns a vertical offset in approx [-1, 1].
+  function waveY(u, t) {
     const turb = params.turbulence;
-    const clean = 1 - turb;
-    const a = Math.sin(u * Math.PI * 2 * 2.2 - t * 1.3) * 0.50 * clean;
-    const b = Math.sin(u * Math.PI * 2 * 5.6 + t * 0.8) * 0.22 * (0.4 + 0.6 * turb);
-    const c = Math.sin(u * Math.PI * 2 * 11  - t * 2.1) * 0.14 * turb;
-    const n = noise1(u * (6 + 18 * turb) + t * (0.6 + 1.4 * turb)) * 0.30 * turb;
-    const base = a + b + c + n;
-    const breathe = 0.60 + 0.40 * Math.sin(t * 0.55) * (0.5 + 0.5 * params.energy);
-    return base * breathe * (0.25 + 1.35 * params.energy);
+    // Primary: slow, low-frequency traveller — the ocean swell
+    const primary = Math.sin(u * Math.PI * 2 * 1.3 - t * 0.55);
+    // Secondary: tiny, wider wavelength cross-swell for non-repeating feel
+    const cross = Math.sin(u * Math.PI * 2 * 0.45 + t * 0.18) * 0.35;
+    // Chop: small high-frequency ripples added by turbulence
+    const chop = Math.sin(u * Math.PI * 2 * 6.5 - t * 1.2) * 0.14 * turb;
+    const ripple = noise1(u * (3 + 7 * turb) + t * 0.35) * 0.18 * turb;
+    // Slow swell: wave grows in, recedes — like a tide breathing
+    const swell = 0.55 + 0.45 * Math.sin(t * 0.22);
+    return (primary + cross + chop + ripple) * 0.5 * swell * (0.35 + 1.1 * params.energy);
   }
 
-  // Render one wave layer at given time, alpha-multiplied by gain (0..1)
-  function drawWave(t, gain, ramp, colorTuple) {
-    if (gain <= 0.01) return;
+  // Draw a single-line wave with soft vertical falloff (anti-aliased in row units).
+  function drawWave(t, ramp, colorTuple) {
     const midRow = rows / 2;
-    const maxHalf = rows * 0.42;
+    const maxAmp = rows * 0.34;
     const rampLast = ramp.length - 1;
+    const spread = 2.2; // vertical softness in rows
 
     for (let x = 0; x < cols; x++) {
       const u = x / cols;
-      const env = envelope(u, t);
-      const halfRows = Math.min(maxHalf, Math.abs(env) * maxHalf);
+      const yCenter = midRow + waveY(u, t) * maxAmp;
+      const yFloor = Math.floor(yCenter);
 
-      const yStart = Math.max(0, Math.floor(midRow - halfRows - 1));
-      const yEnd = Math.min(rows - 1, Math.ceil(midRow + halfRows + 1));
-
-      for (let y = yStart; y <= yEnd; y++) {
-        const dy = y - midRow;
-        const dist = Math.abs(dy);
-        const edgeDist = halfRows - dist;
-        if (edgeDist < -0.5) continue;
-
-        let ch, alpha;
-        if (edgeDist < 0.5) {
-          // Envelope edge — densest glyph from the ramp
-          ch = ramp[rampLast] || ramp[ramp.length - 1];
-          alpha = 0.95 * gain;
-        } else {
-          const t01 = Math.min(1, edgeDist / Math.max(1, halfRows));
-          const intensity = Math.pow(1 - t01, 0.85);
-          const idx = Math.min(rampLast, Math.max(0, Math.floor(intensity * ramp.length)));
-          ch = ramp[idx];
-          if (!ch || ch === ' ') continue;
-          alpha = (0.28 + intensity * 0.60) * gain;
-        }
+      for (let dy = -3; dy <= 3; dy++) {
+        const y = yFloor + dy;
+        if (y < 0 || y >= rows) continue;
+        const d = Math.abs(y + 0.5 - yCenter);
+        const intensity = Math.max(0, 1 - d / spread);
+        if (intensity < 0.06) continue;
+        const idx = Math.min(rampLast, Math.max(0, Math.floor(intensity * ramp.length)));
+        const ch = ramp[idx];
+        if (!ch || ch === ' ') continue;
+        const alpha = 0.35 + 0.6 * intensity;
         ctx.fillStyle = `rgba(${colorTuple},${alpha})`;
         const px = (x * cellW + cellW / 2) * dpr;
         const py = (y * cellH + cellH / 2) * dpr;
@@ -446,8 +438,14 @@
     const t = ms * 0.001;
     refreshStyle();
 
-    ctx.fillStyle = styleCache.bg;
+    // Persistence fade — semi-transparent bg wash each frame leaves a
+    // trace of past wave positions that slowly recedes, like sand.
+    // trace=0 → nearly full clear; trace=10 → long-lasting imprint.
+    const traceT = Math.max(0, Math.min(10, params.trails)) / 10;
+    const fadeAlpha = 0.28 * Math.pow(1 - traceT, 1.4) + 0.012;
+    ctx.fillStyle = `rgba(${rgbTuple(styleCache.bg)},${fadeAlpha})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
+
     ctx.font = `400 ${fontPx * dpr}px "DM Mono", "SF Mono", ui-monospace, monospace`;
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'center';
@@ -455,26 +453,7 @@
     const ramp = PARTICLES[params.particle] || PARTICLES.dots;
     const tuple = rgbTuple(params.color);
 
-    // Draw trails oldest first so the live wave lands on top
-    const nTrails = Math.max(0, params.trails | 0);
-    const trailDt = 0.055;
-    for (let i = nTrails; i >= 1; i--) {
-      // Decaying gain: older = fainter
-      const gain = Math.pow(1 - i / (nTrails + 1), 1.3) * 0.75;
-      drawWave(t - i * trailDt, gain, ramp, tuple);
-    }
-    // Live wave
-    drawWave(t, 1.0, ramp, tuple);
-
-    // Centerline baseline
-    ctx.globalAlpha = 1;
-    ctx.fillStyle = `rgba(${rgbTuple(styleCache.dim.startsWith('#') ? styleCache.dim : '#6B6A66')},0.22)`;
-    const midPy = (rows / 2 * cellH) * dpr;
-    const step = isSmall() ? 3 : 2;
-    for (let x = 0; x < cols; x += step) {
-      const px = (x * cellW + cellW / 2) * dpr;
-      ctx.fillText('·', px, midPy);
-    }
+    drawWave(t, ramp, tuple);
 
     requestAnimationFrame(frame);
   }

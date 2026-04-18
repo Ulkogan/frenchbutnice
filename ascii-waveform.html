@@ -388,44 +388,58 @@
     return hash(i) * (1 - u) + hash(i + 1) * u;
   }
 
-  // Gentle traveling wave — single curve with a slow swell envelope.
-  // Returns a vertical offset in approx [-1, 1].
-  function waveY(u, t) {
-    const turb = params.turbulence;
-    // Primary: slow, low-frequency traveller — the ocean swell
-    const primary = Math.sin(u * Math.PI * 2 * 1.3 - t * 0.55);
-    // Secondary: tiny, wider wavelength cross-swell for non-repeating feel
-    const cross = Math.sin(u * Math.PI * 2 * 0.45 + t * 0.18) * 0.35;
-    // Chop: small high-frequency ripples added by turbulence
-    const chop = Math.sin(u * Math.PI * 2 * 6.5 - t * 1.2) * 0.14 * turb;
-    const ripple = noise1(u * (3 + 7 * turb) + t * 0.35) * 0.18 * turb;
-    // Slow swell: wave grows in, recedes — like a tide breathing
-    const swell = 0.55 + 0.45 * Math.sin(t * 0.22);
-    return (primary + cross + chop + ripple) * 0.5 * swell * (0.35 + 1.1 * params.energy);
+  // Irregular surge profile — composite of slow cycles, sharpened so
+  // waves come in as short surges with longer quiet retreats.
+  function surgeProfile(t) {
+    const s1 = (Math.sin(t * 0.22) + 1) * 0.5;
+    const s2 = (Math.sin(t * 0.37 + 1.7) + 1) * 0.5;
+    const s3 = (Math.sin(t * 0.13 + 3.1) + 1) * 0.5;
+    const blend = s1 * 0.5 + s2 * 0.3 + s3 * 0.2;
+    return Math.pow(blend, 1.7);
   }
 
-  // Draw a single-line wave with soft vertical falloff (anti-aliased in row units).
+  // Top-down shoreline view: the water edge is a mostly-horizontal line
+  // near the lower part of the screen that advances upward during a
+  // surge and retreats downward. Returns a row-space y for column u.
+  function edgeY(u, t) {
+    const chop = params.turbulence;
+    const restY = rows * 0.72;                        // sea's resting edge (lower half)
+    const maxPushRows = rows * 0.46;                  // farthest surge up the beach
+    const surge = surgeProfile(t);
+    const push = surge * maxPushRows * (0.30 + 1.15 * params.energy);
+
+    // Slow along-edge undulation (a bit of natural curvature)
+    const wobble = Math.sin(u * Math.PI * 2 * 1.2 - t * 0.28) * 1.3;
+    // Chop: small high-freq bumps scaled by turbulence
+    const bumps = Math.sin(u * Math.PI * 2 * 4.5 - t * 0.7) * 0.9 * chop;
+    const jitter = noise1(u * 6 + t * 0.4) * 1.8 * chop;
+
+    return restY - push + wobble + bumps + jitter;
+  }
+
+  // Draw the water edge with soft vertical falloff; alpha scales with
+  // surge intensity so peaks lay down more foam than quiet moments.
   function drawWave(t, ramp, colorTuple) {
-    const midRow = rows / 2;
-    const maxAmp = rows * 0.34;
     const rampLast = ramp.length - 1;
-    const spread = 2.2; // vertical softness in rows
+    const spread = 1.9;
+    const surge = surgeProfile(t);
+    const gainBase = 0.55 + 0.45 * surge; // brighter at peaks
 
     for (let x = 0; x < cols; x++) {
       const u = x / cols;
-      const yCenter = midRow + waveY(u, t) * maxAmp;
-      const yFloor = Math.floor(yCenter);
+      const yC = edgeY(u, t);
+      const yFloor = Math.floor(yC);
 
       for (let dy = -3; dy <= 3; dy++) {
         const y = yFloor + dy;
         if (y < 0 || y >= rows) continue;
-        const d = Math.abs(y + 0.5 - yCenter);
+        const d = Math.abs(y + 0.5 - yC);
         const intensity = Math.max(0, 1 - d / spread);
         if (intensity < 0.06) continue;
         const idx = Math.min(rampLast, Math.max(0, Math.floor(intensity * ramp.length)));
         const ch = ramp[idx];
         if (!ch || ch === ' ') continue;
-        const alpha = 0.35 + 0.6 * intensity;
+        const alpha = (0.30 + 0.65 * intensity) * gainBase;
         ctx.fillStyle = `rgba(${colorTuple},${alpha})`;
         const px = (x * cellW + cellW / 2) * dpr;
         const py = (y * cellH + cellH / 2) * dpr;

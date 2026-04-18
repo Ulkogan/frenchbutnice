@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0B0B0C">
 <title>ASCII Waveform — shader study</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,6 +14,8 @@
     --ink: #F3EFE6;
     --dim: #6B6A66;
     --accent: #E8B468;
+    --pad-x: 24px;
+    --pad-y: 24px;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { height: 100%; }
@@ -21,6 +24,8 @@
     color: var(--ink);
     font-family: 'DM Mono', 'SF Mono', ui-monospace, monospace;
     overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
   #stage {
     position: fixed;
@@ -29,8 +34,8 @@
   }
   .hud {
     position: fixed;
-    left: 24px;
-    top: 24px;
+    left: max(var(--pad-x), env(safe-area-inset-left));
+    top: max(var(--pad-y), env(safe-area-inset-top));
     font-size: 11px;
     letter-spacing: 0.12em;
     color: var(--dim);
@@ -50,47 +55,133 @@
   }
   .hud .row { margin-bottom: 4px; }
   .hud .row span:first-child { color: var(--ink); opacity: 0.7; }
+
   .caption {
     position: fixed;
-    left: 24px;
-    bottom: 24px;
-    right: 24px;
+    left: max(var(--pad-x), env(safe-area-inset-left));
+    right: max(var(--pad-x), env(safe-area-inset-right));
+    bottom: calc(max(var(--pad-y), env(safe-area-inset-bottom)) + 88px);
     font-size: 11px;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--dim);
     display: flex;
     justify-content: space-between;
+    gap: 16px;
     pointer-events: none;
     z-index: 2;
   }
+
   @keyframes pulse {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.25; }
   }
-  /* light theme toggle via data attr for quick preview */
+
   body[data-theme="light"] {
     --bg: #F5F3EE;
     --ink: #1C1917;
-    --dim: #A8A29E;
+    --dim: #8A857E;
     --accent: #C2725A;
   }
+
   button.theme {
     position: fixed;
-    right: 24px;
-    top: 20px;
+    right: max(var(--pad-x), env(safe-area-inset-right));
+    top: max(calc(var(--pad-y) - 4px), env(safe-area-inset-top));
     z-index: 3;
     background: transparent;
     color: var(--dim);
     border: 1px solid currentColor;
-    padding: 6px 10px;
+    padding: 8px 12px;
     font-family: inherit;
     font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     cursor: pointer;
+    min-height: 32px;
   }
   button.theme:hover { color: var(--ink); }
+  button.theme:active { color: var(--ink); }
+
+  /* Controls dock — two knobs */
+  .dock {
+    position: fixed;
+    left: max(var(--pad-x), env(safe-area-inset-left));
+    right: max(var(--pad-x), env(safe-area-inset-right));
+    bottom: max(var(--pad-y), env(safe-area-inset-bottom));
+    z-index: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .knob {
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid color-mix(in srgb, var(--dim) 40%, transparent);
+    padding: 10px 12px 12px;
+  }
+  .knob-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .knob-label { color: var(--ink); opacity: 0.85; }
+  .knob-value { color: var(--accent); font-variant-numeric: tabular-nums; }
+
+  input[type=range].slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 28px;
+    background: transparent;
+    cursor: pointer;
+    display: block;
+  }
+  input[type=range].slider:focus { outline: none; }
+  input[type=range].slider::-webkit-slider-runnable-track {
+    height: 2px;
+    background: color-mix(in srgb, var(--dim) 60%, transparent);
+  }
+  input[type=range].slider::-moz-range-track {
+    height: 2px;
+    background: color-mix(in srgb, var(--dim) 60%, transparent);
+  }
+  input[type=range].slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    border-radius: 50%;
+    margin-top: -8px;
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+  input[type=range].slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  @media (max-width: 520px) {
+    :root { --pad-x: 16px; --pad-y: 16px; }
+    .hud { font-size: 10px; }
+    .caption { font-size: 10px; bottom: calc(max(var(--pad-y), env(safe-area-inset-bottom)) + 140px); }
+    .dock { grid-template-columns: 1fr; gap: 8px; }
+    button.theme { font-size: 9px; padding: 8px 10px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hud .dot { animation: none; }
+  }
 </style>
 </head>
 <body>
@@ -99,44 +190,95 @@
     <div class="row"><span>CH</span> &nbsp; 01 / 01</div>
     <div class="row"><span>SR</span> &nbsp; 48.0 kHz</div>
   </div>
-  <button class="theme" onclick="document.body.dataset.theme = document.body.dataset.theme === 'light' ? '' : 'light'">Toggle</button>
+  <button class="theme" onclick="document.body.dataset.theme = document.body.dataset.theme === 'light' ? '' : 'light'">Theme</button>
   <canvas id="stage"></canvas>
   <div class="caption">
     <span>ASCII · WAVEFORM · SHADER</span>
-    <span>frenchbutnice / study · 001</span>
+    <span>frenchbutnice / 001</span>
+  </div>
+  <div class="dock" role="group" aria-label="Waveform controls">
+    <div class="knob">
+      <div class="knob-head">
+        <span class="knob-label">Energy</span>
+        <span class="knob-value" id="vEnergy">0.70</span>
+      </div>
+      <input class="slider" id="energy" type="range" min="0" max="100" value="70" aria-label="Energy">
+    </div>
+    <div class="knob">
+      <div class="knob-head">
+        <span class="knob-label">Turbulence</span>
+        <span class="knob-value" id="vTurb">0.35</span>
+      </div>
+      <input class="slider" id="turb" type="range" min="0" max="100" value="35" aria-label="Turbulence">
+    </div>
   </div>
 <script>
 (() => {
   const canvas = document.getElementById('stage');
-  const ctx = canvas.getContext('2d');
-  // ramp from empty to solid — low-to-high amplitude
+  const ctx = canvas.getContext('2d', { alpha: false });
   const RAMP = ' .·:-=+*%#@';
-  // peak characters used on the top/bottom envelope line
   const PEAK = '▁▂▃▄▅▆▇█';
 
-  let cssW, cssH, dpr, cols, rows, cellW, cellH, fontPx;
+  const isCoarse = matchMedia('(pointer: coarse)').matches;
+  const isSmall = () => window.innerWidth < 520;
 
-  function getStyle(name) {
-    return getComputedStyle(document.body).getPropertyValue(name).trim();
+  let cssW, cssH, dpr, cols, rows, cellW, cellH, fontPx;
+  let styleCache = { bg: '', ink: '', dim: '', accent: '' };
+  let lastThemeKey = '';
+
+  // Controls — in [0,1]
+  const params = { energy: 0.70, turbulence: 0.35 };
+
+  const energyEl = document.getElementById('energy');
+  const turbEl = document.getElementById('turb');
+  const energyVal = document.getElementById('vEnergy');
+  const turbVal = document.getElementById('vTurb');
+
+  function bindSlider(el, key, out) {
+    const apply = () => {
+      params[key] = el.value / 100;
+      out.textContent = params[key].toFixed(2);
+    };
+    el.addEventListener('input', apply);
+    apply();
+  }
+  bindSlider(energyEl, 'energy', energyVal);
+  bindSlider(turbEl, 'turbulence', turbVal);
+
+  function refreshStyle() {
+    const cs = getComputedStyle(document.body);
+    const key = document.body.dataset.theme || 'dark';
+    if (key === lastThemeKey) return;
+    lastThemeKey = key;
+    styleCache.bg = cs.getPropertyValue('--bg').trim();
+    styleCache.ink = cs.getPropertyValue('--ink').trim();
+    styleCache.dim = cs.getPropertyValue('--dim').trim();
+    styleCache.accent = cs.getPropertyValue('--accent').trim();
   }
 
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Cap DPR aggressively on mobile to keep fps up
+    const rawDpr = window.devicePixelRatio || 1;
+    dpr = Math.min(rawDpr, isSmall() ? 1.5 : 2);
     cssW = window.innerWidth;
     cssH = window.innerHeight;
-    canvas.width = cssW * dpr;
-    canvas.height = cssH * dpr;
+    canvas.width = Math.floor(cssW * dpr);
+    canvas.height = Math.floor(cssH * dpr);
     canvas.style.width = cssW + 'px';
     canvas.style.height = cssH + 'px';
-    // Cell sizing — responsive density
-    fontPx = Math.max(12, Math.min(18, Math.round(cssW / 110)));
+    // Chunkier cells on mobile => fewer draws, bigger legible glyphs
+    if (isSmall()) {
+      fontPx = Math.max(13, Math.min(16, Math.round(cssW / 28)));
+    } else {
+      fontPx = Math.max(12, Math.min(18, Math.round(cssW / 110)));
+    }
     cellW = fontPx * 0.62;
     cellH = fontPx * 1.05;
     cols = Math.ceil(cssW / cellW) + 1;
     rows = Math.ceil(cssH / cellH) + 1;
+    lastThemeKey = ''; // force style refresh
   }
 
-  // 1D pseudo-noise for organic variation
   function hash(n) {
     n = (n << 13) ^ n;
     return (1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
@@ -148,28 +290,27 @@
     return hash(i) * (1 - u) + hash(i + 1) * u;
   }
 
-  // Sample the wave envelope for a given column (0..1) at time t
+  // Envelope shaped by two knobs:
+  //  energy     -> overall amplitude & breathing depth
+  //  turbulence -> ratio of noise/high-harmonics vs clean sine
   function envelope(u, t) {
-    // Traveling composite wave: slow carrier + mid + jitter
-    const a = Math.sin(u * Math.PI * 2 * 2.2 - t * 1.3) * 0.42;
-    const b = Math.sin(u * Math.PI * 2 * 5.6 + t * 0.8) * 0.22;
-    const c = Math.sin(u * Math.PI * 2 * 11 - t * 2.1) * 0.10;
-    const n = noise1(u * 12 + t * 0.9) * 0.18;
-    // Global amplitude pulse (breathing)
-    const breathe = 0.72 + 0.28 * Math.sin(t * 0.55);
-    return (a + b + c + n) * breathe;
+    const turb = params.turbulence;
+    const clean = 1 - turb;
+    const a = Math.sin(u * Math.PI * 2 * 2.2 - t * 1.3) * 0.50 * clean;
+    const b = Math.sin(u * Math.PI * 2 * 5.6 + t * 0.8) * 0.22 * (0.4 + 0.6 * turb);
+    const c = Math.sin(u * Math.PI * 2 * 11  - t * 2.1) * 0.14 * turb;
+    const n = noise1(u * (6 + 18 * turb) + t * (0.6 + 1.4 * turb)) * 0.30 * turb;
+    const base = a + b + c + n;
+    const breathe = 0.60 + 0.40 * Math.sin(t * 0.55) * (0.5 + 0.5 * params.energy);
+    return base * breathe * (0.25 + 1.35 * params.energy);
   }
 
   function frame(ms) {
     const t = ms * 0.001;
-    const ink = getStyle('--ink');
-    const dim = getStyle('--dim');
-    const accent = getStyle('--accent');
-    const bg = getStyle('--bg');
+    refreshStyle();
 
-    ctx.fillStyle = bg;
+    ctx.fillStyle = styleCache.bg;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.scale(1, 1);
     ctx.font = `400 ${fontPx * dpr}px "DM Mono", "SF Mono", ui-monospace, monospace`;
     ctx.textBaseline = 'middle';
     ctx.textAlign = 'center';
@@ -180,44 +321,36 @@
     for (let x = 0; x < cols; x++) {
       const u = x / cols;
       const env = envelope(u, t);
-      const halfRows = Math.abs(env) * maxHalf;
-      const sign = env >= 0 ? 1 : -1;
+      const halfRows = Math.min(maxHalf, Math.abs(env) * maxHalf);
 
-      // column top and bottom (mirrored around center for classic waveform look)
       const topY = midRow - halfRows;
       const botY = midRow + halfRows;
 
-      for (let y = 0; y < rows; y++) {
-        if (y < topY - 1 || y > botY + 1) continue;
+      // Only iterate rows actually inside the envelope band (big mobile win)
+      const yStart = Math.max(0, Math.floor(topY - 1));
+      const yEnd = Math.min(rows - 1, Math.ceil(botY + 1));
+
+      for (let y = yStart; y <= yEnd; y++) {
         const dy = y - midRow;
         const dist = Math.abs(dy);
-        const edgeDist = halfRows - dist; // >0 inside the wave, <0 outside
-
-        let ch = '';
-        let alpha = 0;
-        let color = ink;
-
+        const edgeDist = halfRows - dist;
         if (edgeDist < -0.5) continue;
 
+        let ch, alpha, color;
         if (edgeDist < 0.5) {
-          // Envelope edge — brightest, with a small vertical bar char for smoothness
           const frac = Math.max(0, Math.min(0.999, 1 - Math.abs(edgeDist)));
-          const pi = Math.min(PEAK.length - 1, Math.floor(frac * PEAK.length));
-          ch = PEAK[pi];
+          ch = PEAK[Math.min(PEAK.length - 1, Math.floor(frac * PEAK.length))];
           alpha = 0.95;
-          color = accent;
+          color = styleCache.accent;
         } else {
-          // Interior fill — denser near the edge, sparser toward the centerline
           const t01 = Math.min(1, edgeDist / Math.max(1, halfRows));
-          // Invert: more density near edge (t01 near 0), less at center (t01 near 1)
           const intensity = Math.pow(1 - t01, 0.85);
-          const ri = Math.min(RAMP.length - 1, Math.max(0, Math.floor(intensity * RAMP.length)));
-          ch = RAMP[ri];
+          ch = RAMP[Math.min(RAMP.length - 1, Math.max(0, Math.floor(intensity * RAMP.length)))];
+          if (!ch || ch === ' ') continue;
           alpha = 0.35 + intensity * 0.55;
-          color = ink;
+          color = styleCache.ink;
         }
 
-        if (!ch || ch === ' ') continue;
         ctx.globalAlpha = alpha;
         ctx.fillStyle = color;
         const px = (x * cellW + cellW / 2) * dpr;
@@ -226,11 +359,12 @@
       }
     }
 
-    // Centerline baseline — subtle dashed char run
+    // Centerline dotted baseline
     ctx.globalAlpha = 0.18;
-    ctx.fillStyle = dim;
+    ctx.fillStyle = styleCache.dim;
     const midPy = (midRow * cellH) * dpr;
-    for (let x = 0; x < cols; x += 2) {
+    const step = isSmall() ? 3 : 2;
+    for (let x = 0; x < cols; x += step) {
       const px = (x * cellW + cellW / 2) * dpr;
       ctx.fillText('·', px, midPy);
     }
@@ -239,7 +373,13 @@
     requestAnimationFrame(frame);
   }
 
-  window.addEventListener('resize', resize);
+  let resizeRaf = 0;
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(resizeRaf);
+    resizeRaf = requestAnimationFrame(resize);
+  });
+  window.addEventListener('orientationchange', () => setTimeout(resize, 120));
+
   resize();
   requestAnimationFrame(frame);
 })();

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ASCII Waveform — shader study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0B0B0C;
+    --ink: #F3EFE6;
+    --dim: #6B6A66;
+    --accent: #E8B468;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Mono', 'SF Mono', ui-monospace, monospace;
+    overflow: hidden;
+  }
+  #stage {
+    position: fixed;
+    inset: 0;
+    display: block;
+  }
+  .hud {
+    position: fixed;
+    left: 24px;
+    top: 24px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--dim);
+    text-transform: uppercase;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .hud .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  .hud .row { margin-bottom: 4px; }
+  .hud .row span:first-child { color: var(--ink); opacity: 0.7; }
+  .caption {
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    right: 24px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+    z-index: 2;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.25; }
+  }
+  /* light theme toggle via data attr for quick preview */
+  body[data-theme="light"] {
+    --bg: #F5F3EE;
+    --ink: #1C1917;
+    --dim: #A8A29E;
+    --accent: #C2725A;
+  }
+  button.theme {
+    position: fixed;
+    right: 24px;
+    top: 20px;
+    z-index: 3;
+    background: transparent;
+    color: var(--dim);
+    border: 1px solid currentColor;
+    padding: 6px 10px;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  button.theme:hover { color: var(--ink); }
+</style>
+</head>
+<body>
+  <div class="hud">
+    <div class="row"><span class="dot"></span>SIGNAL · LIVE</div>
+    <div class="row"><span>CH</span> &nbsp; 01 / 01</div>
+    <div class="row"><span>SR</span> &nbsp; 48.0 kHz</div>
+  </div>
+  <button class="theme" onclick="document.body.dataset.theme = document.body.dataset.theme === 'light' ? '' : 'light'">Toggle</button>
+  <canvas id="stage"></canvas>
+  <div class="caption">
+    <span>ASCII · WAVEFORM · SHADER</span>
+    <span>frenchbutnice / study · 001</span>
+  </div>
+<script>
+(() => {
+  const canvas = document.getElementById('stage');
+  const ctx = canvas.getContext('2d');
+  // ramp from empty to solid — low-to-high amplitude
+  const RAMP = ' .·:-=+*%#@';
+  // peak characters used on the top/bottom envelope line
+  const PEAK = '▁▂▃▄▅▆▇█';
+
+  let cssW, cssH, dpr, cols, rows, cellW, cellH, fontPx;
+
+  function getStyle(name) {
+    return getComputedStyle(document.body).getPropertyValue(name).trim();
+  }
+
+  function resize() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    cssW = window.innerWidth;
+    cssH = window.innerHeight;
+    canvas.width = cssW * dpr;
+    canvas.height = cssH * dpr;
+    canvas.style.width = cssW + 'px';
+    canvas.style.height = cssH + 'px';
+    // Cell sizing — responsive density
+    fontPx = Math.max(12, Math.min(18, Math.round(cssW / 110)));
+    cellW = fontPx * 0.62;
+    cellH = fontPx * 1.05;
+    cols = Math.ceil(cssW / cellW) + 1;
+    rows = Math.ceil(cssH / cellH) + 1;
+  }
+
+  // 1D pseudo-noise for organic variation
+  function hash(n) {
+    n = (n << 13) ^ n;
+    return (1.0 - ((n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);
+  }
+  function noise1(x) {
+    const i = Math.floor(x);
+    const f = x - i;
+    const u = f * f * (3 - 2 * f);
+    return hash(i) * (1 - u) + hash(i + 1) * u;
+  }
+
+  // Sample the wave envelope for a given column (0..1) at time t
+  function envelope(u, t) {
+    // Traveling composite wave: slow carrier + mid + jitter
+    const a = Math.sin(u * Math.PI * 2 * 2.2 - t * 1.3) * 0.42;
+    const b = Math.sin(u * Math.PI * 2 * 5.6 + t * 0.8) * 0.22;
+    const c = Math.sin(u * Math.PI * 2 * 11 - t * 2.1) * 0.10;
+    const n = noise1(u * 12 + t * 0.9) * 0.18;
+    // Global amplitude pulse (breathing)
+    const breathe = 0.72 + 0.28 * Math.sin(t * 0.55);
+    return (a + b + c + n) * breathe;
+  }
+
+  function frame(ms) {
+    const t = ms * 0.001;
+    const ink = getStyle('--ink');
+    const dim = getStyle('--dim');
+    const accent = getStyle('--accent');
+    const bg = getStyle('--bg');
+
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.scale(1, 1);
+    ctx.font = `400 ${fontPx * dpr}px "DM Mono", "SF Mono", ui-monospace, monospace`;
+    ctx.textBaseline = 'middle';
+    ctx.textAlign = 'center';
+
+    const midRow = rows / 2;
+    const maxHalf = rows * 0.42;
+
+    for (let x = 0; x < cols; x++) {
+      const u = x / cols;
+      const env = envelope(u, t);
+      const halfRows = Math.abs(env) * maxHalf;
+      const sign = env >= 0 ? 1 : -1;
+
+      // column top and bottom (mirrored around center for classic waveform look)
+      const topY = midRow - halfRows;
+      const botY = midRow + halfRows;
+
+      for (let y = 0; y < rows; y++) {
+        if (y < topY - 1 || y > botY + 1) continue;
+        const dy = y - midRow;
+        const dist = Math.abs(dy);
+        const edgeDist = halfRows - dist; // >0 inside the wave, <0 outside
+
+        let ch = '';
+        let alpha = 0;
+        let color = ink;
+
+        if (edgeDist < -0.5) continue;
+
+        if (edgeDist < 0.5) {
+          // Envelope edge — brightest, with a small vertical bar char for smoothness
+          const frac = Math.max(0, Math.min(0.999, 1 - Math.abs(edgeDist)));
+          const pi = Math.min(PEAK.length - 1, Math.floor(frac * PEAK.length));
+          ch = PEAK[pi];
+          alpha = 0.95;
+          color = accent;
+        } else {
+          // Interior fill — denser near the edge, sparser toward the centerline
+          const t01 = Math.min(1, edgeDist / Math.max(1, halfRows));
+          // Invert: more density near edge (t01 near 0), less at center (t01 near 1)
+          const intensity = Math.pow(1 - t01, 0.85);
+          const ri = Math.min(RAMP.length - 1, Math.max(0, Math.floor(intensity * RAMP.length)));
+          ch = RAMP[ri];
+          alpha = 0.35 + intensity * 0.55;
+          color = ink;
+        }
+
+        if (!ch || ch === ' ') continue;
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = color;
+        const px = (x * cellW + cellW / 2) * dpr;
+        const py = (y * cellH + cellH / 2) * dpr;
+        ctx.fillText(ch, px, py);
+      }
+    }
+
+    // Centerline baseline — subtle dashed char run
+    ctx.globalAlpha = 0.18;
+    ctx.fillStyle = dim;
+    const midPy = (midRow * cellH) * dpr;
+    for (let x = 0; x < cols; x += 2) {
+      const px = (x * cellW + cellW / 2) * dpr;
+      ctx.fillText('·', px, midPy);
+    }
+    ctx.globalAlpha = 1;
+
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

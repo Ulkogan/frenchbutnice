@@ -434,30 +434,37 @@
     return Math.pow(blend, 1.7);
   }
 
-  // Top-down shoreline view: the water edge is a mostly-horizontal line
-  // near the lower part of the screen that advances upward during a
-  // surge and retreats downward. Returns a row-space y for column u.
+  // Top-down shoreline: water fills the upper/left, sand the lower/right,
+  // separated by a diagonal curvy edge. Surge pushes the edge downward
+  // (water advances onto the sand) and then it recedes back up.
+  // Returns row-space y for column u — water is where y < edgeY.
   function edgeY(u, t) {
     const chop = params.turbulence;
-    const restY = rows * 0.72;                        // sea's resting edge (lower half)
-    const maxPushRows = rows * 0.46;                  // farthest surge up the beach
+    const restY = rows * 0.48;                        // resting shoreline sits near mid
+    const maxPushRows = rows * 0.22;                  // how far surge pushes water down
     const surge = surgeProfile(t);
     const push = surge * maxPushRows * (0.30 + 1.15 * params.energy);
 
-    // Slow along-edge undulation (a bit of natural curvature)
-    const wobble = Math.sin(u * Math.PI * 2 * 1.2 - t * 0.28) * 1.3;
-    // Chop: small high-freq bumps scaled by turbulence
-    const bumps = Math.sin(u * Math.PI * 2 * 4.5 - t * 0.7) * 0.9 * chop;
-    const jitter = noise1(u * 6 + t * 0.4) * 1.8 * chop;
+    // Diagonal tilt — shoreline isn't horizontal, it angles across the screen.
+    // Slope drifts slowly so the diagonal direction feels alive.
+    const tiltSlope = 0.18 + Math.sin(t * 0.05) * 0.12;
+    const tilt = (u - 0.5) * tiltSlope * rows;
 
-    return restY - push + wobble + bumps + jitter;
+    // Big, slow undulations that give the edge strong curvature
+    const bigA = Math.sin(u * Math.PI * 2 * 0.7 - t * 0.18) * rows * 0.09;
+    const bigB = Math.sin(u * Math.PI * 2 * 1.3 + t * 0.11) * rows * 0.05;
+
+    // Chop: small high-freq bumps scaled by turbulence
+    const bumps = Math.sin(u * Math.PI * 2 * 4.5 - t * 0.7) * 1.1 * chop;
+    const jitter = noise1(u * 6 + t * 0.4) * 2.2 * chop;
+
+    return restY + push + tilt + bigA + bigB + bumps + jitter;
   }
 
-  // Solid-ish water fill from the edge down to the bottom of the stage,
-  // drawn as a single path so the boundary follows the curvy edge line.
+  // Water fills from the top of the stage down to the curvy edge.
   function drawWater(t, waterTuple) {
     ctx.beginPath();
-    ctx.moveTo(0, canvas.height);
+    ctx.moveTo(0, 0);
     const stepsX = cols;
     for (let x = 0; x <= stepsX; x++) {
       const u = x / stepsX;
@@ -465,65 +472,63 @@
       const yPx = Math.max(0, yRows * cellH) * dpr;
       ctx.lineTo(x * cellW * dpr, yPx);
     }
-    ctx.lineTo(canvas.width, canvas.height);
+    ctx.lineTo(canvas.width, 0);
     ctx.closePath();
-    ctx.fillStyle = `rgba(${waterTuple},0.88)`;
+    ctx.fillStyle = `rgba(${waterTuple},0.92)`;
     ctx.fill();
   }
 
   // Cellular foam along the edge + tendrils reaching onto the sand.
-  // Uses thresholded 2D value noise to break the band into bubble-like
-  // clusters; tendril zone extends above the edge with falling density.
+  // Sign convention: d = (y + 0.5) - yEdge.
+  //   d < 0 → water side (above edge on screen)
+  //   d > 0 → sand side (below edge)
   function drawFoam(t, ramp, colorTuple) {
     const rampLast = ramp.length - 1;
     const surge = surgeProfile(t);
-    // Thickness values in rows
-    const waterFoamRows = 2.5;                          // foam reaching into the water
-    const sandFoamRows = 1.4 + 1.8 * surge;             // main foam lip on sand side
-    const tendrilRows = 3.5 + 4.5 * surge;              // spiky fingers past the lip
+    const waterFoamRows = 2.4;                           // foam dipping back into water
+    const sandFoamRows = 1.6 + 2.0 * surge;              // main foam lip on sand side
+    const tendrilRows = 4.0 + 6.0 * surge;               // tendrils/fingers onto sand
 
     // Noise coordinate scaling — lower = bigger cells
-    const nScaleX = 0.34;
-    const nScaleY = 0.55;
+    const nScaleX = 0.30;
+    const nScaleY = 0.50;
     const nTime = t * 0.28;
 
     for (let x = 0; x < cols; x++) {
       const u = x / cols;
       const yEdge = edgeY(u, t);
-      const yStart = Math.max(0, Math.floor(yEdge - tendrilRows - 1));
-      const yEnd = Math.min(rows - 1, Math.ceil(yEdge + waterFoamRows + 1));
+      const yStart = Math.max(0, Math.floor(yEdge - waterFoamRows - 1));
+      const yEnd = Math.min(rows - 1, Math.ceil(yEdge + tendrilRows + 1));
 
       for (let y = yStart; y <= yEnd; y++) {
-        // d > 0 → sand side (above edge on screen); d < 0 → water side
-        const d = yEdge - (y + 0.5);
+        const d = (y + 0.5) - yEdge;
         const nx = x * nScaleX + nTime;
         const ny = y * nScaleY;
 
-        // Composite noise — medium cells + finer detail
         const n1 = noise2(nx, ny);
         const n2 = noise2(nx * 2.1 + 11.3, ny * 2.1 - 4.7) * 0.5;
         const n = (n1 + n2) * 0.7 + 0.5; // shift to ~[0,1]
 
         let density = 0;
 
-        if (d <= 0 && d >= -waterFoamRows) {
-          // Foam-in-water: bubble pattern via thresholded noise
+        if (d < 0 && d >= -waterFoamRows) {
+          // Bubble pattern dipping into the water side of the boundary
           const t01 = (-d) / waterFoamRows;
           const envelope = 1 - t01 * 0.7;
           density = Math.max(0, (n - 0.42) * 2.6 * envelope);
-        } else if (d > 0 && d <= sandFoamRows) {
-          // Main foam lip — brighter, more solid, still broken by noise
+        } else if (d >= 0 && d <= sandFoamRows) {
+          // Main foam lip — brightest near the edge
           const t01 = d / sandFoamRows;
-          const envelope = Math.pow(1 - t01, 0.75);
-          density = Math.max(0, envelope * (0.55 + 0.55 * (n - 0.3)));
+          const envelope = Math.pow(1 - t01, 0.7);
+          density = Math.max(0, envelope * (0.6 + 0.55 * (n - 0.3)));
         } else if (d > sandFoamRows && d <= tendrilRows) {
-          // Tendrils / fingers reaching onto the sand
+          // Tendrils stretching onto the sand — stretched noise gives
+          // vertical finger shapes instead of round blobs.
           const t01 = (d - sandFoamRows) / Math.max(0.001, tendrilRows - sandFoamRows);
-          // Stretch noise vertically for finger-like shapes
-          const tN = noise2(nx * 1.8, ny * 0.35 + t * 0.12);
-          const tF = tN * 0.6 + (n - 0.5) * 0.6;
-          const fall = Math.pow(1 - t01, 1.6);
-          density = Math.max(0, (tF - 0.15) * 2.4 * fall * (0.5 + 0.7 * surge));
+          const tN = noise2(nx * 1.9, ny * 0.32 + t * 0.15);
+          const tF = tN * 0.7 + (n - 0.5) * 0.5;
+          const fall = Math.pow(1 - t01, 1.5);
+          density = Math.max(0, (tF - 0.12) * 2.6 * fall * (0.5 + 0.8 * surge));
         }
 
         if (density < 0.08) continue;
@@ -531,7 +536,7 @@
         const idx = Math.min(rampLast, Math.max(0, Math.floor(intensity * ramp.length)));
         const ch = ramp[idx];
         if (!ch || ch === ' ') continue;
-        const alpha = 0.45 + 0.55 * intensity;
+        const alpha = 0.5 + 0.5 * intensity;
         ctx.fillStyle = `rgba(${colorTuple},${alpha})`;
         const px = (x * cellW + cellW / 2) * dpr;
         const py = (y * cellH + cellH / 2) * dpr;

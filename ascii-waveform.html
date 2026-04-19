@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0B0B0C">
+<meta name="theme-color" content="#EAE1D2">
 <title>ASCII Waveform — shader study</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0B0B0C;
-    --ink: #F3EFE6;
-    --dim: #6B6A66;
-    --accent: #E8B468;
+    --bg: #EAE1D2;
+    --ink: #3A332A;
+    --dim: #A89F8F;
+    --accent: #FFFFFF;
+    --water: #6BB9C4;
     --pad-x: 24px;
     --pad-y: 24px;
   }
@@ -77,10 +78,12 @@
     50% { opacity: 0.25; }
   }
 
-  body[data-theme="light"] {
-    --bg: #F5F3EE;
-    --ink: #1C1917;
-    --dim: #8A857E;
+  body[data-theme="night"] {
+    --bg: #0B1518;
+    --ink: #D6E7EA;
+    --dim: #4A5A5E;
+    --accent: #F3EFE6;
+    --water: #2F6B76;
   }
 
   button.theme {
@@ -110,7 +113,7 @@
     bottom: max(var(--pad-y), env(safe-area-inset-bottom));
     z-index: 3;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
   }
   .knob {
@@ -214,6 +217,9 @@
   input[type=color].color::-webkit-color-swatch { border: none; border-radius: 0; }
   input[type=color].color::-moz-color-swatch { border: none; border-radius: 0; }
 
+  @media (max-width: 960px) {
+    .dock { grid-template-columns: repeat(3, 1fr); }
+  }
   @media (max-width: 720px) {
     .dock { grid-template-columns: 1fr 1fr; }
   }
@@ -239,7 +245,7 @@
     <div class="row"><span>CH</span> &nbsp; 01 / 01</div>
     <div class="row"><span>SR</span> &nbsp; 48.0 kHz</div>
   </div>
-  <button class="theme" onclick="document.body.dataset.theme = document.body.dataset.theme === 'light' ? '' : 'light'">Theme</button>
+  <button class="theme" onclick="document.body.dataset.theme = document.body.dataset.theme === 'night' ? '' : 'night'">Theme</button>
   <canvas id="stage"></canvas>
   <div class="caption">
     <span>ASCII · WAVEFORM · SHADER</span>
@@ -274,8 +280,12 @@
       </select>
     </div>
     <div class="knob">
-      <div class="knob-head"><span class="knob-label">Color</span><span class="knob-value" id="vColor">#E8B468</span></div>
-      <input class="color" id="color" type="color" value="#E8B468" aria-label="Particle color">
+      <div class="knob-head"><span class="knob-label">Foam</span><span class="knob-value" id="vColor">#FFFFFF</span></div>
+      <input class="color" id="color" type="color" value="#FFFFFF" aria-label="Foam color">
+    </div>
+    <div class="knob">
+      <div class="knob-head"><span class="knob-label">Water</span><span class="knob-value" id="vWater">#6BB9C4</span></div>
+      <input class="color" id="water" type="color" value="#6BB9C4" aria-label="Water color">
     </div>
   </div>
 <script>
@@ -300,17 +310,19 @@
   let lastThemeKey = '';
 
   const params = {
-    energy: 0.45,
-    turbulence: 0.12,
+    energy: 0.55,
+    turbulence: 0.18,
     trails: 6,
     size: 14,
     particle: 'dots',
-    color: '#E8B468',
+    color: '#FFFFFF',
+    water: '#6BB9C4',
   };
 
   const el = (id) => document.getElementById(id);
   const vEnergy = el('vEnergy'), vTurb = el('vTurb'), vTrails = el('vTrails');
   const vSize = el('vSize'), vParticle = el('vParticle'), vColor = el('vColor');
+  const vWater = el('vWater');
 
   function bindSlider(id, key, out, fmt) {
     const node = el(id);
@@ -337,8 +349,13 @@
     vColor.textContent = e.target.value.toUpperCase();
     document.documentElement.style.setProperty('--accent', e.target.value);
   });
-  // Prime accent from initial color value
+  el('water').addEventListener('input', (e) => {
+    params.water = e.target.value;
+    vWater.textContent = e.target.value.toUpperCase();
+    document.documentElement.style.setProperty('--water', e.target.value);
+  });
   document.documentElement.style.setProperty('--accent', params.color);
+  document.documentElement.style.setProperty('--water', params.water);
 
   function refreshStyle() {
     const cs = getComputedStyle(document.body);
@@ -388,6 +405,25 @@
     return hash(i) * (1 - u) + hash(i + 1) * u;
   }
 
+  // 2D value noise (smoothstep interp), output roughly in [-1, 1]
+  function hash2(x, y) {
+    let n = (x | 0) * 374761393 + (y | 0) * 668265263;
+    n = (n ^ (n >>> 13)) * 1274126177;
+    n = n ^ (n >>> 16);
+    return (((n & 0x7fffffff) / 1073741824) - 1);
+  }
+  function noise2(x, y) {
+    const xi = Math.floor(x), yi = Math.floor(y);
+    const xf = x - xi, yf = y - yi;
+    const u = xf * xf * (3 - 2 * xf);
+    const v = yf * yf * (3 - 2 * yf);
+    const a = hash2(xi, yi);
+    const b = hash2(xi + 1, yi);
+    const c = hash2(xi, yi + 1);
+    const d = hash2(xi + 1, yi + 1);
+    return (a * (1 - u) + b * u) * (1 - v) + (c * (1 - u) + d * u) * v;
+  }
+
   // Irregular surge profile — composite of slow cycles, sharpened so
   // waves come in as short surges with longer quiet retreats.
   function surgeProfile(t) {
@@ -417,29 +453,85 @@
     return restY - push + wobble + bumps + jitter;
   }
 
-  // Draw the water edge with soft vertical falloff; alpha scales with
-  // surge intensity so peaks lay down more foam than quiet moments.
-  function drawWave(t, ramp, colorTuple) {
+  // Solid-ish water fill from the edge down to the bottom of the stage,
+  // drawn as a single path so the boundary follows the curvy edge line.
+  function drawWater(t, waterTuple) {
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height);
+    const stepsX = cols;
+    for (let x = 0; x <= stepsX; x++) {
+      const u = x / stepsX;
+      const yRows = edgeY(u, t);
+      const yPx = Math.max(0, yRows * cellH) * dpr;
+      ctx.lineTo(x * cellW * dpr, yPx);
+    }
+    ctx.lineTo(canvas.width, canvas.height);
+    ctx.closePath();
+    ctx.fillStyle = `rgba(${waterTuple},0.88)`;
+    ctx.fill();
+  }
+
+  // Cellular foam along the edge + tendrils reaching onto the sand.
+  // Uses thresholded 2D value noise to break the band into bubble-like
+  // clusters; tendril zone extends above the edge with falling density.
+  function drawFoam(t, ramp, colorTuple) {
     const rampLast = ramp.length - 1;
-    const spread = 1.9;
     const surge = surgeProfile(t);
-    const gainBase = 0.55 + 0.45 * surge; // brighter at peaks
+    // Thickness values in rows
+    const waterFoamRows = 2.5;                          // foam reaching into the water
+    const sandFoamRows = 1.4 + 1.8 * surge;             // main foam lip on sand side
+    const tendrilRows = 3.5 + 4.5 * surge;              // spiky fingers past the lip
+
+    // Noise coordinate scaling — lower = bigger cells
+    const nScaleX = 0.34;
+    const nScaleY = 0.55;
+    const nTime = t * 0.28;
 
     for (let x = 0; x < cols; x++) {
       const u = x / cols;
-      const yC = edgeY(u, t);
-      const yFloor = Math.floor(yC);
+      const yEdge = edgeY(u, t);
+      const yStart = Math.max(0, Math.floor(yEdge - tendrilRows - 1));
+      const yEnd = Math.min(rows - 1, Math.ceil(yEdge + waterFoamRows + 1));
 
-      for (let dy = -3; dy <= 3; dy++) {
-        const y = yFloor + dy;
-        if (y < 0 || y >= rows) continue;
-        const d = Math.abs(y + 0.5 - yC);
-        const intensity = Math.max(0, 1 - d / spread);
-        if (intensity < 0.06) continue;
+      for (let y = yStart; y <= yEnd; y++) {
+        // d > 0 → sand side (above edge on screen); d < 0 → water side
+        const d = yEdge - (y + 0.5);
+        const nx = x * nScaleX + nTime;
+        const ny = y * nScaleY;
+
+        // Composite noise — medium cells + finer detail
+        const n1 = noise2(nx, ny);
+        const n2 = noise2(nx * 2.1 + 11.3, ny * 2.1 - 4.7) * 0.5;
+        const n = (n1 + n2) * 0.7 + 0.5; // shift to ~[0,1]
+
+        let density = 0;
+
+        if (d <= 0 && d >= -waterFoamRows) {
+          // Foam-in-water: bubble pattern via thresholded noise
+          const t01 = (-d) / waterFoamRows;
+          const envelope = 1 - t01 * 0.7;
+          density = Math.max(0, (n - 0.42) * 2.6 * envelope);
+        } else if (d > 0 && d <= sandFoamRows) {
+          // Main foam lip — brighter, more solid, still broken by noise
+          const t01 = d / sandFoamRows;
+          const envelope = Math.pow(1 - t01, 0.75);
+          density = Math.max(0, envelope * (0.55 + 0.55 * (n - 0.3)));
+        } else if (d > sandFoamRows && d <= tendrilRows) {
+          // Tendrils / fingers reaching onto the sand
+          const t01 = (d - sandFoamRows) / Math.max(0.001, tendrilRows - sandFoamRows);
+          // Stretch noise vertically for finger-like shapes
+          const tN = noise2(nx * 1.8, ny * 0.35 + t * 0.12);
+          const tF = tN * 0.6 + (n - 0.5) * 0.6;
+          const fall = Math.pow(1 - t01, 1.6);
+          density = Math.max(0, (tF - 0.15) * 2.4 * fall * (0.5 + 0.7 * surge));
+        }
+
+        if (density < 0.08) continue;
+        const intensity = Math.min(1, density);
         const idx = Math.min(rampLast, Math.max(0, Math.floor(intensity * ramp.length)));
         const ch = ramp[idx];
         if (!ch || ch === ' ') continue;
-        const alpha = (0.30 + 0.65 * intensity) * gainBase;
+        const alpha = 0.45 + 0.55 * intensity;
         ctx.fillStyle = `rgba(${colorTuple},${alpha})`;
         const px = (x * cellW + cellW / 2) * dpr;
         const py = (y * cellH + cellH / 2) * dpr;
@@ -465,9 +557,11 @@
     ctx.textAlign = 'center';
 
     const ramp = PARTICLES[params.particle] || PARTICLES.dots;
-    const tuple = rgbTuple(params.color);
+    const foamTuple = rgbTuple(params.color);
+    const waterTuple = rgbTuple(params.water);
 
-    drawWave(t, ramp, tuple);
+    drawWater(t, waterTuple);
+    drawFoam(t, ramp, foamTuple);
 
     requestAnimationFrame(frame);
   }

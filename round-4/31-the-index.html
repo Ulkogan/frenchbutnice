@@ -1404,9 +1404,8 @@ footer a:focus-visible {
   });
 
   document.addEventListener('keydown', function(e) {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.target.closest('[data-editor]') && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
     if (e.key === 'e' || e.key === 'E') {
-      if (e.target.closest('[data-editor]') && e.target.tagName === 'INPUT') return;
       toggleEditor();
     }
     if (e.key === 'Escape' && active) {
@@ -1668,6 +1667,10 @@ footer a:focus-visible {
       navigator.clipboard.writeText(css).then(function() {
         var btn = document.getElementById('editor-copy');
         btn.textContent = 'COPIED';
+        setTimeout(function() { btn.textContent = 'COPY CSS'; }, 1500);
+      }).catch(function() {
+        var btn = document.getElementById('editor-copy');
+        btn.textContent = 'FAILED';
         setTimeout(function() { btn.textContent = 'COPY CSS'; }, 1500);
       });
     });

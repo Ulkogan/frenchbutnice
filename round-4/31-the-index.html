@@ -1358,5 +1358,345 @@ footer a:focus-visible {
   }
 })();
 </script>
+
+<!-- ════════════════════════════════════════════
+     EDITOR OVERLAY (dev tool)
+     ════════════════════════════════════════════ -->
+<div data-editor>
+  <button class="editor-toggle" aria-label="Toggle editor">E</button>
+  <span class="editor-hint"><kbd>E</kbd> toggle editor</span>
+  <div class="editor-panel" id="editor-panel"></div>
+</div>
+
+<script>
+(function() {
+  'use strict';
+
+  var editorRoot = document.querySelector('[data-editor]');
+  var toggleBtn = editorRoot.querySelector('.editor-toggle');
+  var panel = document.getElementById('editor-panel');
+  var active = false;
+  var selectedEl = null;
+  var hoveredEl = null;
+  var modifications = new Map();
+
+  function isArrivalVisible() {
+    var overlay = document.getElementById('arrival-overlay');
+    return overlay && overlay.style.display !== 'none' && !overlay.classList.contains('dissolving');
+  }
+
+  function toggleEditor() {
+    if (isArrivalVisible()) return;
+    active = !active;
+    editorRoot.classList.toggle('editor-active', active);
+    if (!active) {
+      deselectElement();
+      if (hoveredEl) {
+        hoveredEl.classList.remove('editor-hover-outline');
+        hoveredEl = null;
+      }
+    }
+  }
+
+  toggleBtn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    toggleEditor();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+    if (e.key === 'e' || e.key === 'E') {
+      if (e.target.closest('[data-editor]') && e.target.tagName === 'INPUT') return;
+      toggleEditor();
+    }
+    if (e.key === 'Escape' && active) {
+      deselectElement();
+      active = false;
+      editorRoot.classList.remove('editor-active');
+    }
+  });
+
+  document.addEventListener('mouseover', function(e) {
+    if (!active) return;
+    var target = e.target;
+    if (target.closest('[data-editor]')) return;
+    if (hoveredEl && hoveredEl !== target) {
+      hoveredEl.classList.remove('editor-hover-outline');
+    }
+    if (target !== selectedEl) {
+      target.classList.add('editor-hover-outline');
+      hoveredEl = target;
+    }
+  });
+
+  document.addEventListener('mouseout', function(e) {
+    if (!active || !hoveredEl) return;
+    hoveredEl.classList.remove('editor-hover-outline');
+    hoveredEl = null;
+  });
+
+  document.addEventListener('click', function(e) {
+    if (!active) return;
+    var target = e.target;
+    if (target.closest('[data-editor]')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    selectElement(target);
+  }, true);
+
+  function selectElement(el) {
+    deselectElement();
+    selectedEl = el;
+    el.classList.remove('editor-hover-outline');
+    el.classList.add('editor-selected-outline');
+
+    if (!modifications.has(el)) {
+      var cs = window.getComputedStyle(el);
+      modifications.set(el, {
+        original: {
+          fontSize: cs.fontSize,
+          fontWeight: cs.fontWeight,
+          letterSpacing: cs.letterSpacing,
+          lineHeight: cs.lineHeight,
+          color: cs.color,
+          backgroundColor: cs.backgroundColor,
+          paddingTop: cs.paddingTop,
+          paddingRight: cs.paddingRight,
+          paddingBottom: cs.paddingBottom,
+          paddingLeft: cs.paddingLeft,
+          marginTop: cs.marginTop,
+          marginRight: cs.marginRight,
+          marginBottom: cs.marginBottom,
+          marginLeft: cs.marginLeft,
+          borderWidth: cs.borderTopWidth,
+          borderColor: cs.borderTopColor
+        },
+        changed: {}
+      });
+    }
+
+    showPanel(el);
+  }
+
+  function deselectElement() {
+    if (selectedEl) {
+      selectedEl.classList.remove('editor-selected-outline');
+      selectedEl = null;
+    }
+    panel.classList.remove('visible');
+  }
+
+  function showPanel(el) {
+    var rect = el.getBoundingClientRect();
+    var cs = window.getComputedStyle(el);
+    var tag = el.tagName;
+    var cls = el.className
+      .split(' ')
+      .filter(function(c) { return c && !c.startsWith('editor-'); })
+      .map(function(c) { return '.' + c; })
+      .join('') || '(no class)';
+
+    panel.innerHTML = buildPanelHTML(tag, cls, cs);
+    panel.classList.add('visible');
+
+    var pw = 320;
+    var ph = panel.offsetHeight;
+    var left = rect.right + 12;
+    var top = rect.top;
+
+    if (left + pw > window.innerWidth - 16) {
+      left = rect.left - pw - 12;
+    }
+    if (left < 16) left = 16;
+    if (top + ph > window.innerHeight - 16) {
+      top = window.innerHeight - ph - 16;
+    }
+    if (top < 16) top = 16;
+
+    panel.style.left = left + 'px';
+    panel.style.top = top + 'px';
+
+    bindPanelEvents(el, cs);
+  }
+
+  function buildPanelHTML(tag, cls, cs) {
+    var pxToNum = function(v) { return parseFloat(v) || 0; };
+    var rgbToHex = function(rgb) {
+      if (!rgb || rgb === 'transparent' || rgb === 'rgba(0, 0, 0, 0)') return 'transparent';
+      var m = rgb.match(/(\d+),\s*(\d+),\s*(\d+)/);
+      if (!m) return rgb;
+      return '#' + [m[1],m[2],m[3]].map(function(x) {
+        return parseInt(x).toString(16).padStart(2,'0');
+      }).join('');
+    };
+
+    return ''
+      + '<div class="editor-panel-header">'
+      +   '<div>'
+      +     '<div class="editor-panel-tag">' + tag + '</div>'
+      +     '<div class="editor-panel-class">' + cls + '</div>'
+      +   '</div>'
+      +   '<button class="editor-panel-close" id="editor-close">&times;</button>'
+      + '</div>'
+      + '<div class="editor-section">'
+      +   '<div class="editor-section-title">TYPOGRAPHY</div>'
+      +   propRow('font-size', pxToNum(cs.fontSize), 'px')
+      +   propRow('font-weight', cs.fontWeight, '')
+      +   propRow('letter-spacing', pxToNum(cs.letterSpacing), 'px')
+      +   propRow('line-height', pxToNum(cs.lineHeight), 'px')
+      + '</div>'
+      + '<div class="editor-section">'
+      +   '<div class="editor-section-title">COLOR</div>'
+      +   colorRow('color', rgbToHex(cs.color))
+      +   colorRow('background-color', rgbToHex(cs.backgroundColor))
+      + '</div>'
+      + '<div class="editor-section">'
+      +   '<div class="editor-section-title">SPACING</div>'
+      +   spacingBox(cs)
+      + '</div>'
+      + '<div class="editor-section">'
+      +   '<div class="editor-section-title">BORDER</div>'
+      +   propRow('border-width', pxToNum(cs.borderTopWidth), 'px')
+      +   colorRow('border-color', rgbToHex(cs.borderTopColor))
+      + '</div>'
+      + '<div class="editor-actions">'
+      +   '<button class="editor-btn" id="editor-reset">RESET</button>'
+      +   '<button class="editor-btn primary" id="editor-copy">COPY CSS</button>'
+      + '</div>';
+  }
+
+  function propRow(prop, val, unit) {
+    return '<div class="editor-prop-row">'
+      + '<span class="editor-prop-label">' + prop + '</span>'
+      + '<input class="editor-prop-input editor-prop-input-short" data-prop="' + prop + '" value="' + val + '" />'
+      + (unit ? '<span class="editor-prop-unit">' + unit + '</span>' : '')
+      + '</div>';
+  }
+
+  function colorRow(prop, hex) {
+    return '<div class="editor-prop-row">'
+      + '<span class="editor-prop-label">' + prop.replace('background-color','background') + '</span>'
+      + '<div class="editor-color-swatch" style="background:' + hex + ';">'
+      +   '<input type="color" data-color-prop="' + prop + '" value="' + (hex.startsWith('#') ? hex : '#000000') + '" />'
+      + '</div>'
+      + '<input class="editor-prop-input" data-prop="' + prop + '" value="' + hex + '" />'
+      + '</div>';
+  }
+
+  function spacingBox(cs) {
+    var pxN = function(v) { return parseFloat(v) || 0; };
+    return '<div class="editor-spacing-box">'
+      + '<div class="editor-spacing-outer">'
+      +   '<span class="editor-spacing-label margin-l">margin</span>'
+      +   spacingInput('margin-top', pxN(cs.marginTop), 'm top')
+      +   spacingInput('margin-right', pxN(cs.marginRight), 'm right')
+      +   spacingInput('margin-bottom', pxN(cs.marginBottom), 'm bottom')
+      +   spacingInput('margin-left', pxN(cs.marginLeft), 'm left')
+      +   '<div class="editor-spacing-inner">'
+      +     '<span class="editor-spacing-label padding-l">padding</span>'
+      +     spacingInput('padding-top', pxN(cs.paddingTop), 'p top')
+      +     spacingInput('padding-right', pxN(cs.paddingRight), 'p right')
+      +     spacingInput('padding-bottom', pxN(cs.paddingBottom), 'p bottom')
+      +     spacingInput('padding-left', pxN(cs.paddingLeft), 'p left')
+      +     '<div class="editor-spacing-core">ELEMENT</div>'
+      +   '</div>'
+      + '</div>'
+      + '</div>';
+  }
+
+  function spacingInput(prop, val, classes) {
+    var type = classes.startsWith('m') ? 'm' : 'p';
+    var dir = classes.split(' ')[1];
+    return '<input class="editor-spacing-val ' + type + ' ' + dir + '" data-prop="' + prop + '" value="' + val + '" />';
+  }
+
+  function bindPanelEvents(el, cs) {
+    document.getElementById('editor-close').addEventListener('click', function() {
+      deselectElement();
+    });
+
+    panel.querySelectorAll('input[data-prop]').forEach(function(input) {
+      input.addEventListener('input', function() {
+        var prop = input.dataset.prop;
+        var val = input.value;
+        var unit = '';
+
+        var numProps = ['font-size','font-weight','letter-spacing','line-height',
+          'border-width','padding-top','padding-right','padding-bottom','padding-left',
+          'margin-top','margin-right','margin-bottom','margin-left'];
+
+        if (numProps.indexOf(prop) !== -1 && prop !== 'font-weight') {
+          unit = 'px';
+        }
+
+        var cssVal = val + unit;
+        if (prop === 'font-weight') cssVal = val;
+        if (prop === 'color' || prop === 'background-color' || prop === 'border-color') cssVal = val;
+
+        el.style.setProperty(prop, cssVal);
+
+        var mod = modifications.get(el);
+        if (mod) mod.changed[prop] = cssVal;
+      });
+    });
+
+    panel.querySelectorAll('input[data-color-prop]').forEach(function(picker) {
+      picker.addEventListener('input', function() {
+        var prop = picker.dataset.colorProp;
+        el.style.setProperty(prop, picker.value);
+        var hexInput = panel.querySelector('input[data-prop="' + prop + '"]');
+        if (hexInput) hexInput.value = picker.value;
+        picker.parentElement.style.background = picker.value;
+        var mod = modifications.get(el);
+        if (mod) mod.changed[prop] = picker.value;
+      });
+    });
+
+    document.getElementById('editor-reset').addEventListener('click', function() {
+      var mod = modifications.get(el);
+      if (mod) {
+        Object.keys(mod.changed).forEach(function(prop) {
+          el.style.removeProperty(prop);
+        });
+        mod.changed = {};
+        showPanel(el);
+      }
+    });
+
+    document.getElementById('editor-copy').addEventListener('click', function() {
+      var css = generateCSS();
+      navigator.clipboard.writeText(css).then(function() {
+        var btn = document.getElementById('editor-copy');
+        btn.textContent = 'COPIED';
+        setTimeout(function() { btn.textContent = 'COPY CSS'; }, 1500);
+      });
+    });
+  }
+
+  function generateCSS() {
+    var lines = [];
+    modifications.forEach(function(mod, el) {
+      if (Object.keys(mod.changed).length === 0) return;
+      var selector = getSelector(el);
+      lines.push(selector + ' {');
+      Object.keys(mod.changed).forEach(function(prop) {
+        lines.push('  ' + prop + ': ' + mod.changed[prop] + ';');
+      });
+      lines.push('}');
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+
+  function getSelector(el) {
+    var classes = Array.from(el.classList).filter(function(c) {
+      return !c.startsWith('editor-');
+    });
+    if (classes.length > 0) return '.' + classes[0];
+    return el.tagName.toLowerCase();
+  }
+
+})();
+</script>
 </body>
 </html>

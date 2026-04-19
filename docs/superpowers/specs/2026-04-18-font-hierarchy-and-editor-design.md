@@ -121,7 +121,7 @@ A floating panel (~320px wide) with a dark background (`#151820`), border, and b
 Only one file is modified: `round-4/31-the-index.html`
 
 Changes within that file:
-1. Add 8 `@font-face` declarations for OffBit family (after existing Astro Mono declarations)
+1. Add 6 `@font-face` declarations for OffBit family (after existing Astro Mono declarations)
 2. Add 3 CSS variables to `:root`
 3. Update `font-family` on ~10 selectors to use new variables
 4. Add editor CSS (scoped with `[data-editor]` prefix, appended after existing styles)

@@ -23,7 +23,7 @@ Four tiers, each with a distinct role and typeface:
 
 ### Font-face declarations
 
-Eight new `@font-face` rules (OffBit × 3 sub-families × 2 weights). Paths relative to the HTML file:
+Six new `@font-face` rules (OffBit × 3 sub-families × 2 weights). Paths relative to the HTML file:
 
 ```
 ../references/fonts/T17139-OT/OffBit-Regular.otf
@@ -104,7 +104,7 @@ A floating panel (~320px wide) with a dark background (`#151820`), border, and b
 
 - All changes are applied as inline styles on the element.
 - The editor tracks which elements have been modified and what their original computed values were.
-- "Copy CSS" iterates over all modified elements, diffs current inline styles against originals, and outputs class-based CSS rules.
+- "Copy CSS" iterates over all modified elements, diffs current inline styles against originals, and outputs CSS rules using the element's class as selector (falls back to tag name for classless elements).
 - The editor script is a self-contained block at the end of `<body>`, after the existing page script. It injects its own styles scoped with a `[data-editor]` attribute prefix to avoid conflicts.
 - No external dependencies.
 - Editor state does not persist across page reloads.
